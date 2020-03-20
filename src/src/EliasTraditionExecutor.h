@@ -24,4 +24,6 @@ private:
 	void addGuard(Vector3 position);
 	void updateBlips();
 	void playVictimsExecution();
+	void releaseUnnecessaryEntities();
+	void cleanup();
 };

@@ -35,7 +35,7 @@ private:
 	Object poster;
 	Blip targetAreaBlip;
 	Ped target;
-	Blip cellBlip;
+	Blip policeLocBlip;
 
 public:
 	BaseMissionExecutor(BountyMissionData missionData);

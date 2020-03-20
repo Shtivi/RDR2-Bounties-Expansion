@@ -9,6 +9,7 @@ void EliasTraditionExecutor::update()
 {
 	BaseMissionExecutor::update();
 	updateBlips();
+	releaseUnnecessaryEntities();
 }
 
 Ped EliasTraditionExecutor::spawnTarget()
@@ -100,4 +101,40 @@ void EliasTraditionExecutor::addGuard(Vector3 position)
 	PED::SET_PED_KEEP_TASK(guard, true);
 	AI::TASK_STAND_GUARD(guard, position.x, position.y, position.z, 0, "WORLD_HUMAN_GUARD_SCOUT");
 	enemies.push_back(guard);
+}
+
+void EliasTraditionExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&horse);
+
+		for (it = enemies.begin(); it != enemies.end(); ++it)
+		{
+			if (distanceBetweenEntities(*it, player) > 120 || 
+				ENTITY::IS_ENTITY_DEAD(*it))
+			{
+				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&(*it));
+			}
+		}
+	}
+}
+
+void EliasTraditionExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&horse);
+
+	std::vector<Ped>::iterator it;
+	for (it = enemies.begin(); it != enemies.end(); ++it)
+	{
+		if (ENTITY::DOES_ENTITY_EXIST(*it))
+		{
+			ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&(*it));
+		}
+	}
 }

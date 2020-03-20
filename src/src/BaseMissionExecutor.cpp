@@ -82,7 +82,7 @@ void BaseMissionExecutor::update()
 	{
 		Vector3 targetPos = ENTITY::GET_ENTITY_COORDS(target, true, false);
 		if (distanceBetween(targetPos, *getArea()->cellCoords) < 3 &&
-			ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(target) <= 1)
+			ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(target) <= 1.1)
 		{
 			nextStage();
 		}
@@ -232,7 +232,7 @@ void BaseMissionExecutor::onTargetLocated()
 
 void BaseMissionExecutor::onTargetCaptured()
 {
-	cellBlip = createBlip(*getArea()->policeDeptCoords, 0x1857A152);
+	policeLocBlip = createBlip(*getArea()->policeDeptCoords, 0x1857A152);
 
 	std::stringstream text;
 	text << "Take ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ to the ~COLOR_YELLOW~Police Department";
@@ -241,8 +241,8 @@ void BaseMissionExecutor::onTargetCaptured()
 
 void BaseMissionExecutor::onArrivalToPoliceStation()
 {
-	RADAR::REMOVE_BLIP(&cellBlip);
-	cellBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
+	RADAR::REMOVE_BLIP(&policeLocBlip);
+	policeLocBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
 	
 	std::stringstream text;
 	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR-WHITE~ in the ~COLOR_YELLOW~Cell";
@@ -253,6 +253,8 @@ void BaseMissionExecutor::onTargetHandedOver()
 {
 	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
 	RADAR::REMOVE_BLIP(&targetBlip);
+
+	RADAR::REMOVE_BLIP(&policeLocBlip);
 }
 
 void BaseMissionExecutor::onRewardCollected()
@@ -263,12 +265,17 @@ void BaseMissionExecutor::onRewardCollected()
 void BaseMissionExecutor::onFinished()
 {
 	status = BountyMissionStatus::Completed;
+	showSubtitle("Bounty completed!");
+
 	cleanup();
 }
 
 void BaseMissionExecutor::cleanup()
 {
-
+	if (ENTITY::DOES_ENTITY_EXIST(target))
+	{
+		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&target);
+	}
 }
 
 void BaseMissionExecutor::decorateTarget()
