@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="script.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachedRope.cpp">
+      <Filter>Src\AttachedRopes</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachedRopesHandling.cpp">
+      <Filter>Src\AttachedRopes</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMissionExecutor.cpp">
+      <Filter>Src\BountyMissions</Filter>
+    </ClCompile>
+    <ClCompile Include="MapAreasCache.cpp">
+      <Filter>Src\MapArea</Filter>
+    </ClCompile>
+    <ClCompile Include="BountiesManager.cpp">
+      <Filter>Src\BountyMissions</Filter>
+    </ClCompile>
+    <ClCompile Include="Prompt.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EliasTraditionExecutor.cpp">
+      <Filter>Src\BountyMissions\EliasTradition</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\enums.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\natives.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\main.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="script.h">
+      <Filter>Src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard.h">
+      <Filter>Src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachedRope.h">
+      <Filter>Src\AttachedRopes</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachedRopesHanding.h">
+      <Filter>Src\AttachedRopes</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Src\World</Filter>
+    </ClInclude>
+    <ClInclude Include="BountyMissionData.h">
+      <Filter>Src\BountyMissions</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMissionExecutor.h">
+      <Filter>Src\BountyMissions</Filter>
+    </ClInclude>
+    <ClInclude Include="MapArea.h">
+      <Filter>Src\MapArea</Filter>
+    </ClInclude>
+    <ClInclude Include="MapAreasCache.h">
+      <Filter>Src\MapArea</Filter>
+    </ClInclude>
+    <ClInclude Include="BountiesManager.h">
+      <Filter>Src\BountyMissions</Filter>
+    </ClInclude>
+    <ClInclude Include="Prompt.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EliasTraditionExecutor.h">
+      <Filter>Src\BountyMissions\EliasTradition</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{fe82bd4a-2d14-486a-8be5-8bf6b50a2414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{99988ac4-ab5d-4a8e-ad13-6426aa838402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\AttachedRopes">
+      <UniqueIdentifier>{f9123656-93e1-4279-9c47-af84e66142b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Script">
+      <UniqueIdentifier>{1ab8b354-9e05-4e09-af58-2ecd61348e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\World">
+      <UniqueIdentifier>{6db80ad3-fbb5-4bb0-9a52-c14b20395c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\BountyMissions">
+      <UniqueIdentifier>{c2f7fb9b-ee24-49db-bc4c-f591fc990b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\MapArea">
+      <UniqueIdentifier>{70959cf0-1d19-4a91-8d81-ef600696d34c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UI">
+      <UniqueIdentifier>{df612e2a-d78f-4fda-a471-50037b460b4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\BountyMissions\EliasTradition">
+      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
