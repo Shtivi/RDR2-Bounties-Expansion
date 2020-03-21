@@ -15,6 +15,17 @@ void Initialize()
 	initializeBounties();
 }
 
+struct s1 {
+	//int f1;
+	int f2;
+	bool f3;
+	bool f4;
+};
+
+struct s2
+{
+	char* s;
+};
 
 void main()
 {
@@ -28,6 +39,17 @@ void main()
 		{
 			Ped player = PLAYER::PLAYER_PED_ID();
 			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+
+			//s1 a;
+			////a.f1 = 10000;
+			//a.f2 = 10000;
+			//a.f3 = 0;
+			//a.f4 = 1;
+			//
+			//s2 b;
+			//b.s = (char*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", "HELLO WORLD");
+
+			//UIUNK::_0x049D5C615BD38BAD((Any*)&a, (Any*)&b, 1);
 
 			//Vector3 vehPos;
 			//vehPos.x = playerPos.x + 8;
@@ -101,6 +123,8 @@ void main()
 			//{
 			//	log("didnt hit");
 			//}
+
+			//AI::_0x524B54361229154F(player, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_WRITE_NOTEBOOK"), 10000, true, true, 0, true);
 
 		}
 		else if (IsKeyJustUp(VK_KEY_X))

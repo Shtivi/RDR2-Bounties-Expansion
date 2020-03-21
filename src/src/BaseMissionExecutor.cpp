@@ -45,7 +45,7 @@ void BaseMissionExecutor::update()
 	}
 	else if (stage == BountyMissionStage::CollectPoster)
 	{
-		if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 2.5f &&
+		if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 1.5f &&
 			PED::IS_PED_ON_FOOT(player))
 		{
 			inspectPosterPrompt->show();
@@ -208,6 +208,16 @@ void BaseMissionExecutor::onPosterCollected()
 {
 	status = BountyMissionStatus::CollectedPoster;
 
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 posterCoords = *getArea()->bountyPostersCoords;
+	Object seq;
+	AI::OPEN_SEQUENCE_TASK(&seq);
+	AI::TASK_TURN_PED_TO_FACE_COORD(0, posterCoords.x, posterCoords.y, posterCoords.z, 1000);
+	AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_WRITE_NOTEBOOK"), 5000, true, true, 0, true);
+	AI::CLOSE_SEQUENCE_TASK(seq);
+	AI::CLEAR_PED_TASKS(player,1,1);
+	AI::TASK_PERFORM_SEQUENCE(player, seq);
+
 	ENTITY::DELETE_ENTITY(&poster);
 	inspectPosterPrompt->hide();
 	targetAreaBlip = createBlip(missionData->startPosition, AREA_RADIUS, 0xB04092F8, 0x7EAB2A55 /* Bounty sprite */);
@@ -259,7 +269,7 @@ void BaseMissionExecutor::onArrivalToPoliceStation()
 	policeLocBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
 	
 	std::stringstream text;
-	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR-WHITE~ in the ~COLOR_YELLOW~Cell";
+	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in the ~COLOR_YELLOW~Cell";
 	showSubtitle(text.str().c_str());
 }
 
