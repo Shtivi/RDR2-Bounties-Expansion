@@ -39,7 +39,4 @@ Vehicle createVehicle(char* model, Vector3 pos);
 Vehicle createVehicle(Hash model, Vector3 pos);
 Object createProp(char* model, Vector3 position, bool isStatic = false, bool isVisible = true);
 RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastIntersectionOptions intersectionOptions = Everything);
-Blip createBlip(Vector3 pos, Hash blipType, Hash blipSprite = 0);
-Blip createBlip(Entity entity, Hash blipType, Hash blipSprite = 0);
-Blip createBlip(Vector3 source, float radius, Hash blipType, Hash blipSprite = 0);
-void setBlipLabel(Blip blip, const char* label);
+void releaseEntitySafe(Entity* entity);

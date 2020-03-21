@@ -17,7 +17,7 @@
       <Filter>Src\AttachedRopes</Filter>
     </ClCompile>
     <ClCompile Include="world.cpp">
-      <Filter>Src\World</Filter>
+      <Filter>Src\Game</Filter>
     </ClCompile>
     <ClCompile Include="BaseMissionExecutor.cpp">
       <Filter>Src\BountyMissions</Filter>
@@ -42,6 +42,9 @@
     </ClCompile>
     <ClCompile Include="EliasTraditionExecutor.cpp">
       <Filter>Src\BountyMissions\EliasTradition</Filter>
+    </ClCompile>
+    <ClCompile Include="blips.cpp">
+      <Filter>Src\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +76,7 @@
       <Filter>Src\AttachedRopes</Filter>
     </ClInclude>
     <ClInclude Include="world.h">
-      <Filter>Src\World</Filter>
+      <Filter>Src\Game</Filter>
     </ClInclude>
     <ClInclude Include="BountyMissionData.h">
       <Filter>Src\BountyMissions</Filter>
@@ -105,6 +108,9 @@
     <ClInclude Include="EliasTraditionExecutor.h">
       <Filter>Src\BountyMissions\EliasTradition</Filter>
     </ClInclude>
+    <ClInclude Include="blips.h">
+      <Filter>Src\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -119,9 +125,6 @@
     <Filter Include="Src\Script">
       <UniqueIdentifier>{1ab8b354-9e05-4e09-af58-2ecd61348e89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\World">
-      <UniqueIdentifier>{6db80ad3-fbb5-4bb0-9a52-c14b20395c43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\BountyMissions">
       <UniqueIdentifier>{c2f7fb9b-ee24-49db-bc4c-f591fc990b4a}</UniqueIdentifier>
     </Filter>
@@ -133,6 +136,9 @@
     </Filter>
     <Filter Include="Src\BountyMissions\EliasTradition">
       <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game">
+      <UniqueIdentifier>{6db80ad3-fbb5-4bb0-9a52-c14b20395c43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

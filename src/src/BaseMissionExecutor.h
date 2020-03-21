@@ -44,14 +44,14 @@ public:
 	BountyMissionStage getMissionStage();
 	BountyMissionStatus getMissionStatus();
 
-	void update();
-	void nextStage(); // move to protected
+	virtual void update();
 
 protected:
 	MapArea* getArea();
 	Ped getTarget();
 	virtual void prepareSet() = 0;
 	virtual Ped spawnTarget() = 0;
+	void nextStage();
 
 	void fail(const char* reason = NULL);
 	virtual void initialize();

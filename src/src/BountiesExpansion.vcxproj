@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
+    <ClCompile Include="blips.cpp" />
     <ClCompile Include="BountiesManager.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="..\..\inc\types.h" />
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="BaseMissionExecutor.h" />
+    <ClInclude Include="blips.h" />
     <ClInclude Include="BountiesManager.h" />
     <ClInclude Include="BountyMissionData.h" />
     <ClInclude Include="EliasTraditionExecutor.h" />

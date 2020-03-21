@@ -8,6 +8,7 @@ enum TargetCondition
 
 struct BountyMissionData
 {
+	int ordinal;
 	const char* missionName;
 	MapAreas area;
 	int reward;

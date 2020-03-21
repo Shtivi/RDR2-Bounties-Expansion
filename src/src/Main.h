@@ -33,6 +33,7 @@
 
 #include "Math.h";
 #include "world.h";
+#include "blips.h";
 #include "Logger.h";
 #include "Prompt.h";
 #include "UI.h";

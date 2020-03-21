@@ -27,6 +27,17 @@ void BaseMissionExecutor::update()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 
+	if (IsKeyJustUp(VK_KEY_N))
+	{
+		nextStage();
+
+		if (stage == CaptureTarget)
+		{
+			ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
+		}
+	}
+	
+
 	if (stage == BountyMissionStage::MissionInitialization)
 	{
 		initialize();
@@ -57,7 +68,8 @@ void BaseMissionExecutor::update()
 	}
 	else if (stage == BountyMissionStage::LocateTarget)
 	{
-		if (distanceBetweenEntities(player, target) <= 25)
+		if (distanceBetweenEntities(player, target) <= 25 || 
+			ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(player, target, 0))
 		{
 			nextStage();
 		}
@@ -164,6 +176,7 @@ void BaseMissionExecutor::nextStage()
 
 		case BountyMissionStage::CollectReward:			
 			onRewardCollected();
+			onFinished();
 			stage = BountyMissionStage::Finished; 
 			break;
 	}

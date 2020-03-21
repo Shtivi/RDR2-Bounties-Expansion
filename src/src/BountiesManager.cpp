@@ -4,14 +4,15 @@
 
 BaseMissionExecutor* mission;
 
-void initializeSkinnerBrothersKidnapping()
+void initializeEliasTradition()
 {
 	BountyMissionData data;
+	data.ordinal = 1;
 	data.area = Blackwater;
 	data.missionName = "Elias's tradition";
 	data.crime = "Kidnapping";
 	data.description = "Blah blah";
-	data.requiredTargetCondition = Alive;
+	data.requiredTargetCondition = DeadOrAlive;
 	data.reward = 120;
 	data.startPosition.x = -2032.61;
 	data.startPosition.y = -1909.63;
@@ -25,7 +26,7 @@ void initializeSkinnerBrothersKidnapping()
 
 void initializeBounties()
 {
-	initializeSkinnerBrothersKidnapping();
+	initializeEliasTradition();
 }
 
 void updateMissions()

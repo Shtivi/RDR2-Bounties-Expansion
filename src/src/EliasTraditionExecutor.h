@@ -22,7 +22,9 @@ private:
 	void onTargetLocated();
 	void createEnemyBlips();
 	void addGuard(Vector3 position);
-	void updateBlips();
+	void addGuard(Ped guard);
+	void updateBlips(); // todo: remove
+	void updateEnemies();
 	void playVictimsExecution();
 	void releaseUnnecessaryEntities();
 	void cleanup();

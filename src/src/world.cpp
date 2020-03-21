@@ -80,50 +80,15 @@ RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastI
 	return result;
 }
 
-Blip createBlip(Vector3 pos, Hash blipType, Hash blipSprite)
-{
-	Blip blip;
-	Object dummyProp = createProp("p_shotGlass01x", pos, true, false);
-
-	blip = RADAR::_0x23F74C2FDA6E7C61(blipType, dummyProp); // Add blip for dummy prop
-	if (blipSprite != 0)
-	{
-		RADAR::SET_BLIP_SPRITE(blip, blipSprite, false);
-	}
-
-	return blip;
-}
-
-Blip createBlip(Entity entity, Hash blipType, Hash blipSprite)
-{
-	Blip blip = RADAR::_0x23F74C2FDA6E7C61(blipType, entity); // Add blip for dummy prop
-
-	if (blipSprite != 0)
-	{
-		RADAR::SET_BLIP_SPRITE(blip, blipSprite, false);
-	}
-
-	return blip;
-}
-
-Blip createBlip(Vector3 source, float radius, Hash blipType, Hash blipSprite) 
-{
-	Blip blip = RADAR::_0x45F13B7E0A15C880(blipType, source.x, source.y, source.z, radius); // add blip for area
-
-	if (blipSprite != 0)
-	{
-		RADAR::SET_BLIP_SPRITE(blip, blipSprite, false);
-	}
-
-	return blip;
-}
-
-void setBlipLabel(Blip blip, const char* label)
-{
-	RADAR::_0x9CB1A1623062F402(blip, (Any*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", label)); // _SET_BLIP_NAME_FROM_PLAYER_STRING
-}
-
 bool isPedHogtied(Ped ped)
 {
 	return AI::GET_IS_TASK_ACTIVE(ped, 399);
+}
+
+void releaseEntitySafe(Entity* entity)
+{
+	if (ENTITY::DOES_ENTITY_EXIST(*entity))
+	{
+		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(entity);
+	}
 }

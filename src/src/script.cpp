@@ -124,10 +124,6 @@ void main()
 
 			log(output.str().c_str());
 		}
-		if (IsKeyJustUp(VK_KEY_N))
-		{
-			mission->nextStage();
-		}
 
 
 		WAIT(0);
