@@ -45,7 +45,8 @@ void BaseMissionExecutor::update()
 	}
 	else if (stage == BountyMissionStage::CollectPoster)
 	{
-		if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 2.5f)
+		if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 2.5f &&
+			PED::IS_PED_ON_FOOT(player))
 		{
 			inspectPosterPrompt->show();
 

@@ -4,10 +4,7 @@ class EliasTraditionExecutor : public BaseMissionExecutor
 {
 private:
 	Ped target;
-	Ped killer;
-	Ped victim;
 	std::vector<Ped> enemies;
-	Vehicle wagon;
 	Ped horse;
 
 public:
@@ -23,9 +20,7 @@ private:
 	void createEnemyBlips();
 	void addGuard(Vector3 position);
 	void addGuard(Ped guard);
-	void updateBlips(); // todo: remove
 	void updateEnemies();
-	void playVictimsExecution();
 	void releaseUnnecessaryEntities();
 	void cleanup();
 };

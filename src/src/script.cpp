@@ -15,7 +15,6 @@ void Initialize()
 	initializeBounties();
 }
 
-Ped temp;
 
 void main()
 {
@@ -24,13 +23,6 @@ void main()
 	while (true)
 	{
 		updateMissions();
-
-		if (temp && ENTITY::DOES_ENTITY_EXIST(temp))
-		{
-			std::stringstream output;
-			output << ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(temp);
-			displayDebugText(output.str().c_str());
-		}
 
 		if (IsKeyJustUp(VK_KEY_Z))
 		{
@@ -44,13 +36,13 @@ void main()
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &vehPos.z, false);
 			//Vehicle veh = createVehicle(0x276DFE5E, vehPos);
 
-			Vector3 pedPos;
-			pedPos.x = playerPos.x + 2;
-			pedPos.y = playerPos.y + 2;
-			pedPos.z = playerPos.z;
-			Ped ped = createPed("RE_TORTURINGCAPTIVE_MALES_01", pedPos);
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
-			temp = ped;
+			//Vector3 pedPos;
+			//pedPos.x = playerPos.x + 2;
+			//pedPos.y = playerPos.y + 2;
+			//pedPos.z = playerPos.z;
+			//Ped ped = createPed("RE_TORTURINGCAPTIVE_MALES_01", pedPos);
+			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+			//temp = ped;
 
 			//Vector3 pedPos2;
 			//pedPos2.x = playerPos.x + 6;
