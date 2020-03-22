@@ -1,21 +1,20 @@
 #include "Main.h";
 
-BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMgr)
+BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMgr, BountyMissionsFactory* missionsFactory)
 {
 	this->progress = progress;
 	this->areasMgr = areasMgr;
-
-	createEliasTradition();
 }
 
 void BountiesManager::update()
 {
-	std::vector<BaseMissionExecutor*>::iterator it;
 	BaseMissionExecutor* curr;
 	BountyMissionStatus currStatus;
 	int currId;
+	std::vector<BaseMissionExecutor*> finishedMissions;
+	std::vector<BaseMissionExecutor*>::iterator it = missionExecutors.begin();
 
-	for (it = missionExecutors.begin(); it != missionExecutors.end(); ++it)
+	while (it != missionExecutors.end())
 	{
 		curr = *it;
 		currStatus = curr->getMissionStatus();
@@ -25,42 +24,53 @@ void BountiesManager::update()
 		{
 			progress->completeMission(currId);
 			progress->save();
-
-			continue;
+			it = missionExecutors.erase(it);
+			finishedMissions.push_back(curr);
 		}
-		else if (currStatus == BountyMissionStatus::CollectedPoster)
+		else
 		{
-			progress->collectMission(currId);
-			progress->save();
-		}
+			if (currStatus == BountyMissionStatus::CollectedPoster)
+			{
+				progress->collectMission(currId);
+				progress->save();
+			}
 
-		(*it)->update();
+			(*it)->update();
+			it++;
+		}
+	}
+
+	for (it = finishedMissions.begin(); it != finishedMissions.end(); it++)
+	{
+		startNextMission(*it);
 	}
 }
 
-
-void BountiesManager::createEliasTradition()
+void BountiesManager::startNextMission(BaseMissionExecutor* after)
 {
-	BountyMissionData data;
-	EliasTraditionExecutor* executor;
-
-	data.id = 1;
-	data.area = Blackwater;
-	data.missionName = "Elias's Tradition";
-	data.crime = "Murder";
-	data.description = "He is the brother of Elias Green,\nboth are members of the infamous Skinner Brothers.\nWanted for murdering a nearby farmers.";
-	data.requiredTargetCondition = DeadOrAlive;
-	data.reward = 120;
-	data.rewardStr = "120$";
-	data.startPosition.x = -2032.61;
-	data.startPosition.y = -1909.63;
-	data.startPosition.z = 110.051;
-	data.isTargetMale = true;
-	data.targetName = "Elsie Green";
-	
-	executor = new EliasTraditionExecutor(data, areasMgr);
-	executor->setMissionStatus(progress->getMissionProgress(data.id));
-	areasMgr->getMapArea(data.area)->linkMission(data.id);
-
-	missionExecutors.push_back(executor);
+	MapArea* area = areasMgr->getMapArea(after->getMissionData()->area);
+	int nextMissionId = area->nextMission(after->getMissionData->id);
+	if (nextMissionId != -1)
+	{
+		BaseMissionExecutor* nextMission = missionsFactory->fromMissionId(nextMissionId);
+		nextMission->setMissionStatus(BountyMissionStatus::Pending);
+		progress->allowMission(nextMissionId);
+		missionExecutors.push_back(nextMission);
+	}
 }
+
+//
+//void BountiesManager::addMission(BaseMissionExecutor* executor)
+//{
+//	areasMgr->getMapArea(executor->getMissionData()->area)->linkMission(executor->getMissionData()->id);
+//	
+//	BountyMissionStatus status = progress->getMissionProgress(executor->getMissionData()->id);
+//	executor->setMissionStatus(status);
+//
+//	if (status == BountyMissionStatus::Completed || status == BountyMissionStatus::Unavailable)
+//	{
+//		return;
+//	}
+//
+//	missionExecutors.push_back(executor);
+//}

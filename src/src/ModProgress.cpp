@@ -18,6 +18,11 @@ void ModProgress::collectMission(int missionId)
 	setMissionProgress(missionId, BountyMissionStatus::CollectedPoster);
 }
 
+void ModProgress::allowMission(int missionId)
+{
+	setMissionProgress(missionId, BountyMissionStatus::Pending);
+}
+
 void ModProgress::save()
 {
 	std::map<int, BountyMissionStatus>::iterator it;

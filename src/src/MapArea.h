@@ -14,5 +14,5 @@ public:
 	MapArea(const char* name, Vector3 policeDeptCoords, Vector3 bountyPostersCoords, Vector3 cellCoords);
 
 	void linkMission(int missionId);
-	int nextMission(ModProgress* progress);
-};
+	int nextMission(int fromId);
+}; 

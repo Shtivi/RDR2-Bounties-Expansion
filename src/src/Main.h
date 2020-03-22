@@ -47,6 +47,7 @@
 #include "BountyMissionData.h";
 #include "BaseMissionExecutor.h";
 #include "EliasTraditionExecutor.h";
+#include "BountyMissionsFactory.h";
 #include "Autosave.h";
 #include "BountiesManager.h";
 #include "BountiesMenu.h";

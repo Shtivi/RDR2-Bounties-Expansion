@@ -13,17 +13,39 @@ void MapArea::linkMission(int missionId)
 	areaMissionIds.push_back(missionId);
 }
 
-int MapArea::nextMission(ModProgress* progress)
+int MapArea::nextMission(int fromId)
 {
 	std::vector<int>::iterator it;
-
+	
 	for (it = areaMissionIds.begin(); it != areaMissionIds.end(); ++it)
 	{
-		if (progress->getMissionProgress(*it) == BountyMissionStatus::Unavailable)
+		if (*it != fromId)
 		{
-			return *it;
+			continue;
 		}
+
+		if (it + 1 == areaMissionIds.end())
+		{
+			return -1;
+		}
+
+		return *it;
 	}
 
 	return -1;
 }
+
+//int MapArea::nextMission(ModProgress* progress)
+//{
+//	std::vector<int>::iterator it;
+//
+//	for (it = areaMissionIds.begin(); it != areaMissionIds.end(); ++it)
+//	{
+//		if (progress->getMissionProgress(*it) == BountyMissionStatus::Unavailable)
+//		{
+//			return *it;
+//		}
+//	}
+//
+//	return -1;
+//}

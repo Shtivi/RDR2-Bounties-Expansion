@@ -13,6 +13,7 @@ public:
 	BountyMissionStatus getMissionProgress(int missionId);
 	void completeMission(int missionId);
 	void collectMission(int missionId);
+	void allowMission(int missionId);
 	void save();
 
 private:

@@ -23,6 +23,7 @@ struct s2
 bool fatal = false;
 ModProgress* modProgress;
 MapAreasManager* areasMgr;
+BountyMissionsFactory* missionsFactory;
 BountiesManager* bountiesMgr;
 
 void main()
@@ -31,7 +32,8 @@ void main()
 		modProgress = new ModProgress("BountiesExpansion.dat");
 		initializeUI();
 		areasMgr = new MapAreasManager();
-		bountiesMgr = new BountiesManager(modProgress, areasMgr);
+		missionsFactory = new BountyMissionsFactory(areasMgr);
+		bountiesMgr = new BountiesManager(modProgress, areasMgr, missionsFactory);
 	}
 	catch (...)
 	{
