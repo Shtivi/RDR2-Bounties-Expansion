@@ -8,13 +8,6 @@
 
 using namespace std;
 
-void Initialize() 
-{
-	initializeUI();
-	initializeMapAreasCache();
-	initializeBounties();
-}
-
 struct s1 {
 	//int f1;
 	int f2;
@@ -27,14 +20,39 @@ struct s2
 	char* s;
 };
 
+bool fatal = false;
+ModProgress* modProgress;
+MapAreasManager* areasMgr;
+BountiesManager* bountiesMgr;
+
 void main()
 {
-	Initialize();
+	try {
+		modProgress = new ModProgress("BountiesExpansion.dat");
+		initializeUI();
+		areasMgr = new MapAreasManager();
+		bountiesMgr = new BountiesManager(modProgress, areasMgr);
+	}
+	catch (...)
+	{
+		log("failed to load from data file");
+		showSubtitle("[FATAL] BountiesExpansion: Failed to initialize.");
+		fatal = true;
+	}
 
 	while (true)
 	{
-		updateMissions();
+
+		if (fatal)
+		{
+			WAIT(0);
+			return;
+		}
+
+		bountiesMgr->update();
 		menu->update();
+
+		autosaveModProgress(modProgress);
 
 		if (IsKeyJustUp(VK_KEY_Z))
 		{

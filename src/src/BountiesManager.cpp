@@ -1,13 +1,50 @@
 #include "Main.h";
 
-//std::vector<BaseMissionExecutor*> missionExecutors;
+BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMgr)
+{
+	this->progress = progress;
+	this->areasMgr = areasMgr;
 
-BaseMissionExecutor* mission;
+	createEliasTradition();
+}
 
-void initializeEliasTradition()
+void BountiesManager::update()
+{
+	std::vector<BaseMissionExecutor*>::iterator it;
+	BaseMissionExecutor* curr;
+	BountyMissionStatus currStatus;
+	int currId;
+
+	for (it = missionExecutors.begin(); it != missionExecutors.end(); ++it)
+	{
+		curr = *it;
+		currStatus = curr->getMissionStatus();
+		currId = curr->getMissionData()->id;
+		
+		if (currStatus == BountyMissionStatus::Completed)
+		{
+			progress->completeMission(currId);
+			progress->save();
+
+			continue;
+		}
+		else if (currStatus == BountyMissionStatus::CollectedPoster)
+		{
+			progress->collectMission(currId);
+			progress->save();
+		}
+
+		(*it)->update();
+	}
+}
+
+
+void BountiesManager::createEliasTradition()
 {
 	BountyMissionData data;
-	data.ordinal = 1;
+	EliasTraditionExecutor* executor;
+
+	data.id = 1;
 	data.area = Blackwater;
 	data.missionName = "Elias's Tradition";
 	data.crime = "Murder";
@@ -20,20 +57,10 @@ void initializeEliasTradition()
 	data.startPosition.z = 110.051;
 	data.isTargetMale = true;
 	data.targetName = "Elsie Green";
+	
+	executor = new EliasTraditionExecutor(data, areasMgr);
+	executor->setMissionStatus(progress->getMissionProgress(data.id));
+	areasMgr->getMapArea(data.area)->linkMission(data.id);
 
-	//missionExecutors.push_back(new BaseMissionExecutor(data));
-	mission = new EliasTraditionExecutor(data);
-}
-
-void initializeBounties()
-{
-	initializeEliasTradition();
-}
-
-void updateMissions()
-{
-	if (mission->getMissionStatus() < BountyMissionStatus::Completed)
-	{
-		mission->update();
-	}
+	missionExecutors.push_back(executor);
 }

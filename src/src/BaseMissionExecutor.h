@@ -2,34 +2,13 @@
 
 const int AREA_RADIUS = 90;
 
-enum BountyMissionStage
-{
-	MissionInitialization = -1,
-	CollectPoster = 0,
-	GoToArea = 1,
-	LocateTarget = 2,
-	CaptureTarget = 3,
-	ArriveToPoliceStation = 4,
-	HandOverTarget = 5,
-	CollectReward = 6,
-	Finished = 7
-
-};
-
-enum BountyMissionStatus {
-	Pending = 0,
-	CollectedPoster,
-	InProgress,
-	Completed,
-	Failed
-};
-
 class BaseMissionExecutor
 {
 private:
 	BountyMissionData* missionData;
 	BountyMissionStage stage;
 	BountyMissionStatus status;
+	MapAreasManager* areasMgr;
 
 	Blip posterBlip;
 	Object poster;
@@ -38,11 +17,13 @@ private:
 	Blip policeLocBlip;
 
 public:
-	BaseMissionExecutor(BountyMissionData missionData);
+	BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
 
 	BountyMissionData* getMissionData();
 	BountyMissionStage getMissionStage();
 	BountyMissionStatus getMissionStatus();
+
+	void setMissionStatus(BountyMissionStatus status);
 
 	virtual void update();
 

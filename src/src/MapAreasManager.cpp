@@ -1,8 +1,23 @@
 #include "Main.h";
 
-std::map<MapAreas, MapArea*> cache;
 
-MapArea* createBlackwater()
+MapAreasManager::MapAreasManager()
+{
+	cache.insert(std::make_pair(Blackwater, createBlackwater()));
+}
+
+
+MapArea* MapAreasManager::getMapArea(MapAreas area)
+{
+	if (cache.find(area) == cache.end())
+	{
+		return NULL;
+	}
+
+	return cache.find(area)->second;
+}
+
+MapArea* MapAreasManager::createBlackwater()
 {
 	Vector3 policeDeptCoords;
 	policeDeptCoords.x = -756.347;
@@ -17,19 +32,4 @@ MapArea* createBlackwater()
 	posterCoords.z = 43.7609;
 
 	return new MapArea("Blackwater", policeDeptCoords, posterCoords, cellCoords);
-}
-
-void initializeMapAreasCache()
-{
-	cache.insert(std::make_pair(Blackwater, createBlackwater()));
-}
-
-MapArea* getMapArea(MapAreas area)
-{
-	if (cache.find(area) == cache.end())
-	{
-		return NULL;
-	}
-
-	return cache.find(area)->second;
 }

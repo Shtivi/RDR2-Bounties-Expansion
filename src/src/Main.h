@@ -39,12 +39,15 @@
 #include "GUIDrawer.h";
 #include "AttachedRope.h";
 #include "AttachedRopesHanding.h";
+#include "BountyDefinitions.h";
 
+#include "ModProgress.h";
 #include "MapArea.h";
-#include "MapAreasCache.h";
+#include "MapAreasManager.h";
 #include "BountyMissionData.h";
 #include "BaseMissionExecutor.h";
 #include "EliasTraditionExecutor.h";
+#include "Autosave.h";
 #include "BountiesManager.h";
 #include "BountiesMenu.h";
 #include "UI.h";

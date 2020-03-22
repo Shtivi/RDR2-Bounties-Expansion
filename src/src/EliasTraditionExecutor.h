@@ -8,7 +8,7 @@ private:
 	Ped horse;
 
 public:
-	EliasTraditionExecutor(BountyMissionData missionData);
+	EliasTraditionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
 	void update();
 
 protected:

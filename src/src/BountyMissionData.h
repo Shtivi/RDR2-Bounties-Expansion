@@ -1,14 +1,8 @@
 #pragma once
 
-enum TargetCondition
-{
-	Alive,
-	DeadOrAlive
-};
-
 struct BountyMissionData
 {
-	int ordinal;
+	int id;
 	const char* missionName;
 	MapAreas area;
 	int reward;

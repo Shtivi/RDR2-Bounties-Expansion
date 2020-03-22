@@ -1,7 +1,7 @@
 #include "Main.h";
 
-EliasTraditionExecutor::EliasTraditionExecutor(BountyMissionData missionData)
-	: BaseMissionExecutor(missionData)
+EliasTraditionExecutor::EliasTraditionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
 {
 }
 

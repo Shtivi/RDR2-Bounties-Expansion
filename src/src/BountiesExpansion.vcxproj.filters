@@ -20,13 +20,10 @@
       <Filter>Src\Game</Filter>
     </ClCompile>
     <ClCompile Include="BaseMissionExecutor.cpp">
-      <Filter>Src\BountyMissions</Filter>
-    </ClCompile>
-    <ClCompile Include="MapAreasCache.cpp">
-      <Filter>Src\MapArea</Filter>
+      <Filter>Src\Game\BountyMissions</Filter>
     </ClCompile>
     <ClCompile Include="BountiesManager.cpp">
-      <Filter>Src\BountyMissions</Filter>
+      <Filter>Src\Game\BountyMissions</Filter>
     </ClCompile>
     <ClCompile Include="Prompt.cpp">
       <Filter>Src\UI</Filter>
@@ -41,7 +38,7 @@
       <Filter>Src\UI</Filter>
     </ClCompile>
     <ClCompile Include="EliasTraditionExecutor.cpp">
-      <Filter>Src\BountyMissions\EliasTradition</Filter>
+      <Filter>Src\Game\BountyMissions\EliasTradition</Filter>
     </ClCompile>
     <ClCompile Include="blips.cpp">
       <Filter>Src\Game</Filter>
@@ -51,6 +48,18 @@
     </ClCompile>
     <ClCompile Include="BountiesMenu.cpp">
       <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ModProgress.cpp">
+      <Filter>Src\Game\ModProgress</Filter>
+    </ClCompile>
+    <ClCompile Include="MapArea.cpp">
+      <Filter>Src\Game\MapArea</Filter>
+    </ClCompile>
+    <ClCompile Include="MapAreasManager.cpp">
+      <Filter>Src\Game\MapArea</Filter>
+    </ClCompile>
+    <ClCompile Include="Autosave.cpp">
+      <Filter>Src\Game\ModProgress</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,19 +94,16 @@
       <Filter>Src\Game</Filter>
     </ClInclude>
     <ClInclude Include="BountyMissionData.h">
-      <Filter>Src\BountyMissions</Filter>
+      <Filter>Src\Game\BountyMissions</Filter>
     </ClInclude>
     <ClInclude Include="BaseMissionExecutor.h">
-      <Filter>Src\BountyMissions</Filter>
+      <Filter>Src\Game\BountyMissions</Filter>
     </ClInclude>
     <ClInclude Include="MapArea.h">
-      <Filter>Src\MapArea</Filter>
-    </ClInclude>
-    <ClInclude Include="MapAreasCache.h">
-      <Filter>Src\MapArea</Filter>
+      <Filter>Src\Game\MapArea</Filter>
     </ClInclude>
     <ClInclude Include="BountiesManager.h">
-      <Filter>Src\BountyMissions</Filter>
+      <Filter>Src\Game\BountyMissions</Filter>
     </ClInclude>
     <ClInclude Include="Prompt.h">
       <Filter>Src\UI</Filter>
@@ -112,7 +118,7 @@
       <Filter>Src\UI</Filter>
     </ClInclude>
     <ClInclude Include="EliasTraditionExecutor.h">
-      <Filter>Src\BountyMissions\EliasTradition</Filter>
+      <Filter>Src\Game\BountyMissions\EliasTradition</Filter>
     </ClInclude>
     <ClInclude Include="blips.h">
       <Filter>Src\Game</Filter>
@@ -122,6 +128,18 @@
     </ClInclude>
     <ClInclude Include="BountiesMenu.h">
       <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ModProgress.h">
+      <Filter>Src\Game\ModProgress</Filter>
+    </ClInclude>
+    <ClInclude Include="MapAreasManager.h">
+      <Filter>Src\Game\MapArea</Filter>
+    </ClInclude>
+    <ClInclude Include="Autosave.h">
+      <Filter>Src\Game\ModProgress</Filter>
+    </ClInclude>
+    <ClInclude Include="BountyDefinitions.h">
+      <Filter>Src\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,20 +155,23 @@
     <Filter Include="Src\Script">
       <UniqueIdentifier>{1ab8b354-9e05-4e09-af58-2ecd61348e89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\BountyMissions">
-      <UniqueIdentifier>{c2f7fb9b-ee24-49db-bc4c-f591fc990b4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\MapArea">
-      <UniqueIdentifier>{70959cf0-1d19-4a91-8d81-ef600696d34c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\UI">
       <UniqueIdentifier>{df612e2a-d78f-4fda-a471-50037b460b4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\BountyMissions\EliasTradition">
-      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Game">
       <UniqueIdentifier>{6db80ad3-fbb5-4bb0-9a52-c14b20395c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\MapArea">
+      <UniqueIdentifier>{70959cf0-1d19-4a91-8d81-ef600696d34c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions">
+      <UniqueIdentifier>{c2f7fb9b-ee24-49db-bc4c-f591fc990b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\EliasTradition">
+      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\ModProgress">
+      <UniqueIdentifier>{304e4802-3468-45cc-ba72-42c6b67b91ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

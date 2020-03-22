@@ -1,7 +1,8 @@
 #include "Main.h"
 
-BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData)
+BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 {
+	this->areasMgr = areasMgr;
 	this->missionData = new BountyMissionData(missionData);
 	this->stage = MissionInitialization;
 	this->status = Pending;
@@ -20,6 +21,26 @@ BountyMissionStage BaseMissionExecutor::getMissionStage()
 BountyMissionStatus BaseMissionExecutor::getMissionStatus()
 {
 	return status;
+}
+
+void BaseMissionExecutor::setMissionStatus(BountyMissionStatus status)
+{
+	this->status = status;
+
+	switch (status)
+	{
+	case BountyMissionStatus::Pending:
+		stage = BountyMissionStage::MissionInitialization;
+		break;
+	case BountyMissionStatus::CollectedPoster:
+		stage = BountyMissionStage::GoToArea;
+		onPosterCollected();
+		break;
+	case BountyMissionStatus::Completed:
+		stage = BountyMissionStage::Finished;
+		onFinished();
+		break;
+	}
 }
 
 void BaseMissionExecutor::update()
@@ -129,7 +150,7 @@ void BaseMissionExecutor::update()
 
 MapArea* BaseMissionExecutor::getArea()
 {
-	return getMapArea(missionData->area);
+	return areasMgr->getMapArea(missionData->area);
 }
 
 Ped BaseMissionExecutor::getTarget()
@@ -197,8 +218,7 @@ void BaseMissionExecutor::initialize()
 {
 	status = BountyMissionStatus::Pending;
 
-	MapArea* area = getMapArea(missionData->area);
-	Vector3* posterPos = area->bountyPostersCoords;
+	Vector3* posterPos = getArea()->bountyPostersCoords;
 
 	poster = createProp("p_cs_newspaper_01x", *posterPos, true);
 	posterBlip = createBlip(poster, 0xEC972124, 0x9E6FEC8F);
@@ -208,21 +228,24 @@ void BaseMissionExecutor::onPosterCollected()
 {
 	status = BountyMissionStatus::CollectedPoster;
 
-	Ped player = PLAYER::PLAYER_PED_ID();
-	Vector3 posterCoords = *getArea()->bountyPostersCoords;
-	Object seq;
-	AI::OPEN_SEQUENCE_TASK(&seq);
-	AI::TASK_TURN_PED_TO_FACE_COORD(0, posterCoords.x, posterCoords.y, posterCoords.z, 1000);
-	AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_WRITE_NOTEBOOK"), 5000, true, true, 0, true);
-	AI::CLOSE_SEQUENCE_TASK(seq);
-	AI::CLEAR_PED_TASKS(player,1,1);
-	AI::TASK_PERFORM_SEQUENCE(player, seq);
-	inspectPosterPrompt->hide();
+	if (ENTITY::DOES_ENTITY_EXIST(poster))
+	{
+		Ped player = PLAYER::PLAYER_PED_ID();
+		Vector3 posterCoords = *getArea()->bountyPostersCoords;
+		Object seq;
+		AI::OPEN_SEQUENCE_TASK(&seq);
+		AI::TASK_TURN_PED_TO_FACE_COORD(0, posterCoords.x, posterCoords.y, posterCoords.z, 1000);
+		AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_WRITE_NOTEBOOK"), 5000, true, true, 0, true);
+		AI::CLOSE_SEQUENCE_TASK(seq);
+		AI::CLEAR_PED_TASKS(player,1,1);
+		AI::TASK_PERFORM_SEQUENCE(player, seq);
+		inspectPosterPrompt->hide();
 
-	WAIT(5000);
-	menu->showMissionDetails(missionData);
+		WAIT(5000);
 
-	ENTITY::DELETE_ENTITY(&poster);
+		menu->showMissionDetails(missionData);
+		ENTITY::DELETE_ENTITY(&poster);
+	}
 
 	targetAreaBlip = createBlip(missionData->startPosition, AREA_RADIUS, 0xB04092F8, 0x7EAB2A55 /* Bounty sprite */);
 
@@ -288,13 +311,12 @@ void BaseMissionExecutor::onTargetHandedOver()
 void BaseMissionExecutor::onRewardCollected()
 {
 	CASH::PLAYER_ADD_CASH(missionData->reward * 100, 0);
+	showSubtitle("Bounty completed!");
 }
 
 void BaseMissionExecutor::onFinished()
 {
 	status = BountyMissionStatus::Completed;
-	showSubtitle("Bounty completed!");
-
 	cleanup();
 }
 

@@ -2,12 +2,15 @@
 
 class BountiesManager
 {
+private:
+	std::vector<BaseMissionExecutor*> missionExecutors;
+	ModProgress* progress;
+	MapAreasManager* areasMgr;
+
 public:
-	BountiesManager();
+	BountiesManager(ModProgress* progress, MapAreasManager* areasMgr);
 	void update();
 
 private:
+	void createEliasTradition();
 };
-
-void initializeBounties();
-void updateMissions();
