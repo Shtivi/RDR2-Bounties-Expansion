@@ -217,9 +217,13 @@ void BaseMissionExecutor::onPosterCollected()
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::CLEAR_PED_TASKS(player,1,1);
 	AI::TASK_PERFORM_SEQUENCE(player, seq);
+	inspectPosterPrompt->hide();
+
+	WAIT(5000);
+	menu->showMissionDetails(missionData);
 
 	ENTITY::DELETE_ENTITY(&poster);
-	inspectPosterPrompt->hide();
+
 	targetAreaBlip = createBlip(missionData->startPosition, AREA_RADIUS, 0xB04092F8, 0x7EAB2A55 /* Bounty sprite */);
 
 	const char* condition = missionData->requiredTargetCondition == TargetCondition::Alive ? "Alive" : "Dead or Alive";

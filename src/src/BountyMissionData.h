@@ -12,6 +12,7 @@ struct BountyMissionData
 	const char* missionName;
 	MapAreas area;
 	int reward;
+	const char* rewardStr;
 	TargetCondition requiredTargetCondition;
 	Vector3 startPosition;
 	bool isTargetMale;

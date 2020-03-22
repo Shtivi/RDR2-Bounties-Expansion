@@ -36,13 +36,9 @@
 #include "blips.h";
 #include "Logger.h";
 #include "Prompt.h";
-#include "UI.h";
+#include "GUIDrawer.h";
 #include "AttachedRope.h";
 #include "AttachedRopesHanding.h";
-
-//#include "LassoHandling.h"
-//#include "ActionControllers.h";
-//#include "PlayerActionsHandling.h";
 
 #include "MapArea.h";
 #include "MapAreasCache.h";
@@ -50,3 +46,5 @@
 #include "BaseMissionExecutor.h";
 #include "EliasTraditionExecutor.h";
 #include "BountiesManager.h";
+#include "BountiesMenu.h";
+#include "UI.h";

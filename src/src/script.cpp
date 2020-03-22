@@ -10,7 +10,7 @@ using namespace std;
 
 void Initialize() 
 {
-	initializePrompts();
+	initializeUI();
 	initializeMapAreasCache();
 	initializeBounties();
 }
@@ -34,6 +34,7 @@ void main()
 	while (true)
 	{
 		updateMissions();
+		menu->update();
 
 		if (IsKeyJustUp(VK_KEY_Z))
 		{
@@ -140,7 +141,6 @@ void main()
 
 			log(output.str().c_str());
 		}
-
 
 		WAIT(0);
 	}

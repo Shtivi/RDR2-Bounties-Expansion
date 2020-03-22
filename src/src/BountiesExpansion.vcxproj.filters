@@ -46,6 +46,12 @@
     <ClCompile Include="blips.cpp">
       <Filter>Src\Game</Filter>
     </ClCompile>
+    <ClCompile Include="GUIDrawer.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="BountiesMenu.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -110,6 +116,12 @@
     </ClInclude>
     <ClInclude Include="blips.h">
       <Filter>Src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIDrawer.h">
+      <Filter>Src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="BountiesMenu.h">
+      <Filter>Src\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

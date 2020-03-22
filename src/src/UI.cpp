@@ -1,11 +1,14 @@
 #include "Main.h";
 
 Prompt* inspectPosterPrompt;
+BountiesMenu* menu;
 
-void initializePrompts()
+void initializeUI()
 {
 	inspectPosterPrompt = new Prompt("Inspect bounty", GAMEPLAY::GET_HASH_KEY("INPUT_MERCY_KILL"), SemiHold);
 	inspectPosterPrompt->hide();
+
+	menu = new BountiesMenu();
 }
 
 void showSubtitle(const char* text)
