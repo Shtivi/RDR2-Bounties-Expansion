@@ -5,7 +5,14 @@ BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreas
 	this->areasMgr = areasMgr;
 	this->missionData = new BountyMissionData(missionData);
 	this->stage = MissionInitialization;
-	this->status = Pending;
+	this->status = Unavailable;
+	setTargetAreaRadius(AREA_RADIUS);
+
+	poster = NULL;
+	posterBlip = NULL;
+	targetAreaBlip = NULL;
+	target = NULL;
+	policeLocBlip = NULL;
 }
 
 BountyMissionData* BaseMissionExecutor::getMissionData()
@@ -32,10 +39,12 @@ void BaseMissionExecutor::setMissionStatus(BountyMissionStatus status)
 	case BountyMissionStatus::Pending:
 		stage = BountyMissionStage::MissionInitialization;
 		break;
+
 	case BountyMissionStatus::CollectedPoster:
 		stage = BountyMissionStage::GoToArea;
 		onPosterCollected();
 		break;
+
 	case BountyMissionStatus::Completed:
 		stage = BountyMissionStage::Finished;
 		onFinished();
@@ -57,7 +66,6 @@ void BaseMissionExecutor::update()
 			ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
 		}
 	}
-	
 
 	if (stage == BountyMissionStage::MissionInitialization)
 	{
@@ -158,6 +166,11 @@ Ped BaseMissionExecutor::getTarget()
 	return target;
 }
 
+void BaseMissionExecutor::setTargetAreaRadius(int radius)
+{
+	this->targetAreaRadius = radius;
+}
+
 void BaseMissionExecutor::nextStage()
 {
 	switch (stage)
@@ -222,13 +235,14 @@ void BaseMissionExecutor::initialize()
 
 	poster = createProp("p_cs_newspaper_01x", *posterPos, true);
 	posterBlip = createBlip(poster, 0xEC972124, 0x9E6FEC8F);
+	setBlipLabel(posterBlip, "Bounty Poster");
 }
 
 void BaseMissionExecutor::onPosterCollected()
 {
 	status = BountyMissionStatus::CollectedPoster;
 
-	if (ENTITY::DOES_ENTITY_EXIST(poster))
+	if (poster)
 	{
 		Ped player = PLAYER::PLAYER_PED_ID();
 		Vector3 posterCoords = *getArea()->bountyPostersCoords;
@@ -247,7 +261,7 @@ void BaseMissionExecutor::onPosterCollected()
 		ENTITY::DELETE_ENTITY(&poster);
 	}
 
-	targetAreaBlip = createBlip(missionData->startPosition, AREA_RADIUS, 0xB04092F8, 0x7EAB2A55 /* Bounty sprite */);
+	targetAreaBlip = createBlip(missionData->startPosition, targetAreaRadius, 0xB04092F8, 0x7EAB2A55 /* Bounty sprite */);
 
 	const char* condition = missionData->requiredTargetCondition == TargetCondition::Alive ? "Alive" : "Dead or Alive";
 	std::stringstream label;
@@ -263,7 +277,8 @@ void BaseMissionExecutor::onArrivalToArea()
 	status = BountyMissionStatus::InProgress;
 
 	RADAR::REMOVE_BLIP(&targetAreaBlip);
-	targetAreaBlip = createBlip(missionData->startPosition, AREA_RADIUS, 0xC19DA63, 0);
+	targetAreaBlip = createBlip(missionData->startPosition, targetAreaRadius, 0xC19DA63, 0);
+	setBlipLabel(targetAreaBlip, "Bounty Hunting");
 
 	target = spawnTarget();
 	prepareSet();

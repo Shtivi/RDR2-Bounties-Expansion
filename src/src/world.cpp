@@ -40,6 +40,21 @@ Ped createPed(char* modelName, Vector3 pos)
 	return ped;
 }
 
+Ped createPedOnHorse(char* modelName, Ped horse, int seatIndex)
+{
+	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
+	STREAMING::REQUEST_MODEL(model, false);
+	while (!STREAMING::HAS_MODEL_LOADED(model))
+	{
+		WAIT(0);
+	}
+
+	Ped ped = PED::_0xF89AA2BD01FC06B7(horse, model, seatIndex, 0, 0, 0, 0);
+
+	PED::SET_PED_VISIBLE(ped, true);
+	return ped;
+}
+
 Vehicle createVehicle(char* modelName, Vector3 pos)
 {
 	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);

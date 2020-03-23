@@ -8,22 +8,48 @@ BountyMissionsFactory::BountyMissionsFactory(MapAreasManager* areasMgr)
 
 bool BountyMissionsFactory::doesMissionExist(int missionId)
 {
-	return (cache.find(missionId) != cache.end());
+	return (executorsCache.find(missionId) != executorsCache.end());
 }
 
 BaseMissionExecutor* BountyMissionsFactory::fromMissionId(int missionId)
 {
-	if (cache.find(missionId) != cache.end())
+	if (executorsCache.find(missionId) != executorsCache.end())
 	{
-		return cache.find(missionId)->second;
+		return executorsCache.find(missionId)->second;
 	}
 
 	return NULL;
 }
 
+std::vector<int> BountyMissionsFactory::getAllMissionIds()
+{
+	std::vector<int> missionsData;
+	std::map<int, BaseMissionExecutor*>::iterator it = executorsCache.begin();
+
+	while(it != executorsCache.end())
+	{
+		missionsData.push_back((*it).second->getMissionData()->id);
+		++it;
+	}
+
+	std::sort(missionsData.begin(), missionsData.end());
+	return missionsData;
+}
+
+
 void BountyMissionsFactory::initializeCache()
 {
-	cache[1] = eliasTraditionExecutor();
+	executorsCache[1] = eliasTraditionExecutor();
+	executorsCache[2] = turkishRunnerExecutor();
+
+	std::map<int, BaseMissionExecutor*>::iterator it = executorsCache.begin();
+	BaseMissionExecutor* curr;
+	while (it != executorsCache.end())
+	{
+		curr = (*it).second;
+		areasMgr->getMapArea(curr->getMissionData()->area)->linkMission(curr->getMissionData()->id);
+		++it;
+	}
 }
 
 EliasTraditionExecutor* BountyMissionsFactory::eliasTraditionExecutor()
@@ -44,5 +70,22 @@ EliasTraditionExecutor* BountyMissionsFactory::eliasTraditionExecutor()
 	data.targetName = "Elsie Green";
 
 	return new EliasTraditionExecutor(data, areasMgr);
+}
 
+TurkishRunnerExecutor* BountyMissionsFactory::turkishRunnerExecutor()
+{
+	BountyMissionData data;
+	data.id = 2;
+	data.area = Blackwater;
+	data.missionName = "The Turkish Runner";
+	data.crime = "Horse theft";
+	data.description = "He wanted for stealing a rare horse\n from the stables in Blackwater.\nThe suspect is a middle aged hispanic male.\nBeware, he could be armed.";
+	data.requiredTargetCondition = Alive;
+	data.reward = 100;
+	data.rewardStr = "100$";
+	data.startPosition = toVector3(-999.894, -954.673, 61.9213);
+	data.isTargetMale = true;
+	data.targetName = "Alejandro Hernandez";
+
+	return new TurkishRunnerExecutor(data, areasMgr);
 }

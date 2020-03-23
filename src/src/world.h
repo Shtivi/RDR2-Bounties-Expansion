@@ -34,6 +34,7 @@ void getGroundPos(Vector3 originalPos, Vector3* outPos);
 float getGroundPos(Vector3 originalPos);
 float distanceBetweenEntities(Entity entity1, Entity entity2);
 Ped createPed(char* model, Vector3 pos);
+Ped createPedOnHorse(char* model, Ped horse, int seatIndex = 1);
 bool isPedHogtied(Ped ped);
 Vehicle createVehicle(char* model, Vector3 pos);
 Vehicle createVehicle(Hash model, Vector3 pos);

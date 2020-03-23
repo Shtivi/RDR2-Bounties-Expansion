@@ -11,41 +11,23 @@ MapArea::MapArea(const char* name, Vector3 policeDeptCoords, Vector3 bountyPoste
 void MapArea::linkMission(int missionId)
 {
 	areaMissionIds.push_back(missionId);
+	std::sort(areaMissionIds.begin(), areaMissionIds.end());
 }
 
 int MapArea::nextMission(int fromId)
 {
-	std::vector<int>::iterator it;
+	std::vector<int>::iterator it = areaMissionIds.begin();
 	
-	for (it = areaMissionIds.begin(); it != areaMissionIds.end(); ++it)
+	while (it != areaMissionIds.end() && *it != fromId)
 	{
-		if (*it != fromId)
-		{
-			continue;
-		}
-
-		if (it + 1 == areaMissionIds.end())
-		{
-			return -1;
-		}
-
-		return *it;
+		++it;
 	}
 
-	return -1;
-}
+	if (it == areaMissionIds.end() || it + 1 == areaMissionIds.end())
+	{
+		return -1;
+	}
 
-//int MapArea::nextMission(ModProgress* progress)
-//{
-//	std::vector<int>::iterator it;
-//
-//	for (it = areaMissionIds.begin(); it != areaMissionIds.end(); ++it)
-//	{
-//		if (progress->getMissionProgress(*it) == BountyMissionStatus::Unavailable)
-//		{
-//			return *it;
-//		}
-//	}
-//
-//	return -1;
-//}
+	++it;
+	return *it;
+}

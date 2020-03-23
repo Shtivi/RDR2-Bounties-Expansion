@@ -4,6 +4,7 @@ BountiesMenu::BountiesMenu()
 {
 	mode = BountiesMenuMode::Closed;
 	closePrompt = new Prompt("Close", GAMEPLAY::GET_HASH_KEY("INPUT_FRONTEND_CANCEL"), PromptMode::Standard);
+	closePrompt->hide();
 }
 
 void BountiesMenu::open()
@@ -53,7 +54,7 @@ void BountiesMenu::update()
 
 void BountiesMenu::printMission()
 {
-	drawTitle(displayedMission->missionName);
+	drawTitle(displayedMission->targetName);
 	drawHeader("Incomplete");
 
 	float y = 0.170f;

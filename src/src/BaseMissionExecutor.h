@@ -10,6 +10,7 @@ private:
 	BountyMissionStatus status;
 	MapAreasManager* areasMgr;
 
+	int targetAreaRadius;
 	Blip posterBlip;
 	Object poster;
 	Blip targetAreaBlip;
@@ -22,14 +23,13 @@ public:
 	BountyMissionData* getMissionData();
 	BountyMissionStage getMissionStage();
 	BountyMissionStatus getMissionStatus();
-
 	void setMissionStatus(BountyMissionStatus status);
-
 	virtual void update();
 
 protected:
 	MapArea* getArea();
 	Ped getTarget();
+	void setTargetAreaRadius(int radius);
 	virtual void prepareSet() = 0;
 	virtual Ped spawnTarget() = 0;
 	void nextStage();

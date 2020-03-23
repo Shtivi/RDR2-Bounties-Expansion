@@ -11,7 +11,6 @@ enum BountyMissionStage
 	HandOverTarget = 5,
 	CollectReward = 6,
 	Finished = 7
-
 };
 
 enum BountyMissionStatus {

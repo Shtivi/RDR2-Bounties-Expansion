@@ -1,9 +1,10 @@
 #include "Main.h";
 
+using namespace std;
+
 ModProgress::ModProgress(const char* dataFile)
 {
 	hasChanges = false;
-
 	this->dataFile = dataFile;
 	readFromDataFile();
 }
@@ -34,14 +35,24 @@ void ModProgress::save()
 		return;
 	}
 
+	log("saving mod progress");
+
 	file.open(dataFile);;
 	if (file.is_open())
 	{
-		for (it = cache.begin(); it != cache.end(); ++it)
+		it = cache.begin();
+
+		while (it != cache.end())
 		{
 			std::stringstream output;
 			output << it->first << " " << it->second;
 			file << output.str();
+
+			it++;
+			if (it != cache.end())
+			{
+				file << "\n";
+			}
 		}
 
 		hasChanges = false;
@@ -57,6 +68,7 @@ BountyMissionStatus ModProgress::getMissionProgress(int missionId)
 	{
 		cache[missionId] = BountyMissionStatus::Unavailable;
 		return BountyMissionStatus::Unavailable;
+		log("couldnt find");
 	}
 
 	return it->second;;
@@ -69,13 +81,17 @@ void ModProgress::setMissionProgress(int missionId, BountyMissionStatus status)
 	if (it == cache.end())
 	{
 		cache[missionId] = status;
+		hasChanges = true;
 	}
 	else
 	{
-		it->second = status;
+		if (it->second != status)
+		{
+			hasChanges = true;
+			it->second = status;
+		}
 	}
 
-	hasChanges = true;
 }
 
 void ModProgress::readFromDataFile()
@@ -96,6 +112,8 @@ void ModProgress::readFromDataFile()
 	}
 	else
 	{
+		log("unable open data file for reading, trying to create new...");
+
 		std::ofstream newFile;
 
 		newFile.open(dataFile, std::ios_base::out);
@@ -105,6 +123,7 @@ void ModProgress::readFromDataFile()
 		}
 		else
 		{
+			log("unable to create a new data file. fatal.");
 			throw "Unable to create a new data file";
 		}
 	}

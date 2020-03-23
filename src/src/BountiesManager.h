@@ -13,6 +13,7 @@ public:
 	void update();
 
 private:
+	void loadActiveMissions();
 	void startNextMission(BaseMissionExecutor* after);
 	//void addMission(BaseMissionExecutor* executor);
 };

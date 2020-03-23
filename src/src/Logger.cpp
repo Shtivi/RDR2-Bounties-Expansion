@@ -21,3 +21,8 @@ void log(Vector3 pos)
 	output << pos.x << ", " << pos.y << ", " << pos.z;
 	log(output.str().c_str());
 }
+
+void log(std::string msg)
+{
+	log(msg.c_str());
+}

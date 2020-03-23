@@ -30,10 +30,10 @@ void main()
 {
 	try {
 		modProgress = new ModProgress("BountiesExpansion.dat");
-		initializeUI();
 		areasMgr = new MapAreasManager();
 		missionsFactory = new BountyMissionsFactory(areasMgr);
 		bountiesMgr = new BountiesManager(modProgress, areasMgr, missionsFactory);
+		initializeUI();
 	}
 	catch (...)
 	{
@@ -83,9 +83,9 @@ void main()
 			//pedPos.x = playerPos.x + 2;
 			//pedPos.y = playerPos.y + 2;
 			//pedPos.z = playerPos.z;
-			//Ped ped = createPed("RE_TORTURINGCAPTIVE_MALES_01", pedPos);
+			//Ped ped = createPed("G_M_M_UniBanditos_01", pedPos);
+			//PED::SET_PED_RELATIONSHIP_GROUP_HASH(ped, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
-			//temp = ped;
 
 			//Vector3 pedPos2;
 			//pedPos2.x = playerPos.x + 6;

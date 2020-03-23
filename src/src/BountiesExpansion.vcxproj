@@ -13,6 +13,7 @@
     <ClCompile Include="blips.cpp" />
     <ClCompile Include="BountiesManager.cpp" />
     <ClCompile Include="BountiesMenu.cpp" />
+    <ClCompile Include="BountyMissionsFactory.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -25,6 +26,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
     <ClCompile Include="script.cpp" />
+    <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
@@ -41,6 +43,7 @@
     <ClInclude Include="BountiesMenu.h" />
     <ClInclude Include="BountyDefinitions.h" />
     <ClInclude Include="BountyMissionData.h" />
+    <ClInclude Include="BountyMissionsFactory.h" />
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />
     <ClInclude Include="keyboard.h" />
@@ -53,6 +56,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>

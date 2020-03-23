@@ -61,6 +61,12 @@
     <ClCompile Include="Autosave.cpp">
       <Filter>Src\Game\ModProgress</Filter>
     </ClCompile>
+    <ClCompile Include="BountyMissionsFactory.cpp">
+      <Filter>Src\Game\BountyMissions</Filter>
+    </ClCompile>
+    <ClCompile Include="TurkishRunnerExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\TurkishRunner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -141,6 +147,12 @@
     <ClInclude Include="BountyDefinitions.h">
       <Filter>Src\Game</Filter>
     </ClInclude>
+    <ClInclude Include="BountyMissionsFactory.h">
+      <Filter>Src\Game\BountyMissions</Filter>
+    </ClInclude>
+    <ClInclude Include="TurkishRunnerExecutor.h">
+      <Filter>Src\Game\BountyMissions\TurkishRunner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -172,6 +184,9 @@
     </Filter>
     <Filter Include="Src\Game\ModProgress">
       <UniqueIdentifier>{304e4802-3468-45cc-ba72-42c6b67b91ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\TurkishRunner">
+      <UniqueIdentifier>{7d21da97-5ed7-4912-9fcd-09fc08266b7a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
