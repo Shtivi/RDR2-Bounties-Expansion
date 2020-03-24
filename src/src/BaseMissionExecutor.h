@@ -1,6 +1,7 @@
 #pragma once
 
 const int AREA_RADIUS = 90;
+const int REQUIRED_DIST_TO_LOCATE = 25;
 
 class BaseMissionExecutor
 {
@@ -10,12 +11,17 @@ private:
 	BountyMissionStatus status;
 	MapAreasManager* areasMgr;
 
+	int requiredDistanceToLocate;
+	bool mustBeCloseToLocate;
 	int targetAreaRadius;
+
 	Blip posterBlip;
 	Object poster;
 	Blip targetAreaBlip;
-	Ped target;
 	Blip policeLocBlip;
+
+protected:
+	Ped target;
 
 public:
 	BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -30,6 +36,8 @@ protected:
 	MapArea* getArea();
 	Ped getTarget();
 	void setTargetAreaRadius(int radius);
+	void setRequiredDistanceToLocateTarget(int distance);
+	void setMustBeCloseToLocate(bool toggle);
 	virtual void prepareSet() = 0;
 	virtual Ped spawnTarget() = 0;
 	void nextStage();
@@ -43,7 +51,7 @@ protected:
 	virtual void onArrivalToPoliceStation();
 	virtual void onTargetHandedOver();
 	virtual void onRewardCollected();
-	virtual void onFinished();
+	virtual void onFinished(bool shouldCleanup = true);
 	virtual void cleanup();
 
 private:

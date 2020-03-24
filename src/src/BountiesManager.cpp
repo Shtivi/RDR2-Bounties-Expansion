@@ -34,6 +34,11 @@ void BountiesManager::update()
 			it = missionExecutors.erase(it);
 			finishedMissions.push_back(curr);
 		}
+		else if (currStatus == BountyMissionStatus::Failed)
+		{
+			it = missionExecutors.erase(it);
+			finishedMissions.push_back(curr);
+		}
 		else
 		{
 			if (currStatus >= BountyMissionStatus::CollectedPoster && currStatus <= BountyMissionStatus::Completed)

@@ -3,7 +3,6 @@
 class EliasTraditionExecutor : public BaseMissionExecutor
 {
 private:
-	Ped target;
 	std::vector<Ped> enemies;
 	Ped horse;
 

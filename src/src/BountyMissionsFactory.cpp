@@ -79,11 +79,11 @@ TurkishRunnerExecutor* BountyMissionsFactory::turkishRunnerExecutor()
 	data.area = Blackwater;
 	data.missionName = "The Turkish Runner";
 	data.crime = "Horse theft";
-	data.description = "He wanted for stealing a rare horse\n from the stables in Blackwater.\nThe suspect is a middle aged hispanic male.\nBeware, he could be armed.";
+	data.description = "He wanted for stealing a rare horse\nfrom the stables in Blackwater.\nThe suspect is a mexican, middle aged male.\nLast seen near Macfarlande's ranch.\nBe aware, he could be armed.";
 	data.requiredTargetCondition = Alive;
 	data.reward = 100;
 	data.rewardStr = "100$";
-	data.startPosition = toVector3(-999.894, -954.673, 61.9213);
+	data.startPosition = toVector3(-2758.81, -2690.14, 87.4308);
 	data.isTargetMale = true;
 	data.targetName = "Alejandro Hernandez";
 

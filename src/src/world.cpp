@@ -102,7 +102,7 @@ bool isPedHogtied(Ped ped)
 
 void releaseEntitySafe(Entity* entity)
 {
-	if (ENTITY::DOES_ENTITY_EXIST(*entity))
+	if ((*entity) && ENTITY::DOES_ENTITY_EXIST(*entity))
 	{
 		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(entity);
 	}

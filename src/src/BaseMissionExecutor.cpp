@@ -6,7 +6,10 @@ BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreas
 	this->missionData = new BountyMissionData(missionData);
 	this->stage = MissionInitialization;
 	this->status = Unavailable;
+
 	setTargetAreaRadius(AREA_RADIUS);
+	setRequiredDistanceToLocateTarget(REQUIRED_DIST_TO_LOCATE);
+	setMustBeCloseToLocate(false);
 
 	poster = NULL;
 	posterBlip = NULL;
@@ -47,7 +50,7 @@ void BaseMissionExecutor::setMissionStatus(BountyMissionStatus status)
 
 	case BountyMissionStatus::Completed:
 		stage = BountyMissionStage::Finished;
-		onFinished();
+		onFinished(false);
 		break;
 	}
 }
@@ -63,7 +66,15 @@ void BaseMissionExecutor::update()
 
 		if (stage == CaptureTarget)
 		{
-			ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
+			if (missionData->requiredTargetCondition == Alive)
+			{
+				//ENTITY::SET_ENTITY_COORDS(target, getArea()->cellCoords->x, getArea()->cellCoords->y, getArea()->cellCoords->z, 0, 0, 0, 0);
+				ENTITY::SET_ENTITY_COORDS(target, playerPos.x, playerPos.y, playerPos.z, 0, 0, 0, 0);
+			}
+			else
+			{
+				ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
+			}
 		}
 	}
 
@@ -91,15 +102,21 @@ void BaseMissionExecutor::update()
 	}
 	else if (stage == BountyMissionStage::GoToArea)
 	{
-		if (distanceBetween(playerPos, missionData->startPosition) <= AREA_RADIUS)
+		if (distanceBetween(playerPos, missionData->startPosition) <= targetAreaRadius)
 		{
 			nextStage();
 		}
 	}
 	else if (stage == BountyMissionStage::LocateTarget)
 	{
-		if (distanceBetweenEntities(player, target) <= 25 || 
-			ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(player, target, 0))
+		if (mustBeCloseToLocate)
+		{
+			if (distanceBetweenEntities(player, target) <= requiredDistanceToLocate)
+			{
+				nextStage();
+			}
+		}
+		else if	(ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(player, target, 0))
 		{
 			nextStage();
 		}
@@ -134,10 +151,9 @@ void BaseMissionExecutor::update()
 		nextStage();
 	}
 
-	if (stage >= BountyMissionStage::LocateTarget)
+	if (stage >= BountyMissionStage::LocateTarget && stage <= BountyMissionStage::CollectReward)
 	{
-		if (missionData->requiredTargetCondition == TargetCondition::Alive && 
-			ENTITY::IS_ENTITY_DEAD(target))
+		if (missionData->requiredTargetCondition == TargetCondition::Alive && ENTITY::IS_ENTITY_DEAD(target))
 		{
 			fail("Bounty failed. The target was wanted alive!");
 		}
@@ -169,6 +185,16 @@ Ped BaseMissionExecutor::getTarget()
 void BaseMissionExecutor::setTargetAreaRadius(int radius)
 {
 	this->targetAreaRadius = radius;
+}
+
+void BaseMissionExecutor::setRequiredDistanceToLocateTarget(int distance)
+{
+	requiredDistanceToLocate = distance;
+}
+
+void BaseMissionExecutor::setMustBeCloseToLocate(bool toggle)
+{
+	mustBeCloseToLocate = toggle;
 }
 
 void BaseMissionExecutor::nextStage()
@@ -225,6 +251,8 @@ void BaseMissionExecutor::fail(const char* reason)
 	{
 		showSubtitle(reason);
 	}
+
+	cleanup();
 }
 
 void BaseMissionExecutor::initialize()
@@ -329,18 +357,25 @@ void BaseMissionExecutor::onRewardCollected()
 	showSubtitle("Bounty completed!");
 }
 
-void BaseMissionExecutor::onFinished()
+void BaseMissionExecutor::onFinished(bool shouldCleanup)
 {
 	status = BountyMissionStatus::Completed;
-	cleanup();
+
+	if (shouldCleanup)
+	{
+		cleanup();
+	}
 }
 
 void BaseMissionExecutor::cleanup()
 {
-	if (ENTITY::DOES_ENTITY_EXIST(target))
+	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
+	if (RADAR::DOES_BLIP_EXIST(targetBlip))
 	{
-		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&target);
+		RADAR::REMOVE_BLIP(&targetBlip);
 	}
+
+	releaseEntitySafe(&target);
 }
 
 void BaseMissionExecutor::decorateTarget()

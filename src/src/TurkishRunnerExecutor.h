@@ -3,9 +3,13 @@
 class TurkishRunnerExecutor : public BaseMissionExecutor
 {
 private:
-	Ped target;
+	Vector3 campfirePos;
+	Object campfire;
 	Ped horse;
-	bool isFleeing;
+	std::vector<Ped> enemies;
+	std::vector<Ped> horses;
+
+	bool enemiesAlerted;
 
 public:
 	TurkishRunnerExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -14,5 +18,13 @@ public:
 protected:
 	void prepareSet();
 	Ped spawnTarget();
+	void onTargetLocated();
 	void cleanup();
+
+private:
+	void releaseUnnecessaryEntities();
+	void addEnemy(Vector3 pos);
+	void addEnemy(Ped ped);
+	void addHorse(const char* model, Vector3 pos);
+	void addHorse(Ped horse);
 };
