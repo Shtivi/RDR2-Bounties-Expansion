@@ -67,6 +67,9 @@
     <ClCompile Include="TurkishRunnerExecutor.cpp">
       <Filter>Src\Game\BountyMissions\TurkishRunner</Filter>
     </ClCompile>
+    <ClCompile Include="DateUtils.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="TurkishRunnerExecutor.h">
       <Filter>Src\Game\BountyMissions\TurkishRunner</Filter>
+    </ClInclude>
+    <ClInclude Include="DateUtils.h">
+      <Filter>Src\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ void TurkishRunnerExecutor::update()
 	releaseUnnecessaryEntities();
 
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (getMissionStage() == BountyMissionStage::CaptureTarget && distanceBetweenEntities(target, player) < 40 && !enemiesAlerted)
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && distanceBetweenEntities(target, player) < 30 && !enemiesAlerted)
 	{
 		vector<Ped>::iterator pedItr;
 		for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -75,6 +75,7 @@ Ped TurkishRunnerExecutor::spawnTarget()
 void TurkishRunnerExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+
 	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-2824.89, -2611.77, 92.867));
 	addHorse(horse);
 	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2821.52, -2610.63, 92.8223));
@@ -83,6 +84,8 @@ void TurkishRunnerExecutor::prepareSet()
 	addEnemy(target);
 	addEnemy(toVector3(-2813.18, -2610.57, 92.5611));
 	addEnemy(toVector3(-2817.03, -2610.64, 92.7105));
+	addEnemy(toVector3(-2812.38, -2614.95, 92.5829));
+	addEnemy(toVector3(-2812.46, -2612.73, 92.5725));
 }
 
 void TurkishRunnerExecutor::onTargetLocated()

@@ -1,5 +1,7 @@
 #include "Main.h";
 
+using namespace std;
+
 BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMgr, BountyMissionsFactory* missionsFactory)
 {
 	this->progress = progress;
@@ -37,7 +39,21 @@ void BountiesManager::update()
 		else if (currStatus == BountyMissionStatus::Failed)
 		{
 			it = missionExecutors.erase(it);
-			finishedMissions.push_back(curr);
+			failedMissions[currId] = getGameTime();
+
+			std::string msg = "mission failed: ";
+			msg = msg.append(curr->getMissionData()->targetName);
+			log(msg);
+
+			tm gameTime = getGameTime();
+			stringstream s;
+			s << to_string(gameTime.tm_year) << "/"
+				<< to_string(gameTime.tm_mon) << "/"
+				<< std::to_string(gameTime.tm_mday) << " "
+				<< std::to_string(gameTime.tm_hour) << ":"
+				<< std::to_string(gameTime.tm_hour) << ":"
+				<< std::to_string(gameTime.tm_sec);
+			log(s.str());
 		}
 		else
 		{
@@ -56,6 +72,8 @@ void BountiesManager::update()
 	{
 		startNextMission(*it);
 	}
+
+	updateFailedMissions();
 }
 
 void BountiesManager::loadActiveMissions()
@@ -136,18 +154,32 @@ void BountiesManager::startNextMission(BaseMissionExecutor* after)
 	}
 }
 
-//
-//void BountiesManager::addMission(BaseMissionExecutor* executor)
-//{
-//	areasMgr->getMapArea(executor->getMissionData()->area)->linkMission(executor->getMissionData()->id);
-//	
-//	BountyMissionStatus status = progress->getMissionProgress(executor->getMissionData()->id);
-//	executor->setMissionStatus(status);
-//
-//	if (status == BountyMissionStatus::Completed || status == BountyMissionStatus::Unavailable)
-//	{
-//		return;
-//	}
-//
-//	missionExecutors.push_back(executor);
-//}
+void BountiesManager::updateFailedMissions()
+{
+	tm gameTime = getGameTime();
+	tm* missionFailureTime;
+	int missionId;
+	BaseMissionExecutor* missionExecutor;
+
+	map<int, tm>::iterator it = failedMissions.begin();
+	while (it != failedMissions.end())
+	{
+		missionId = (*it).first;
+		missionFailureTime = &(*it).second;
+
+		int diffInSecs = difftime(mktime(&gameTime), mktime(missionFailureTime));
+		log(to_string(mktime(&gameTime)));
+		log(to_string(mktime(missionFailureTime)));;
+		if (diffInSecs >= RESTART_FAILED_MISSION_WAITING_SECS)
+		{
+			missionExecutor = missionsFactory->fromMissionId(missionId);
+			missionExecutor->setMissionStatus(BountyMissionStatus::CollectedPoster);
+			missionExecutors.push_back(missionExecutor);
+			it = failedMissions.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+}

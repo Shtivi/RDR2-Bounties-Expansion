@@ -370,11 +370,9 @@ void BaseMissionExecutor::onFinished(bool shouldCleanup)
 void BaseMissionExecutor::cleanup()
 {
 	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
-	if (RADAR::DOES_BLIP_EXIST(targetBlip))
-	{
-		RADAR::REMOVE_BLIP(&targetBlip);
-	}
-
+	deleteBlipSafe(&targetBlip);
+	deleteBlipSafe(&targetAreaBlip);
+	deleteBlipSafe(&policeLocBlip);
 	releaseEntitySafe(&target);
 }
 

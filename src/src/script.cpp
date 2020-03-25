@@ -63,52 +63,63 @@ void main()
 
 		if (IsKeyJustUp(VK_KEY_Z))
 		{
-			Ped player = PLAYER::PLAYER_PED_ID();
-			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+			TIME::SET_CLOCK_TIME((TIME::GET_CLOCK_HOURS() + 3) % 24, TIME::GET_CLOCK_MINUTES(), 0);
+			tm gameTime = getGameTime();
+			stringstream s;
+			s << to_string(gameTime.tm_year) << "/"
+				<< to_string(gameTime.tm_mon) << "/"
+				<< std::to_string(gameTime.tm_mday) << " "
+				<< std::to_string(gameTime.tm_hour) << ":"
+				<< std::to_string(gameTime.tm_hour) << ":"
+				<< std::to_string(gameTime.tm_sec);
+			log(s.str());
 
-			Vector3 vehPos;
-			vehPos.x = playerPos.x + 4;
-			vehPos.y = playerPos.y + 4;
-			vehPos.z = playerPos.z;
-			getGroundPos(vehPos, &vehPos);
-			//createProp("P_CAMPFIRE05X", vehPos);
-			Ped horse = createPed("A_C_Horse_Turkoman_DarkBay", vehPos);
-			PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
+			//Ped player = PLAYER::PLAYER_PED_ID();
+			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 
-			Ped target = createPed("G_M_M_UniBanditos_01", toVector3(playerPos.x + 6, playerPos.y + 6, playerPos.z));
-			//Ped target = createPedOnHorse("G_M_M_UniBanditos_01", horse);
-			//PED::REGISTER_TARGET(target, player, 1);
-			//WEAPON::GIVE_DELAYED_WEAPON_TO_PED(target, 0xA84762EC, 120, false, 0);
+			//Vector3 vehPos;
+			//vehPos.x = playerPos.x + 4;
+			//vehPos.y = playerPos.y + 4;
+			//vehPos.z = playerPos.z;
+			//getGroundPos(vehPos, &vehPos);
+			////createProp("P_CAMPFIRE05X", vehPos);
+			//Ped horse = createPed("A_C_Horse_Turkoman_DarkBay", vehPos);
+			//PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 
-
-			Object seq;
-			PED::_0xFE07FF6495D52E2A(target, 3, 0, 0);
-			AI::OPEN_SEQUENCE_TASK(&seq);
-			AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_SIT_GROUND"), 5000, true, true, 3, true);
-			AI::_0x92DB0739813C5186(0, horse, -1, -1, 2.0f, 1, 0, 0);
-			//AI::TASK_AIM_GUN_AT_ENTITY(0, player, 3000, 1, 1);
-			//AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(0, 15, 0, 0);
-			//AI::TASK_COMBAT_PED(0, player, 0, 16);
-			//AI::_0xFD45175A6DFD7CE9(0, player, 2, 0, -1.0f, -1, 0);
-			AI::_0xFD45175A6DFD7CE9(0, player, 4, 0, -999.0f, -1, 0); // FLEE
-			AI::CLOSE_SEQUENCE_TASK(seq);
-
-			Object horseSeq;
-			AI::OPEN_SEQUENCE_TASK(&horseSeq);
-			AI::TASK_STAND_STILL(0, 4000);
-			AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -6.0f, -1, 0); // FLEE
-			AI::CLOSE_SEQUENCE_TASK(horseSeq);
-
-			WAIT(1000);
+			//Ped target = createPed("G_M_M_UniBanditos_01", toVector3(playerPos.x + 6, playerPos.y + 6, playerPos.z));
+			////Ped target = createPedOnHorse("G_M_M_UniBanditos_01", horse);
+			////PED::REGISTER_TARGET(target, player, 1);
+			////WEAPON::GIVE_DELAYED_WEAPON_TO_PED(target, 0xA84762EC, 120, false, 0);
 
 
-			WEAPON::SET_CURRENT_PED_WEAPON(target, WEAPON::GET_BEST_PED_WEAPON(target, 0, 0), true, 0, false, false);
-			AI::CLEAR_PED_TASKS(target, 0, 0);
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, 1);
-			AI::TASK_PERFORM_SEQUENCE(target, seq);
+			//Object seq;
+			//PED::_0xFE07FF6495D52E2A(target, 3, 0, 0);
+			//AI::OPEN_SEQUENCE_TASK(&seq);
+			//AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_SIT_GROUND"), 5000, true, true, 3, true);
+			//AI::_0x92DB0739813C5186(0, horse, -1, -1, 2.0f, 1, 0, 0);
+			////AI::TASK_AIM_GUN_AT_ENTITY(0, player, 3000, 1, 1);
+			////AI::TASK_COMBAT_HATED_TARGETS_AROUND_PED(0, 15, 0, 0);
+			////AI::TASK_COMBAT_PED(0, player, 0, 16);
+			////AI::_0xFD45175A6DFD7CE9(0, player, 2, 0, -1.0f, -1, 0);
+			//AI::_0xFD45175A6DFD7CE9(0, player, 4, 0, -999.0f, -1, 0); // FLEE
+			//AI::CLOSE_SEQUENCE_TASK(seq);
 
-			AI::CLEAR_PED_TASKS(horse, 1, 1);
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+			//Object horseSeq;
+			//AI::OPEN_SEQUENCE_TASK(&horseSeq);
+			//AI::TASK_STAND_STILL(0, 4000);
+			//AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -6.0f, -1, 0); // FLEE
+			//AI::CLOSE_SEQUENCE_TASK(horseSeq);
+
+			//WAIT(1000);
+
+
+			//WEAPON::SET_CURRENT_PED_WEAPON(target, WEAPON::GET_BEST_PED_WEAPON(target, 0, 0), true, 0, false, false);
+			//AI::CLEAR_PED_TASKS(target, 0, 0);
+			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, 1);
+			//AI::TASK_PERFORM_SEQUENCE(target, seq);
+
+			//AI::CLEAR_PED_TASKS(horse, 1, 1);
+			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 			//AI::TASK_PERFORM_SEQUENCE(horse, horseSeq);
 
 			//AI::TASK_SMART_FLEE_PED(target, player, 2000, -1, 0, 0, 0);

@@ -42,3 +42,11 @@ void setBlipLabel(Blip blip, const char* label)
 {
 	RADAR::_0x9CB1A1623062F402(blip, (Any*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", label)); // _SET_BLIP_NAME_FROM_PLAYER_STRING
 }
+
+void deleteBlipSafe(Blip* blip)
+{
+	if (RADAR::DOES_BLIP_EXIST(*blip))
+	{
+		RADAR::REMOVE_BLIP(blip);
+	}
+}

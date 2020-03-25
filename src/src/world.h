@@ -1,5 +1,7 @@
 #pragma once
 
+using namespace std;
+
 const Hash BLIP_STYLE_ENEMY = 0x318C617C;
 const Hash BLIP_TYPE_BOUNTY_TARGET = 0x38CDE89D;
 const Hash BLIP_SPRITE_BOUNTY_TARGET = 0x5846C31D;
@@ -41,3 +43,4 @@ Vehicle createVehicle(Hash model, Vector3 pos);
 Object createProp(char* model, Vector3 position, bool isStatic = false, bool isVisible = true);
 RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastIntersectionOptions intersectionOptions = Everything);
 void releaseEntitySafe(Entity* entity);
+tm getGameTime();

@@ -107,3 +107,17 @@ void releaseEntitySafe(Entity* entity)
 		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(entity);
 	}
 }
+
+tm getGameTime()
+{
+	tm gameTime;
+	gameTime.tm_year = 70; // make problems only with years aroud 1970, not 1900.
+	gameTime.tm_mon = TIME::GET_CLOCK_MONTH();
+	gameTime.tm_mday = TIME::GET_CLOCK_DAY_OF_MONTH();
+	gameTime.tm_wday = TIME::GET_CLOCK_DAY_OF_WEEK();
+	gameTime.tm_hour = TIME::GET_CLOCK_HOURS();
+	gameTime.tm_min = TIME::GET_CLOCK_MINUTES();
+	gameTime.tm_sec = TIME::GET_CLOCK_SECONDS();
+
+	return gameTime;
+}
