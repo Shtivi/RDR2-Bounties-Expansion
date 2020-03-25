@@ -60,6 +60,7 @@ void BaseMissionExecutor::update()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 
+	// TODO: delete this code
 	if (IsKeyJustUp(VK_KEY_N))
 	{
 		nextStage();

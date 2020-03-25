@@ -17,6 +17,18 @@ MapArea* MapAreasManager::getMapArea(MapAreas area)
 	return cache.find(area)->second;
 }
 
+vector<MapArea*> MapAreasManager::getMapAreas()
+{
+	vector<MapArea*> results;
+	map<MapAreas, MapArea*>::iterator it;
+	for (it = cache.begin(); it != cache.end(); it++)
+	{
+		results.push_back((*it).second);
+	}
+
+	return results;
+}
+
 MapArea* MapAreasManager::createBlackwater()
 {
 	Vector3 policeDeptCoords;

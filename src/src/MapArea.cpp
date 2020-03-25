@@ -31,3 +31,8 @@ int MapArea::nextMission(int fromId)
 	++it;
 	return *it;
 }
+
+vector<int>* MapArea::getMissionIds()
+{
+	return &(this->areaMissionIds);
+}

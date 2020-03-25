@@ -44,16 +44,6 @@ void BountiesManager::update()
 			std::string msg = "mission failed: ";
 			msg = msg.append(curr->getMissionData()->targetName);
 			log(msg);
-
-			//tm gameTime = getGameTime();
-			//stringstream s;
-			//s << to_string(gameTime.tm_year) << "/"
-			//	<< to_string(gameTime.tm_mon) << "/"
-			//	<< std::to_string(gameTime.tm_mday) << " "
-			//	<< std::to_string(gameTime.tm_hour) << ":"
-			//	<< std::to_string(gameTime.tm_hour) << ":"
-			//	<< std::to_string(gameTime.tm_sec);
-			//log(s.str());
 		}
 		else
 		{
@@ -78,7 +68,38 @@ void BountiesManager::update()
 
 void BountiesManager::loadActiveMissions()
 {
-	std::vector<int> missionsData = missionsFactory->getAllMissionIds();
+	vector<MapArea*> areas = areasMgr->getMapAreas();
+	vector<MapArea*>::iterator areasItr;
+	MapArea* currArea;
+	for (areasItr = areas.begin(); areasItr != areas.end(); areasItr++, currArea = *areasItr)
+	{
+		vector<int>* missionIds = currArea->getMissionIds();
+		vector<int>::iterator missionItr = missionIds->begin();
+		int currMissionId;
+		BaseMissionExecutor* executor;
+
+		bool doneAreaHandling = false;;
+		while (missionItr != missionIds->end() && !doneAreaHandling)
+		{
+			currMissionId = *missionItr;
+			if (missionsFactory->doesMissionExist(currMissionId))
+			{
+				BountyMissionStatus missionProgress = progress->getMissionProgress(currMissionId);
+				if (missionProgress > BountyMissionStatus::Unavailable && missionProgress <= BountyMissionStatus::Completed)
+				{
+					executor = missionsFactory->fromMissionId(currMissionId);
+					executor->setMissionStatus(missionProgress);
+					missionExecutors.push_back(executor);
+					doneAreaHandling = true;
+				}
+			}
+
+			missionItr++;
+		}
+	}
+
+
+	/*std::vector<int> missionsData = missionsFactory->getAllMissionIds();
 	std::vector<int>::iterator it;
 	BaseMissionExecutor* executor;
 
@@ -118,7 +139,7 @@ void BountiesManager::loadActiveMissions()
 
 			missionExecutors.push_back(executor);
 		}
-	}
+	}*/
 }
 
 void BountiesManager::startNextMission(BaseMissionExecutor* after)

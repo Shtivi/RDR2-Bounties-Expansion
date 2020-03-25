@@ -15,4 +15,5 @@ public:
 
 	void linkMission(int missionId);
 	int nextMission(int fromId);
+	vector<int>* getMissionIds();
 }; 
