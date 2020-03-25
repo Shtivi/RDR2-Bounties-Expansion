@@ -14,7 +14,6 @@
     <ClCompile Include="BountiesManager.cpp" />
     <ClCompile Include="BountiesMenu.cpp" />
     <ClCompile Include="BountyMissionsFactory.cpp" />
-    <ClCompile Include="DateUtils.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -45,7 +44,6 @@
     <ClInclude Include="BountyDefinitions.h" />
     <ClInclude Include="BountyMissionData.h" />
     <ClInclude Include="BountyMissionsFactory.h" />
-    <ClInclude Include="DateUtils.h" />
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />
     <ClInclude Include="keyboard.h" />

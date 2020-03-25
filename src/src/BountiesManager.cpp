@@ -45,15 +45,15 @@ void BountiesManager::update()
 			msg = msg.append(curr->getMissionData()->targetName);
 			log(msg);
 
-			tm gameTime = getGameTime();
-			stringstream s;
-			s << to_string(gameTime.tm_year) << "/"
-				<< to_string(gameTime.tm_mon) << "/"
-				<< std::to_string(gameTime.tm_mday) << " "
-				<< std::to_string(gameTime.tm_hour) << ":"
-				<< std::to_string(gameTime.tm_hour) << ":"
-				<< std::to_string(gameTime.tm_sec);
-			log(s.str());
+			//tm gameTime = getGameTime();
+			//stringstream s;
+			//s << to_string(gameTime.tm_year) << "/"
+			//	<< to_string(gameTime.tm_mon) << "/"
+			//	<< std::to_string(gameTime.tm_mday) << " "
+			//	<< std::to_string(gameTime.tm_hour) << ":"
+			//	<< std::to_string(gameTime.tm_hour) << ":"
+			//	<< std::to_string(gameTime.tm_sec);
+			//log(s.str());
 		}
 		else
 		{
