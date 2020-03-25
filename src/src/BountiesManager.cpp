@@ -71,6 +71,9 @@ void BountiesManager::loadActiveMissions()
 	vector<MapArea*> areas = areasMgr->getMapAreas();
 	vector<MapArea*>::iterator areasItr;
 	MapArea* currArea;
+
+	log("loading missions:");
+
 	for (areasItr = areas.begin(); areasItr != areas.end(); areasItr++, currArea = *areasItr)
 	{
 		vector<int>* missionIds = currArea->getMissionIds();
@@ -91,55 +94,14 @@ void BountiesManager::loadActiveMissions()
 					executor->setMissionStatus(missionProgress);
 					missionExecutors.push_back(executor);
 					doneAreaHandling = true;
+
+					log(executor->getMissionData()->targetName);
 				}
 			}
 
 			missionItr++;
 		}
 	}
-
-
-	/*std::vector<int> missionsData = missionsFactory->getAllMissionIds();
-	std::vector<int>::iterator it;
-	BaseMissionExecutor* executor;
-
-	for (it = missionsData.begin(); it != missionsData.end(); it++)
-	{
-		executor = missionsFactory->fromMissionId(*it);
-
-		if (!executor)
-		{
-			log("Executor not found in factory for mission:");
-			log(std::to_string(*it).c_str());
-			continue;
-		}
-
-		bool shouldAdd = true;
-		std::vector<BaseMissionExecutor*>::iterator execItr = missionExecutors.begin();
-		while (execItr != missionExecutors.end() && shouldAdd)
-		{
-			if ((*execItr)->getMissionData()->area == executor->getMissionData()->area)
-			{
-				shouldAdd = false;
-			}
-			execItr++;
-		}
-
-		if (!shouldAdd)
-		{
-			continue;
-		}
-
-		executor->setMissionStatus(progress->getMissionProgress(*it));
-		if (executor->getMissionStatus() >= BountyMissionStatus::Pending)
-		{
-			std::string msg = "loaded mission: ";
-			msg = msg.append(executor->getMissionData()->targetName);
-			log(msg);
-
-			missionExecutors.push_back(executor);
-		}
-	}*/
 }
 
 void BountiesManager::startNextMission(BaseMissionExecutor* after)
