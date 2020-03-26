@@ -20,62 +20,37 @@ struct s2
 	char* s;
 };
 
-bool fatal = false;
 ModProgress* modProgress;
 MapAreasManager* areasMgr;
 BountyMissionsFactory* missionsFactory;
 BountiesManager* bountiesMgr;
 
+void initialize()
+{
+	modProgress = new ModProgress("BountiesExpansion.dat");
+	areasMgr = new MapAreasManager();
+	missionsFactory = new BountyMissionsFactory(areasMgr);
+	log("initializing bounties manager");
+	bountiesMgr = new BountiesManager(modProgress, areasMgr, missionsFactory);
+	initializeUI();
+	log("initialization completed");
+}
+
 void main()
 {
-	try {
-		modProgress = new ModProgress("BountiesExpansion.dat");
-		areasMgr = new MapAreasManager();
-		missionsFactory = new BountyMissionsFactory(areasMgr);
-		
-		log("initializing bounties manager");
-		bountiesMgr = new BountiesManager(modProgress, areasMgr, missionsFactory);
-
-		initializeUI();
-		
-		log("initialization completed");
-	}
-	catch (...)
-	{
-		log("failed to initialize, please make sure the data file is valid.");
-		showSubtitle("[FATAL] BountiesExpansion: Failed to initialize.");
-		fatal = true;
-	}
+	initialize();
 
 	while (true)
 	{
-
-		if (fatal)
-		{
-			WAIT(0);
-			return;
-		}
-
 		bountiesMgr->update();
 		menu->update();
 
-		autosaveModProgress(modProgress);
+		//autosaveModProgress(modProgress);
 
 		if (IsKeyJustUp(VK_KEY_Z))
 		{
-			TIME::SET_CLOCK_TIME((TIME::GET_CLOCK_HOURS() + 3) % 24, TIME::GET_CLOCK_MINUTES(), 0);
-			tm gameTime = getGameTime();
-			stringstream s;
-			s << to_string(gameTime.tm_year) << "/"
-				<< to_string(gameTime.tm_mon) << "/"
-				<< std::to_string(gameTime.tm_mday) << " "
-				<< std::to_string(gameTime.tm_hour) << ":"
-				<< std::to_string(gameTime.tm_hour) << ":"
-				<< std::to_string(gameTime.tm_sec);
-			log(s.str());
-
-			//Ped player = PLAYER::PLAYER_PED_ID();
-			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+			Ped player = PLAYER::PLAYER_PED_ID();
+			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 
 			//Vector3 vehPos;
 			//vehPos.x = playerPos.x + 4;
@@ -185,9 +160,7 @@ void main()
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(pedPos.x, pedPos.y, pedPos.z, &pedPos.z, false);
 			//OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY("p_cs_cratetnt01x"), pedPos.x, pedPos.y, pedPos.z, true, true, true, 1, 1);
 
-			//Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
 			//Vector3 startPos = add(&playerPos, &toVector3(0, 0, -0.8f));
-			//RaycastResult ray = raycast(startPos, forwardVec, 10);
 			//if (ray.didHit)
 			//{
 			//	log(ray.hitPos);
@@ -206,7 +179,13 @@ void main()
 			//	log("didnt hit");
 			//}
 
-			//AI::_0x524B54361229154F(player, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_WRITE_NOTEBOOK"), 10000, true, true, 0, true);
+			Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
+			RaycastResult ray = raycast(playerPos, forwardVec, 10);
+			if (ray.didHit)
+			{
+				log(ray.hitPos);
+			}
+			
 
 		}
 		else if (IsKeyJustUp(VK_KEY_X))

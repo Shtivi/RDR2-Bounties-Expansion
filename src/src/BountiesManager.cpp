@@ -89,7 +89,7 @@ void BountiesManager::loadActiveMissions()
 			if (missionsFactory->doesMissionExist(currMissionId))
 			{
 				BountyMissionStatus missionProgress = progress->getMissionProgress(currMissionId);
-				if (missionProgress > BountyMissionStatus::Unavailable && missionProgress <= BountyMissionStatus::Completed)
+				if (missionProgress > BountyMissionStatus::Unavailable && missionProgress < BountyMissionStatus::Completed)
 				{
 					executor = missionsFactory->fromMissionId(currMissionId);
 					executor->setMissionStatus(missionProgress);
@@ -107,6 +107,8 @@ void BountiesManager::loadActiveMissions()
 
 void BountiesManager::startNextMission(BaseMissionExecutor* after)
 {
+	log((new string("starting next mission after: "))->append(after->getMissionData()->targetName));
+
 	MapArea* area = areasMgr->getMapArea(after->getMissionData()->area);
 	int nextMissionId = area->nextMission(after->getMissionData()->id);
 
@@ -152,8 +154,6 @@ void BountiesManager::updateFailedMissions()
 		missionFailureTime = &(*it).second;
 
 		int diffInSecs = difftime(mktime(&gameTime), mktime(missionFailureTime));
-		log(to_string(mktime(&gameTime)));
-		log(to_string(mktime(missionFailureTime)));;
 		if (diffInSecs >= RESTART_FAILED_MISSION_WAITING_SECS)
 		{
 			missionExecutor = missionsFactory->fromMissionId(missionId);

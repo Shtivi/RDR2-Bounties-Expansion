@@ -22,7 +22,7 @@ int MapArea::nextMission(int fromId)
 		++it;
 	}
 
-	if (it == areaMissionIds.end() || it++ == areaMissionIds.end())
+	if (it == areaMissionIds.end() || ++it == areaMissionIds.end())
 	{
 		return -1;
 	}

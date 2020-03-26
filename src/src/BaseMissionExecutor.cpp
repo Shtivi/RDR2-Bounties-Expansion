@@ -323,6 +323,12 @@ void BaseMissionExecutor::onTargetLocated()
 {
 	decorateTarget();
 	RADAR::REMOVE_BLIP(&targetAreaBlip);
+
+	const char* gender = missionData->isTargetMale ? "He" : "She";
+	const char* condition = missionData->requiredTargetCondition == TargetCondition::Alive ? "Alive" : "Dead or Alive";
+	std::stringstream text;
+	text << "Capture ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~. " << gender << " is wanted " << condition << ".";
+	showSubtitle(text.str().c_str());
 }
 
 void BaseMissionExecutor::onTargetCaptured()
@@ -347,9 +353,8 @@ void BaseMissionExecutor::onArrivalToPoliceStation()
 void BaseMissionExecutor::onTargetHandedOver()
 {
 	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
-	RADAR::REMOVE_BLIP(&targetBlip);
-
-	RADAR::REMOVE_BLIP(&policeLocBlip);
+	deleteBlipSafe(&targetBlip);
+	deleteBlipSafe(&policeLocBlip);
 }
 
 void BaseMissionExecutor::onRewardCollected()

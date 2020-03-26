@@ -3,8 +3,12 @@
 class EliasTraditionExecutor : public BaseMissionExecutor
 {
 private:
-	std::vector<Ped> enemies;
+	vector<Ped> enemies;
 	Ped horse;
+	Ped killer;
+	Ped victim;
+	bool executedVictim;
+	bool enemiesAlerted;
 
 public:
 	EliasTraditionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -17,9 +21,10 @@ protected:
 private:
 	void onTargetLocated();
 	void createEnemyBlips();
-	void addGuard(Vector3 position);
+	Ped addGuard(Vector3 position);
 	void addGuard(Ped guard);
 	void updateEnemies();
+	void playVictimExecution();
 	void releaseUnnecessaryEntities();
 	void cleanup();
 };

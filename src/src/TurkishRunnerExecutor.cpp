@@ -136,7 +136,7 @@ void TurkishRunnerExecutor::addEnemy(Ped ped)
 	Object seq;
 	AI::OPEN_SEQUENCE_TASK(&seq);
 	AI::TASK_TURN_PED_TO_FACE_COORD(0, campfirePos.x, campfirePos.y, campfirePos.z, 1000);
-	AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true);
+	AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true); // PLAY SCENARIO
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(ped, seq);
 }
