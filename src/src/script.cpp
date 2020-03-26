@@ -42,7 +42,7 @@ void main()
 	}
 	catch (...)
 	{
-		log("failed to load from data file");
+		log("failed to initialize, please make sure the data file is valid.");
 		showSubtitle("[FATAL] BountiesExpansion: Failed to initialize.");
 		fatal = true;
 	}

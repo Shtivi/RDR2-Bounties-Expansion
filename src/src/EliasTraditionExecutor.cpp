@@ -66,7 +66,7 @@ void EliasTraditionExecutor::updateEnemies()
 	for (it = enemies.begin(); it != enemies.end(); ++it)
 	{
 		if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(*it, player, 1) &&
-			distanceBetweenEntities(*it, player) < 28)
+			distanceBetweenEntities(*it, player) < 22)
 		{
 			AI::TASK_COMBAT_PED(*it, player, 0, 16);
 		}

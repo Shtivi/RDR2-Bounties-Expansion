@@ -74,10 +74,11 @@ void BountiesManager::loadActiveMissions()
 
 	log("loading missions:");
 
-	for (areasItr = areas.begin(); areasItr != areas.end(); areasItr++, currArea = *areasItr)
+	for (areasItr = areas.begin(); areasItr != areas.end(); areasItr++)
 	{
-		vector<int>* missionIds = currArea->getMissionIds();
-		vector<int>::iterator missionItr = missionIds->begin();
+		currArea = *areasItr;
+		set<int>* missionIds = currArea->getMissionIds();
+		set<int>::iterator missionItr = missionIds->begin();
 		int currMissionId;
 		BaseMissionExecutor* executor;
 

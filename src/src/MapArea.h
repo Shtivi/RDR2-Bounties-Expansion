@@ -3,7 +3,7 @@
 class MapArea
 {
 private:
-	std::vector<int> areaMissionIds;
+	set<int> areaMissionIds;
 
 public:
 	const char* name;
@@ -15,5 +15,5 @@ public:
 
 	void linkMission(int missionId);
 	int nextMission(int fromId);
-	vector<int>* getMissionIds();
+	set<int>* getMissionIds();
 }; 

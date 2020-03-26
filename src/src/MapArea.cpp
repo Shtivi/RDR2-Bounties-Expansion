@@ -10,29 +10,27 @@ MapArea::MapArea(const char* name, Vector3 policeDeptCoords, Vector3 bountyPoste
 
 void MapArea::linkMission(int missionId)
 {
-	areaMissionIds.push_back(missionId);
-	std::sort(areaMissionIds.begin(), areaMissionIds.end());
+	areaMissionIds.insert(missionId);
 }
 
 int MapArea::nextMission(int fromId)
 {
-	std::vector<int>::iterator it = areaMissionIds.begin();
+	set<int>::iterator it = areaMissionIds.begin();
 	
 	while (it != areaMissionIds.end() && *it != fromId)
 	{
 		++it;
 	}
 
-	if (it == areaMissionIds.end() || it + 1 == areaMissionIds.end())
+	if (it == areaMissionIds.end() || it++ == areaMissionIds.end())
 	{
 		return -1;
 	}
 
-	++it;
 	return *it;
 }
 
-vector<int>* MapArea::getMissionIds()
+set<int>* MapArea::getMissionIds()
 {
 	return &(this->areaMissionIds);
 }
