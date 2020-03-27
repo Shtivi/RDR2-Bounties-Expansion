@@ -30,10 +30,10 @@ enum TargetCondition
 
 enum MapAreas
 {
-	Blackwater,
+	Blackwater = 1,
+	Rhodes,
+	SaintDenis,
 	Valentine,
 	Strawberry,
-	Annesburg,
-	SaintDenis,
-	Lemoyne
+	Annesburg
 };

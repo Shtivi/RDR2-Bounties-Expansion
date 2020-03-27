@@ -1,11 +1,12 @@
 #include "Main.h"
 
-MapArea::MapArea(const char* name, Vector3 policeDeptCoords, Vector3 bountyPostersCoords, Vector3 cellCoords)
+MapArea::MapArea(const char* name, Vector3 policeDeptCoords, Vector3 bountyPostersCoords, Vector3 cellCoords, float bountyPosterHeading)
 {
 	this->name = name;
 	this->policeDeptCoords = new Vector3(policeDeptCoords);
 	this->bountyPostersCoords = new Vector3(bountyPostersCoords);
 	this->cellCoords = new Vector3(cellCoords);
+	this->bountyPosterHeading = bountyPosterHeading;
 }
 
 void MapArea::linkMission(int missionId)

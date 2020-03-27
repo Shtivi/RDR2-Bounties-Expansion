@@ -3,7 +3,8 @@
 
 MapAreasManager::MapAreasManager()
 {
-	cache.insert(std::make_pair(Blackwater, createBlackwater()));
+	cache[Blackwater] = createBlackwater();
+	cache[Rhodes] = createRhodes();
 }
 
 
@@ -44,4 +45,13 @@ MapArea* MapAreasManager::createBlackwater()
 	posterCoords.z = 43.7609;
 
 	return new MapArea("Blackwater", policeDeptCoords, posterCoords, cellCoords);
+}
+
+MapArea* MapAreasManager::createRhodes()
+{
+	Vector3 policeDeptCoords = toVector3(1358.17, -1308.19, 76.7296);
+	Vector3 cellCoords = toVector3(1357.97, -1301.96, 76.7606);
+	Vector3 posterCoords = toVector3(1234.58, -1293.13, 77.2681);
+
+	return new MapArea("Rhodes", policeDeptCoords, posterCoords, cellCoords, 136);
 }

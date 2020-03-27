@@ -16,6 +16,7 @@
     <ClCompile Include="BountyMissionsFactory.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
+    <ClCompile Include="JacobSeedExecutor.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MapArea.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="BountyMissionsFactory.h" />
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />
+    <ClInclude Include="JacobSeedExecutor.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MapArea.h" />

@@ -263,6 +263,7 @@ void BaseMissionExecutor::initialize()
 	Vector3* posterPos = getArea()->bountyPostersCoords;
 
 	poster = createProp("p_cs_newspaper_01x", *posterPos, true);
+	ENTITY::SET_ENTITY_HEADING(poster, getArea()->bountyPosterHeading);
 	posterBlip = createBlip(poster, 0xEC972124, 0x9E6FEC8F);
 	setBlipLabel(posterBlip, "Bounty Poster");
 }

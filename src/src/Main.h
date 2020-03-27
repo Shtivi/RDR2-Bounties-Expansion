@@ -48,6 +48,7 @@
 #include "BaseMissionExecutor.h";
 #include "EliasTraditionExecutor.h";
 #include "TurkishRunnerExecutor.h";
+#include "JacobSeedExecutor.h";
 #include "BountyMissionsFactory.h";
 #include "Autosave.h";
 #include "BountiesManager.h";

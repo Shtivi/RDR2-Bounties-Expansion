@@ -183,6 +183,7 @@ void main()
 			RaycastResult ray = raycast(playerPos, forwardVec, 10);
 			if (ray.didHit)
 			{
+				log(to_string(ENTITY::GET_ENTITY_HEADING(player)));
 				log(ray.hitPos);
 			}
 			

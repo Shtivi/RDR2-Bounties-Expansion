@@ -14,4 +14,5 @@ public:
 
 private:
 	MapArea* createBlackwater();
+	MapArea* createRhodes();
 };

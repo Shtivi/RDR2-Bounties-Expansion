@@ -17,4 +17,5 @@ private:
 	void initializeCache();
 	EliasTraditionExecutor* eliasTraditionExecutor();
 	TurkishRunnerExecutor* turkishRunnerExecutor();
+	JacobSeedExecutor* jacobSeedExecutor();
 };

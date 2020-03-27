@@ -38,7 +38,7 @@
       <Filter>Src\UI</Filter>
     </ClCompile>
     <ClCompile Include="EliasTraditionExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\EliasTradition</Filter>
+      <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
     </ClCompile>
     <ClCompile Include="blips.cpp">
       <Filter>Src\Game</Filter>
@@ -65,7 +65,10 @@
       <Filter>Src\Game\BountyMissions</Filter>
     </ClCompile>
     <ClCompile Include="TurkishRunnerExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\TurkishRunner</Filter>
+      <Filter>Src\Game\BountyMissions\AlejandroHernandez</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobSeedExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\JacobSeed</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +127,7 @@
       <Filter>Src\UI</Filter>
     </ClInclude>
     <ClInclude Include="EliasTraditionExecutor.h">
-      <Filter>Src\Game\BountyMissions\EliasTradition</Filter>
+      <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
     </ClInclude>
     <ClInclude Include="blips.h">
       <Filter>Src\Game</Filter>
@@ -151,7 +154,10 @@
       <Filter>Src\Game\BountyMissions</Filter>
     </ClInclude>
     <ClInclude Include="TurkishRunnerExecutor.h">
-      <Filter>Src\Game\BountyMissions\TurkishRunner</Filter>
+      <Filter>Src\Game\BountyMissions\AlejandroHernandez</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobSeedExecutor.h">
+      <Filter>Src\Game\BountyMissions\JacobSeed</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,14 +185,17 @@
     <Filter Include="Src\Game\BountyMissions">
       <UniqueIdentifier>{c2f7fb9b-ee24-49db-bc4c-f591fc990b4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\BountyMissions\EliasTradition">
-      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Game\ModProgress">
       <UniqueIdentifier>{304e4802-3468-45cc-ba72-42c6b67b91ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\BountyMissions\TurkishRunner">
+    <Filter Include="Src\Game\BountyMissions\ElsieGreen">
+      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\AlejandroHernandez">
       <UniqueIdentifier>{7d21da97-5ed7-4912-9fcd-09fc08266b7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\JacobSeed">
+      <UniqueIdentifier>{3f7eb3d0-41de-4b81-8bb2-413eb6e0760d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

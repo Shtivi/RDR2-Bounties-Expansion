@@ -41,6 +41,7 @@ void BountyMissionsFactory::initializeCache()
 {
 	executorsCache[1] = eliasTraditionExecutor();
 	executorsCache[2] = turkishRunnerExecutor();
+	executorsCache[3] = jacobSeedExecutor();
 
 	std::map<int, BaseMissionExecutor*>::iterator it = executorsCache.begin();
 	BaseMissionExecutor* curr;
@@ -59,10 +60,10 @@ EliasTraditionExecutor* BountyMissionsFactory::eliasTraditionExecutor()
 	data.area = Blackwater;
 	data.missionName = "Elias's Tradition";
 	data.crime = "Murder";
-	data.description = "He is the brother of Elias Green,\nboth are members of the infamous Skinner Brothers.\nWanted for murdering a nearby farmers.";
+	data.description = "He is the brother of Elias Green,\nboth are members of the infamous Skinner Brothers.\nWanted for murdering a nearby farmers.\nHe is extremely aggresive and dangerous.";
 	data.requiredTargetCondition = DeadOrAlive;
-	data.reward = 120;
-	data.rewardStr = "120$";
+	data.reward = 150;
+	data.rewardStr = "150%";
 	data.startPosition.x = -2032.61;
 	data.startPosition.y = -1909.63;
 	data.startPosition.z = 110.051;
@@ -81,11 +82,29 @@ TurkishRunnerExecutor* BountyMissionsFactory::turkishRunnerExecutor()
 	data.crime = "Horse theft";
 	data.description = "He wanted for stealing a rare horse\nfrom the stables in Blackwater.\nThe suspect is a mexican, middle aged male.\nLast seen near Macfarlande's ranch.\nBe aware, he could be armed.";
 	data.requiredTargetCondition = Alive;
-	data.reward = 100;
-	data.rewardStr = "100$";
+	data.reward = 180;
+	data.rewardStr = "180%";
 	data.startPosition = toVector3(-2758.81, -2690.14, 87.4308);
 	data.isTargetMale = true;
 	data.targetName = "Alejandro Hernandez";
 
 	return new TurkishRunnerExecutor(data, areasMgr);
+}
+
+JacobSeedExecutor* BountyMissionsFactory::jacobSeedExecutor()
+{
+	BountyMissionData data;
+	data.id = 3;
+	data.area = Rhodes;
+	data.missionName = "Jacob Seed";
+	data.crime = "Fire Arms Theft";
+	data.description = "Jacob Seed is the leader of a local\nLemoyne Raiders group.\nHe is wanted for robbing a fire arms delivery\non its way to Fort Wallace.\nHe and his gang are extremely dangerous.";
+	data.requiredTargetCondition = DeadOrAlive;
+	data.reward = 220;
+	data.rewardStr = "220$";
+	data.startPosition = toVector3(0, 0, 0);
+	data.isTargetMale = true;
+	data.targetName = "Jacob Seed";
+
+	return new JacobSeedExecutor(data, areasMgr);
 }
