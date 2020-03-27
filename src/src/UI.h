@@ -6,3 +6,4 @@ extern BountiesMenu* menu;
 void initializeUI();
 void showSubtitle(const char* text);
 void displayDebugText(const char* text);
+void showHelpMessage(const char* text, int durationSeconds = 10);

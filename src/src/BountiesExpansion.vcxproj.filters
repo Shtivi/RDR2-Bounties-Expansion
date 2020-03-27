@@ -70,6 +70,9 @@
     <ClCompile Include="JacobSeedExecutor.cpp">
       <Filter>Src\Game\BountyMissions\JacobSeed</Filter>
     </ClCompile>
+    <ClCompile Include="HelpMessages.cpp">
+      <Filter>Src\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">

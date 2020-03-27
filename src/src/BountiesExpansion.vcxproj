@@ -16,6 +16,7 @@
     <ClCompile Include="BountyMissionsFactory.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
+    <ClCompile Include="HelpMessages.cpp" />
     <ClCompile Include="JacobSeedExecutor.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Logger.cpp" />
