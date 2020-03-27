@@ -36,7 +36,6 @@ std::vector<int> BountyMissionsFactory::getAllMissionIds()
 	return missionsData;
 }
 
-
 void BountyMissionsFactory::initializeCache()
 {
 	executorsCache[1] = eliasTraditionExecutor();
@@ -99,10 +98,10 @@ JacobSeedExecutor* BountyMissionsFactory::jacobSeedExecutor()
 	data.missionName = "Jacob Seed";
 	data.crime = "Fire Arms Theft";
 	data.description = "Jacob Seed is the leader of a local\nLemoyne Raiders group.\nHe is wanted for robbing a fire arms delivery\non its way to Fort Wallace.\nHe and his gang are extremely dangerous.";
-	data.requiredTargetCondition = DeadOrAlive;
+	data.requiredTargetCondition = Alive;
 	data.reward = 220;
 	data.rewardStr = "220$";
-	data.startPosition = toVector3(0, 0, 0);
+	data.startPosition = toVector3(1570.67, -439.573, 65.966);
 	data.isTargetMale = true;
 	data.targetName = "Jacob Seed";
 

@@ -5,14 +5,7 @@
 
 void log(const char* msg)
 {
-	std::ofstream file;
-	file.open("BountiesExpansion.txt", std::ios_base::app);
-
-	if (file.is_open())
-	{
-		file << msg << "\n";
-		file.close();
-	}
+	log(msg, "BountiesExpansion.log");
 }
 
 void log(Vector3 pos)
@@ -25,4 +18,16 @@ void log(Vector3 pos)
 void log(std::string msg)
 {
 	log(msg.c_str());
+}
+
+void log(const char* msg, const char* fileName)
+{
+	std::ofstream file;
+	file.open(fileName, std::ios_base::app);
+
+	if (file.is_open())
+	{
+		file << msg << "\n";
+		file.close();
+	}
 }

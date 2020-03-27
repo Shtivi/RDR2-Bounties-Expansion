@@ -25,7 +25,7 @@ float distanceBetweenEntities(Entity entity1, Entity entity2)
 	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, 1);
 }
 
-Ped createPed(char* modelName, Vector3 pos)
+Ped createPed(char* modelName, Vector3 pos, float heading)
 {
 	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
 	STREAMING::REQUEST_MODEL(model, false);
@@ -34,7 +34,7 @@ Ped createPed(char* modelName, Vector3 pos)
 		WAIT(0);
 	}
 
-	Ped ped = PED::CREATE_PED(model, pos.x, pos.y, pos.z, 0, false, false, false, false);
+	Ped ped = PED::CREATE_PED(model, pos.x, pos.y, pos.z, heading, false, false, false, false);
 	PED::SET_PED_VISIBLE(ped, true);
 
 	return ped;
@@ -55,14 +55,16 @@ Ped createPedOnHorse(char* modelName, Ped horse, int seatIndex)
 	return ped;
 }
 
-Vehicle createVehicle(char* modelName, Vector3 pos)
+Vehicle createVehicle(char* modelName, Vector3 pos, float heading)
 {
 	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
-	return createVehicle(model, pos);;
+	return createVehicle(model, pos, heading);;
 }
 
-Vehicle createVehicle(Hash model, Vector3 pos)
+Vehicle createVehicle(Hash model, Vector3 pos, float heading)
 {
+	Vehicle veh;
+
 	if (!STREAMING::HAS_MODEL_LOADED(model))
 	{
 		STREAMING::REQUEST_MODEL(model, false);
@@ -73,7 +75,10 @@ Vehicle createVehicle(Hash model, Vector3 pos)
 		WAIT(0);
 	}
 
-	VEHICLE::CREATE_VEHICLE(model, pos.x, pos.y, pos.z, 0, true, true, false, false);
+	veh = VEHICLE::CREATE_VEHICLE(model, pos.x, pos.y, pos.z, heading, true, true, false, false);
+	VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh, 0);
+
+	return veh;
 }
 
 Object createProp(char* model, Vector3 position, bool isStatic, bool isVisible)

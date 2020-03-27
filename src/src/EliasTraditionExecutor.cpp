@@ -139,9 +139,6 @@ void EliasTraditionExecutor::playVictimExecution()
 	AI::OPEN_SEQUENCE_TASK(&seq);
 	AI::TASK_GO_TO_ENTITY(0, victim, 10000, 0.4f, 1, 0, 0);
 	AI::TASK_COMBAT_PED(0, victim, 0, 16);
-	//AI::_0x502EC17B1BED4BFA(0, victim); // Pickup victim
-	//AI::_0x6D3D87C57B3D52C7(0, victim, horse, 0); // Place on mount
-	//AI::TASK_GO_STRAIGHT_TO_COORD(0, killerPos.x, killerPos.y, killerPos.z, 1, -1,)
 	AI::TASK_STAND_GUARD(0, -2036.25, -1919.92, 108.586, 0, "WORLD_HUMAN_GUARD_SCOUT");
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::CLEAR_PED_TASKS(killer, 1, 1);

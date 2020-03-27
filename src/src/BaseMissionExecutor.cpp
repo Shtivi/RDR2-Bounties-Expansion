@@ -343,7 +343,7 @@ void BaseMissionExecutor::onTargetCaptured()
 
 void BaseMissionExecutor::onArrivalToPoliceStation()
 {
-	RADAR::REMOVE_BLIP(&policeLocBlip);
+	deleteBlipSafe(&policeLocBlip);
 	policeLocBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
 	
 	std::stringstream text;
@@ -376,7 +376,6 @@ void BaseMissionExecutor::onFinished(bool shouldCleanup)
 
 void BaseMissionExecutor::cleanup()
 {
-	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
 	deleteBlipSafe(&targetBlip);
 	deleteBlipSafe(&targetAreaBlip);
 	deleteBlipSafe(&policeLocBlip);
@@ -386,5 +385,5 @@ void BaseMissionExecutor::cleanup()
 void BaseMissionExecutor::decorateTarget()
 {
 	PED::_0x4A48B6E03BABB4AC(target, (Any*)missionData->targetName); // Set ped name
-	createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);
+	targetBlip = createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);
 }

@@ -19,6 +19,7 @@ private:
 	Object poster;
 	Blip targetAreaBlip;
 	Blip policeLocBlip;
+	Blip targetBlip;
 
 protected:
 	Ped target;
