@@ -3,9 +3,30 @@
 #include <fstream>
 #include <string>
 
+const char* const LOG_FILE = "BountiesExpansion.log";
+
+ofstream file;
+
+void initializeLogger()
+{
+	file.open(LOG_FILE, std::ios_base::out);
+	file.close();
+}
+
 void log(const char* msg)
 {
-	log(msg, "BountiesExpansion.log");
+	time_t nowTimestamp = std::time(0);
+	tm* now = localtime(&nowTimestamp);
+	stringstream txt;
+
+	file.open(LOG_FILE, std::ios_base::app);
+	if (file.is_open())
+	{
+		txt << "[" << now->tm_mday << "/" << now->tm_mon << "/" << now->tm_year + 1900 << " "
+			<< now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << "] " << msg;
+		file << txt.str().c_str() << "\n";
+		file.close();
+	}
 }
 
 void log(Vector3 pos)
@@ -18,16 +39,4 @@ void log(Vector3 pos)
 void log(std::string msg)
 {
 	log(msg.c_str());
-}
-
-void log(const char* msg, const char* fileName)
-{
-	std::ofstream file;
-	file.open(fileName, std::ios_base::app);
-
-	if (file.is_open())
-	{
-		file << msg << "\n";
-		file.close();
-	}
 }

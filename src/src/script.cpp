@@ -29,6 +29,7 @@ BountiesManager* bountiesMgr;
 
 void initialize()
 {
+	initializeLogger();
 	modProgress = new ModProgress("BountiesExpansion.dat");
 	areasMgr = new MapAreasManager();
 	missionsFactory = new BountyMissionsFactory(areasMgr);
@@ -90,11 +91,11 @@ void main()
 			//if (ray.didHit)
 			//{
 			//	log(to_string(ENTITY::GET_ENTITY_HEADING(player)), "positions.txt");
-			//	log(ray.hitPos, "positions.txt");
+			//	log(ray.hitPos);
 			//}
 			//else
 			//{
-			//	log("didnt hit", "positions.txt");
+			//	log("didnt hit");
 			//}
 			
 
@@ -111,7 +112,7 @@ void main()
 				<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
 				<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
 
-			log(output.str().c_str(), "positions.txt");
+			log(output.str().c_str());
 		}
 
 		WAIT(0);

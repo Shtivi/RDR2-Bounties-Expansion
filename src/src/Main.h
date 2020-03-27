@@ -31,16 +31,15 @@
 #include "../../inc/MinHook/MinHook.h"
 #pragma comment(lib, "../../inc/MinHook/libMinHook.x64.lib")
 
+#include "Logger.h";
 #include "Math.h";
 #include "world.h";
 #include "blips.h";
-#include "Logger.h";
 #include "Prompt.h";
 #include "GUIDrawer.h";
 #include "AttachedRope.h";
 #include "AttachedRopesHanding.h";
 #include "BountyDefinitions.h";
-
 #include "ModProgress.h";
 #include "MapArea.h";
 #include "MapAreasManager.h";
