@@ -15,4 +15,5 @@ public:
 private:
 	MapArea* createBlackwater();
 	MapArea* createRhodes();
+	MapArea* createValentine();
 };

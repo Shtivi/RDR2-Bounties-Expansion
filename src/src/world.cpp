@@ -83,7 +83,19 @@ Vehicle createVehicle(Hash model, Vector3 pos, float heading)
 
 Object createProp(char* model, Vector3 position, bool isStatic, bool isVisible)
 {
-	Object prop = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY(model), position.x, position.y, position.z, false, false, !isStatic, 0, 0);
+	Hash modelHash = GAMEPLAY::GET_HASH_KEY(model);
+
+	if (!STREAMING::HAS_MODEL_LOADED(modelHash))
+	{
+		STREAMING::REQUEST_MODEL(modelHash, false);
+	}
+
+	while (!STREAMING::HAS_MODEL_LOADED(modelHash))
+	{
+		WAIT(0);
+	}
+
+	Object prop = OBJECT::CREATE_OBJECT(modelHash, position.x, position.y, position.z, false, false, !isStatic, 0, 0);
 
 	ENTITY::FREEZE_ENTITY_POSITION(prop, isStatic);
 	ENTITY::SET_ENTITY_VISIBLE(prop, isVisible);

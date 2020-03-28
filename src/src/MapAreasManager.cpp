@@ -5,6 +5,7 @@ MapAreasManager::MapAreasManager()
 {
 	cache[Blackwater] = createBlackwater();
 	cache[Rhodes] = createRhodes();
+	cache[Valentine] = createValentine();
 }
 
 
@@ -54,4 +55,13 @@ MapArea* MapAreasManager::createRhodes()
 	Vector3 posterCoords = toVector3(1234.58, -1293.13, 77.2681);
 
 	return new MapArea("Rhodes", policeDeptCoords, posterCoords, cellCoords, 136);
+}
+
+MapArea* MapAreasManager::createValentine()
+{
+	Vector3 policeDeptCoords = toVector3(-275.256, 801.303, 118.397);
+	Vector3 cellCoords = toVector3(-275.918, 810.098, 118.376);
+	Vector3 posterCoords = toVector3(-298.459, 785.939, 118.204);
+
+	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 191.451248);
 }

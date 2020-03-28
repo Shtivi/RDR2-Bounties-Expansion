@@ -73,6 +73,9 @@
     <ClCompile Include="HelpMessages.cpp">
       <Filter>Src\UI</Filter>
     </ClCompile>
+    <ClCompile Include="AndrewClarkExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -162,6 +165,9 @@
     <ClInclude Include="JacobSeedExecutor.h">
       <Filter>Src\Game\BountyMissions\JacobSeed</Filter>
     </ClInclude>
+    <ClInclude Include="AndrewClarkExecutor.h">
+      <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -199,6 +205,9 @@
     </Filter>
     <Filter Include="Src\Game\BountyMissions\JacobSeed">
       <UniqueIdentifier>{3f7eb3d0-41de-4b81-8bb2-413eb6e0760d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\AndrewClark">
+      <UniqueIdentifier>{4fc86ec7-af10-4fba-bf6d-146dc4bd3f3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

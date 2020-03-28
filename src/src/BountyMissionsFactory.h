@@ -18,4 +18,5 @@ private:
 	EliasTraditionExecutor* eliasTraditionExecutor();
 	TurkishRunnerExecutor* turkishRunnerExecutor();
 	JacobSeedExecutor* jacobSeedExecutor();
+	AndrewClarkExecutor* andrewClarkExecutor();
 };

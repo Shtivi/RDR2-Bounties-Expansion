@@ -66,7 +66,8 @@ BountyMissionStatus ModProgress::getMissionProgress(int missionId)
 
 	if (it == cache.end())
 	{
-		log("couldnt find");
+		string logTxt = string("mission status for mission id: ").append(to_string(missionId)).append(" was not found");
+		log(logTxt);
 		cache[missionId] = BountyMissionStatus::Unavailable;
 		return BountyMissionStatus::Unavailable;
 	}
@@ -98,34 +99,28 @@ void ModProgress::readFromDataFile()
 {
 	std::ifstream file;
 	std::string input;
+	int count = 0;
 
 	file.open(dataFile);;
 	if (file.is_open())
 	{
-		log("data file opened, parsing...");
+		log("loading mod progress from data file");
 
 		while (!file.eof())
 		{
 			std::getline(file, input);
 			parseToCache(input);
+			count++;
 		}
 
-		log("data file loaded");
-
-		//file.close();
+		file.close();
+		string text = string("mod progress loaded: ").append(to_string(count)).append(" missions");
+		log(text);
 	}
 	else
 	{
-		log("unable open data file for reading, trying to create new...");
-
-		std::ofstream newFile;
-
-		newFile.open(dataFile, std::ios_base::out);
-		if (!newFile.is_open())
-		{
-			log("unable to create a new data file. fatal.");
-			throw "Unable to create a new data file";
-		}
+		log("unable to load from data file");
+		throw "unable to load from data file";
 	}
 }
 

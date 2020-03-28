@@ -99,8 +99,20 @@ void BountiesManager::loadActiveMissions()
 					log(executor->getMissionData()->targetName);
 				}
 			}
+			else
+			{
+				string logTxt = string("could not find a registered executor for mission id: ").append(to_string(currMissionId));
+				log(logTxt);
+			}
 
 			missionItr++;
+		}
+
+		if (missionItr == missionIds->end())
+		{
+			string msg = "no available missions in: ";
+			msg = msg.append(currArea->name);
+			log(msg);
 		}
 	}
 }

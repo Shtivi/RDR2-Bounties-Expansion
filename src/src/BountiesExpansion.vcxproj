@@ -7,6 +7,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AndrewClarkExecutor.cpp" />
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="Autosave.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="..\..\inc\enums.h" />
     <ClInclude Include="..\..\inc\natives.h" />
     <ClInclude Include="..\..\inc\types.h" />
+    <ClInclude Include="AndrewClarkExecutor.h" />
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="Autosave.h" />
     <ClInclude Include="BaseMissionExecutor.h" />

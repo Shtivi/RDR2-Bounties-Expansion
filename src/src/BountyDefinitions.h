@@ -32,8 +32,8 @@ enum MapAreas
 {
 	Blackwater = 1,
 	Rhodes,
-	SaintDenis,
 	Valentine,
+	SaintDenis,
 	Strawberry,
 	Annesburg
 };
