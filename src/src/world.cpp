@@ -25,62 +25,6 @@ float distanceBetweenEntities(Entity entity1, Entity entity2)
 	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, 1);
 }
 
-Ped createPed(char* modelName, Vector3 pos, float heading)
-{
-	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
-	STREAMING::REQUEST_MODEL(model, false);
-	while (!STREAMING::HAS_MODEL_LOADED(model))
-	{
-		WAIT(0);
-	}
-
-	Ped ped = PED::CREATE_PED(model, pos.x, pos.y, pos.z, heading, false, false, false, false);
-	PED::SET_PED_VISIBLE(ped, true);
-
-	return ped;
-}
-
-Ped createPedOnHorse(char* modelName, Ped horse, int seatIndex)
-{
-	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
-	STREAMING::REQUEST_MODEL(model, false);
-	while (!STREAMING::HAS_MODEL_LOADED(model))
-	{
-		WAIT(0);
-	}
-
-	Ped ped = PED::_0xF89AA2BD01FC06B7(horse, model, seatIndex, 0, 0, 0, 0);
-
-	PED::SET_PED_VISIBLE(ped, true);
-	return ped;
-}
-
-Vehicle createVehicle(char* modelName, Vector3 pos, float heading)
-{
-	Hash model = GAMEPLAY::GET_HASH_KEY(modelName);
-	return createVehicle(model, pos, heading);;
-}
-
-Vehicle createVehicle(Hash model, Vector3 pos, float heading)
-{
-	Vehicle veh;
-
-	if (!STREAMING::HAS_MODEL_LOADED(model))
-	{
-		STREAMING::REQUEST_MODEL(model, false);
-	}
-
-	while (!STREAMING::HAS_MODEL_LOADED(model))
-	{
-		WAIT(0);
-	}
-
-	veh = VEHICLE::CREATE_VEHICLE(model, pos.x, pos.y, pos.z, heading, true, true, false, false);
-	VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh, 0);
-
-	return veh;
-}
-
 Object createProp(char* model, Vector3 position, bool isStatic, bool isVisible)
 {
 	Hash modelHash = GAMEPLAY::GET_HASH_KEY(model);
@@ -110,11 +54,6 @@ RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastI
 	int rayHandle = SHAPETEST::_START_SHAPE_TEST_RAY(source.x, source.y, source.z, target.x, target.y, target.z, intersectionOptions, 0, 7);
 	SHAPETEST::GET_SHAPE_TEST_RESULT(rayHandle, (BOOL*)&result.didHit, &result.hitPos, &result.normal, &result.hitEntity);
 	return result;
-}
-
-bool isPedHogtied(Ped ped)
-{
-	return AI::GET_IS_TASK_ACTIVE(ped, 399);
 }
 
 void releaseEntitySafe(Entity* entity)

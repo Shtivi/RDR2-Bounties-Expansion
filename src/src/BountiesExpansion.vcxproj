@@ -25,12 +25,14 @@
     <ClCompile Include="MapAreasManager.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="ModProgress.cpp" />
+    <ClCompile Include="Ped.cpp" />
     <ClCompile Include="Prompt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Vehicles.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -57,12 +59,14 @@
     <ClInclude Include="MapAreasManager.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="ModProgress.h" />
+    <ClInclude Include="Ped.h" />
     <ClInclude Include="Prompt.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="Vehicles.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

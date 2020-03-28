@@ -16,8 +16,8 @@ void BountiesManager::update()
 	BaseMissionExecutor* curr;
 	BountyMissionStatus currStatus;
 	int currId;
-	std::vector<BaseMissionExecutor*> finishedMissions;
-	std::vector<BaseMissionExecutor*>::iterator it = missionExecutors.begin();
+	vector<BaseMissionExecutor*> finishedMissions;
+	vector<BaseMissionExecutor*>::iterator it = missionExecutors.begin();
 
 	while (it != missionExecutors.end())
 	{

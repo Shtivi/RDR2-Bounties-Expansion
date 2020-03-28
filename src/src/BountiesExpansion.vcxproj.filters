@@ -76,6 +76,12 @@
     <ClCompile Include="AndrewClarkExecutor.cpp">
       <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
     </ClCompile>
+    <ClCompile Include="Vehicles.cpp">
+      <Filter>Src\Game\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="Ped.cpp">
+      <Filter>Src\Game\Ped</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -168,6 +174,12 @@
     <ClInclude Include="AndrewClarkExecutor.h">
       <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
     </ClInclude>
+    <ClInclude Include="Vehicles.h">
+      <Filter>Src\Game\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="Ped.h">
+      <Filter>Src\Game\Ped</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -208,6 +220,12 @@
     </Filter>
     <Filter Include="Src\Game\BountyMissions\AndrewClark">
       <UniqueIdentifier>{4fc86ec7-af10-4fba-bf6d-146dc4bd3f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Vehicle">
+      <UniqueIdentifier>{8420c31a-2b40-431e-be72-8561bd4ac2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Ped">
+      <UniqueIdentifier>{9a046c40-3698-4c88-bb4e-70551b41ac91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -44,15 +44,16 @@ void main()
 			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
 
-			/*Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 6)));
-			getGroundPos(vehPos, &vehPos);
-			createVehicle(0xAAFEA8AE, vehPos);*/
+			//Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 6)));
+			//getGroundPos(vehPos, &vehPos);
+			//setVehicleCargo(createVehicle(VehicleHash::Wagon02X, vehPos), VehicleCargoHash::CampCargo1);
 
-			Vector3 propPos = add(&playerPos, &(multiply(&forwardVec, 3)));
-			getGroundPos(propPos, &propPos);
+			playAmbientSpeech(player, "GENERIC_CURSE_HIGH", "0971_A_M_M_ROUGHTRAVELLERS_WHITE_02");
 
-			showHelpMessage("Hello World");
-			createProp("s_canapricots01x", propPos);
+			//Ped horse = createPed("A_C_Horse_Morgan_BayRoan", toVector3(-308.29, 1359.79, 157.94), 139.169);
+			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+
+			//createProp("s_lootablebedchest", propPos);
 			//createProp("s_agedpiraterum01x", propPos);
 
 			//Object box = createProp("s_lootablemoneybox", propPos);

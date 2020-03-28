@@ -115,12 +115,12 @@ AndrewClarkExecutor* BountyMissionsFactory::andrewClarkExecutor()
 	data.id = 4;
 	data.area = Valentine;
 	data.missionName = "Andrew Clark";
-	data.crime = "Armed Robbery";
-	data.description = "He is the leader of a small group\nof outlaws belong to the\nO'driscoll gang.\n";
+	data.crime = "Fraud and Theft";
+	data.description = "He had been working for the bank of Valentine\nfor years and was found guilty of\nstealing the bank's money.\nLast known whereabouts was north of Valentine.";
 	data.requiredTargetCondition = Alive;
-	data.reward = 200;
-	data.rewardStr = "$200";
-	data.startPosition = toVector3(0, -0, 0);
+	data.reward = 120;
+	data.rewardStr = "$120";
+	data.startPosition = toVector3(-364.596, 1263.53, 141.176);
 	data.isTargetMale = true;
 	data.targetName = "Andrew Clark";
 

@@ -35,11 +35,6 @@ enum RaycastIntersectionOptions
 void getGroundPos(Vector3 originalPos, Vector3* outPos);
 float getGroundPos(Vector3 originalPos);
 float distanceBetweenEntities(Entity entity1, Entity entity2);
-Ped createPed(char* model, Vector3 pos, float heading = 0);
-Ped createPedOnHorse(char* model, Ped horse, int seatIndex = 1);
-bool isPedHogtied(Ped ped);
-Vehicle createVehicle(char* model, Vector3 pos, float heading = 0);
-Vehicle createVehicle(Hash model, Vector3 pos, float heading = 0);
 Object createProp(char* model, Vector3 position, bool isStatic = false, bool isVisible = true);
 RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastIntersectionOptions intersectionOptions = Everything);
 void releaseEntitySafe(Entity* entity);
