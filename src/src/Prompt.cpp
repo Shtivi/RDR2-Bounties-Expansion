@@ -15,7 +15,7 @@ Prompt::Prompt(const char* text, Hash control, PromptMode mode)
 	UI::_0xF7AA2696A22AD8B9(this->handle); // _UIPROMPT_REGISTER_END
 
 	semiHoldShouldReturn = false;
-	isEnabled = false;
+	hide();
 }
 
 Entity Prompt::getTargetEntity()

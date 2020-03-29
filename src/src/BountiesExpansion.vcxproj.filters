@@ -83,7 +83,22 @@
       <Filter>Src\Game\Ped</Filter>
     </ClCompile>
     <ClCompile Include="Conversation.cpp">
-      <Filter>Src\Game\Ped</Filter>
+      <Filter>Src\Game\Ped\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversationLine.cpp">
+      <Filter>Src\Game\Ped\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Delay.cpp">
+      <Filter>Src\Game\Ped\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="SyncPlayable.cpp">
+      <Filter>Src\Game\Ped\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="RobberyWarningShot.cpp">
+      <Filter>Src\Game\Ped\Interaction\RobberyInteraction</Filter>
+    </ClCompile>
+    <ClCompile Include="RobberyAimAtVictim.cpp">
+      <Filter>Src\Game\Ped\Interaction\RobberyInteraction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,7 +199,10 @@
       <Filter>Src\Game\Ped</Filter>
     </ClInclude>
     <ClInclude Include="Conversation.h">
-      <Filter>Src\Game\Ped</Filter>
+      <Filter>Src\Game\Ped\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="RobberyInteraction.h">
+      <Filter>Src\Game\Ped\Interaction\RobberyInteraction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +250,12 @@
     </Filter>
     <Filter Include="Src\Game\Ped">
       <UniqueIdentifier>{9a046c40-3698-4c88-bb4e-70551b41ac91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Ped\Interaction">
+      <UniqueIdentifier>{aac89977-7778-4b3c-9c1f-6c44b1524484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Ped\Interaction\RobberyInteraction">
+      <UniqueIdentifier>{14748df6-76e8-49b5-adc8-22f3cfff73bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

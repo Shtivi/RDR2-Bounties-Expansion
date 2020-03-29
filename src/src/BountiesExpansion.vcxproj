@@ -16,6 +16,8 @@
     <ClCompile Include="BountiesMenu.cpp" />
     <ClCompile Include="BountyMissionsFactory.cpp" />
     <ClCompile Include="Conversation.cpp" />
+    <ClCompile Include="ConversationLine.cpp" />
+    <ClCompile Include="Delay.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="HelpMessages.cpp" />
@@ -30,7 +32,10 @@
     <ClCompile Include="Prompt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
+    <ClCompile Include="RobberyAimAtVictim.cpp" />
+    <ClCompile Include="RobberyWarningShot.cpp" />
     <ClCompile Include="script.cpp" />
+    <ClCompile Include="SyncPlayable.cpp" />
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Vehicles.cpp" />
@@ -65,6 +70,7 @@
     <ClInclude Include="Prompt.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
+    <ClInclude Include="RobberyInteraction.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />

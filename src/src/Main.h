@@ -37,6 +37,7 @@
 #include "Vehicles.h";
 #include "Ped.h";
 #include "Conversation.h";
+#include "RobberyInteraction.h";
 #include "blips.h";
 #include "Prompt.h";
 #include "GUIDrawer.h";

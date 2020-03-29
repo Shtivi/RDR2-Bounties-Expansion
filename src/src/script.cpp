@@ -48,24 +48,17 @@ void main()
 			getGroundPos(vehPos, &vehPos);
 			//setVehicleCargo(createVehicle(VehicleHash::Wagon02X, vehPos), VehicleCargoHash::CampCargo1);
 
-			Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
-			PED::_0x4A48B6E03BABB4AC(target, (Any*)"Sheep"); // Set ped name
-			AUDIO::SET_AMBIENT_VOICE_NAME(target, "0044_A_M_M_BYNROUGHTRAVELLERS_01_WHITE_01");
-			PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
+			//Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
+			//PED::_0x4A48B6E03BABB4AC(target, (Any*)"Sheep"); // Set ped name
+			//AUDIO::SET_AMBIENT_VOICE_NAME(target, "0044_A_M_M_BYNROUGHTRAVELLERS_01_WHITE_01");
+			//PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
+			//AI::TASK_HANDS_UP(target, -1, player, -1, 0);
 
 			Conversation conv;
-			conv.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
-			conv.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
+			//conv.addLine(player, "ROB_ESCALATED_TOUGH");
+			conv.addLine(player, "ROB_PULL_GUN");
 			conv.play();
-			//playAmbientSpeech(player, "RE_AMD_LWL_V2_ROB_DEALERS");
-			
-			//while (AUDIO::IS_AMBIENT_SPEECH_PLAYING(player))
-			//{
-			//	displayDebugText("playing");
-
-			//	WAIT(0);
-			//}
 
 			//playAmbientSpeech(player, "ROB_AGAIN_THREATEN");
 
@@ -112,18 +105,18 @@ void main()
 		}
 		else if (IsKeyJustUp(VK_KEY_X))
 		{
-			//Ped player = PLAYER::PLAYER_PED_ID();
-			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-			//float ground;
-			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
+			Ped player = PLAYER::PLAYER_PED_ID();
+			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+			float ground;
+			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
 
-			//std::stringstream output;
-			//output << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
-			//	<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
-			//	<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
+			std::stringstream output;
+			output << "\n" 
+				<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
+				<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
+				<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
 
-			//log(output.str().c_str());
-			showHelpMessage("Hello");
+			log(output.str().c_str());
 		}
 
 		WAIT(0);

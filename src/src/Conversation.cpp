@@ -5,43 +5,55 @@ Conversation::Conversation()
 {
 }
 
-void Conversation::addLine(ConversationLine line)
+bool Conversation::isPlaying()
+{
+	return _isPlaying;
+}
+
+bool Conversation::isEnded()
+{
+	return _isEnded;
+}
+
+void Conversation::addLine(IPlayable* line)
 {
 	lines.insert(lines.end(), line);
 }
 
 void Conversation::addLine(Ped speaker, char* speechLineName)
 {
-	ConversationLine line;
-	line.speaker = speaker;
-	line.speechLineName = speechLineName;
+	ConversationLine* line = new ConversationLine(speaker, speechLineName);
 	addLine(line);
+}
+
+void Conversation::addDelay(int millisecs)
+{
+	addLine(new Delay(millisecs));
 }
 
 void Conversation::play()
 {
-	ConversationLine* currLine;
-	ConversationLine* prevLine = NULL;
-	vector<ConversationLine>::iterator lineItr = lines.begin();
+	IPlayable* currLine;
+	IPlayable* prevLine = NULL;
+	vector<IPlayable*>::iterator lineItr = lines.begin();
+
+	_isPlaying = true;
+	_isEnded = false;
+
 	while (lineItr != lines.end())
 	{
-		currLine = &(*lineItr);
+		currLine = (*lineItr);
 
-		if (prevLine == NULL)
+		while (currLine->isPlaying())
 		{
-			playAmbientSpeech(currLine->speaker, currLine->speechLineName);
-			prevLine = currLine;
+			WAIT(100);
 		}
-		else
-		{
-			while (AUDIO::IS_ANY_SPEECH_PLAYING(prevLine->speaker))
-			{
-				this_thread::sleep_for(100ms);
-			}
-			playAmbientSpeech(currLine->speaker, currLine->speechLineName);
-			prevLine = currLine;
-		}
+		currLine->playSync();
+		prevLine = currLine;
 
 		lineItr++;
 	}
+
+	_isPlaying = false;
+	_isEnded = true;
 }
