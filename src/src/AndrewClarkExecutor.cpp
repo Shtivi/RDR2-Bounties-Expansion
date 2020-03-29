@@ -7,7 +7,6 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 	setRequiredDistanceToLocateTarget(15);
 	setMustBeCloseToLocate(true);
 	isTargetAlerted = false;
-	targetRobbed = false;
 	isTargetScared = false;
 	robberyProgress = RobberyProgress::NONE;
 	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
@@ -16,12 +15,6 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 
 void AndrewClarkExecutor::update()
 {
-	// ROB:
-	// RE_BUB_V1_PLAYER_ASK_1ST_ROB_A
-	// RE_BUB_V1_PLAYER_ASK_2ND_ROB_A
-	// RE_AMD_LWL_V2_ROB_DEALERS
-	// Leave that safe: RE_LSF_BIV_V1_ROB
-
 	BaseMissionExecutor::update();
 	Ped player = PLAYER::PLAYER_PED_ID();
 
@@ -44,6 +37,10 @@ void AndrewClarkExecutor::update()
 		playTargetRobbery();
 	}
 
+	if (getMissionStage() == BountyMissionStage::ArriveToPoliceStation)
+	{
+		displayDebugText(to_string(distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 1), *(getArea()->policeDeptCoords))).c_str());
+	}
 }
 
 Ped AndrewClarkExecutor::spawnTarget()
@@ -63,8 +60,8 @@ void AndrewClarkExecutor::prepareSet()
 	Object campfire = createProp("p_campfire05x", toVector3(-308.143, 1355.59, 158.132));
 	campProps.push_back(campfire);
 
-	float tentHeading = 347.298;
-	Vector3 tentPos = toVector3(-307.515, 1349.5, 158.023);
+	float tentHeading = 193.621;
+	Vector3 tentPos = toVector3(-307.686, 1351.84, 158.326);
 	campProps.push_back(createProp("p_amb_tent01x", tentPos, tentHeading));
 	campProps.push_back(createProp("p_bedrollopen03x", tentPos, tentHeading));
 
@@ -80,7 +77,6 @@ void AndrewClarkExecutor::prepareSet()
 void AndrewClarkExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
-	
 	Ped player = PLAYER::PLAYER_PED_ID();
 
 	Object seq;
@@ -135,7 +131,6 @@ void AndrewClarkExecutor::playTargetRobbery()
 	}
 	else if (robberyProgress == RobberyProgress::TARGET_RESISTING)
 	{
-		//robberyInteraction.addLine(new RobberyAimAtVictim(player, target));
 		robberyInteraction.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
 		robberyInteraction.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
 		robberyInteraction.play();
@@ -183,4 +178,16 @@ void AndrewClarkExecutor::goToStash()
 	showSubtitle(msg.c_str());
 	AI::CLEAR_PED_TASKS(target, 1, 1);
 	AI::TASK_GO_TO_ENTITY(target, stash, 30000, 0.3f, 2, 0, 0);
+}
+
+void AndrewClarkExecutor::spawnBountyHunters()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+	Vector3 enemiesSourcePos = getRandomPedPositionInRange(playerPos, 45);
+
+	Ped horse1 = createPed("A_C_Horse_TennesseeWalker_DappleBay	", getRandomPedPositionInRange(enemiesSourcePos, 3));
+
+
+	Ped horse2 = createPed("A_C_Horse_TennesseeWalker_DappleBay	", getRandomPedPositionInRange(enemiesSourcePos, 3));
 }

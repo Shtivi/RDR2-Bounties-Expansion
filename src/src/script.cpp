@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 ModProgress* modProgress;
 MapAreasManager* areasMgr;
 BountyMissionsFactory* missionsFactory;
@@ -36,8 +35,6 @@ void main()
 		bountiesMgr->update();
 		menu->update();
 
-		//autosaveModProgress(modProgress);
-
 		if (IsKeyJustUp(VK_KEY_Z))
 		{
 			Ped player = PLAYER::PLAYER_PED_ID();
@@ -47,20 +44,18 @@ void main()
 			Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 3)));
 			getGroundPos(vehPos, &vehPos);
 
-			//setVehicleCargo(createVehicle(VehicleHash::Wagon02X, vehPos), VehicleCargoHash::CampCargo1);
-
-			//Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
-			//PED::_0x4A48B6E03BABB4AC(target, (Any*)"Sheep"); // Set ped name
-			//AUDIO::SET_AMBIENT_VOICE_NAME(target, "0044_A_M_M_BYNROUGHTRAVELLERS_01_WHITE_01");
-			//PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
-			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
-			//AI::TASK_HANDS_UP(target, -1, player, -1, 0);
-
-
-			//playAmbientSpeech(player, "ROB_AGAIN_THREATEN");
-
-			//Ped horse = createPed("A_C_Horse_Morgan_BayRoan", toVector3(-308.29, 1359.79, 157.94), 139.169);
-			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+			Vector3 pedPos = getRandomPositionInRange(playerPos, 6);
+			Vector3 realPos;
+			if (!PATHFIND::GET_SAFE_COORD_FOR_PED(pedPos.x, pedPos.y, pedPos.z, true, &realPos, 16))
+			{
+				Ped ped = createPed("G_M_M_BountyHunters_01", pedPos);
+				AUDIO::SET_AMBIENT_VOICE_NAME(ped, "0740_G_M_M_BOUNTYHUNTERS_01_WHITE_02");
+				playAmbientSpeech(ped, "ITS_THEM_EXTREME");
+			}
+			else
+			{
+				showSubtitle("wasnt found");
+			}
 
 			//Vector3 propPos = add(&playerPos, &(multiply(&forwardVec, 3)));
 			//getGroundPos(propPos, &propPos);

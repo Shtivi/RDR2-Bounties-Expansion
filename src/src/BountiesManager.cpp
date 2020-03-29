@@ -160,6 +160,7 @@ void BountiesManager::updateFailedMissions()
 	BaseMissionExecutor* missionExecutor;
 
 	map<int, tm>::iterator it = failedMissions.begin();
+
 	while (it != failedMissions.end())
 	{
 		missionId = (*it).first;

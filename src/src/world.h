@@ -32,10 +32,13 @@ enum RaycastIntersectionOptions
 	Unk4 = 512
 };
 
+Vector3 getRandomPositionInRange(Vector3 source, int radius);
+Vector3 getRandomPedPositionInRange(Vector3 source, int radius);
+void getGroundPos(Vector3* position);
 void getGroundPos(Vector3 originalPos, Vector3* outPos);
 float getGroundPos(Vector3 originalPos);
 float distanceBetweenEntities(Entity entity1, Entity entity2);
-Object createProp(char* model, Vector3 position, bool isStatic = false, bool isVisible = true);
+Object createProp(char* model, Vector3 position, float heading = 0, bool isStatic = false, bool isVisible = true);
 RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastIntersectionOptions intersectionOptions = Everything);
 void releaseEntitySafe(Entity* entity);
 tm getGameTime();

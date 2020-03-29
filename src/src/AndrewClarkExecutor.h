@@ -18,8 +18,9 @@ private:
 	Prompt* threatPrompt;
 	bool isTargetAlerted;
 	bool isTargetScared;
-	bool targetRobbed;
 	RobberyProgress robberyProgress;
+	vector<Ped> bountyHunters;
+	vector<Ped> horses;
 
 public:
 	AndrewClarkExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -33,4 +34,5 @@ private:
 
 	void playTargetRobbery();
 	void goToStash();
+	void spawnBountyHunters();
 };

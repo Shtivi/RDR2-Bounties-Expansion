@@ -1,5 +1,30 @@
 #include "Main.h"
 
+Vector3 getRandomPositionInRange(Vector3 center, int radius)
+{
+	int x = rndInt((int)center.x - radius, (int)center.x + radius + 1);
+	int topOrBottom = rndInt(0, 2) == 1 ? 1 : -1;
+	double y = topOrBottom * sqrt(pow(radius, 2) - pow(x - center.x, 2)) + center.y;
+	
+	Vector3 output;
+	output.x = x;
+	output.y = (float)y;
+	output.z = getGroundPos(output);
+	return output;
+}
+
+Vector3 getRandomPedPositionInRange(Vector3 source, int radius)
+{
+	Vector3 position = getRandomPositionInRange(source, radius);
+	PATHFIND::GET_SAFE_COORD_FOR_PED(position.x, position.y, position.z, true, &position, 16);
+	return position;
+}
+
+void getGroundPos(Vector3* originalPos)
+{
+	getGroundPos(*originalPos, originalPos);
+}
+
 void getGroundPos(Vector3 originalPos, Vector3* outPos)
 {
 	float groundZ;
@@ -25,7 +50,7 @@ float distanceBetweenEntities(Entity entity1, Entity entity2)
 	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, 1);
 }
 
-Object createProp(char* model, Vector3 position, bool isStatic, bool isVisible)
+Object createProp(char* model, Vector3 position, float heading, bool isStatic, bool isVisible)
 {
 	Hash modelHash = GAMEPLAY::GET_HASH_KEY(model);
 
@@ -40,7 +65,7 @@ Object createProp(char* model, Vector3 position, bool isStatic, bool isVisible)
 	}
 
 	Object prop = OBJECT::CREATE_OBJECT(modelHash, position.x, position.y, position.z, false, false, !isStatic, 0, 0);
-
+	ENTITY::SET_ENTITY_HEADING(prop, heading);
 	ENTITY::FREEZE_ENTITY_POSITION(prop, isStatic);
 	ENTITY::SET_ENTITY_VISIBLE(prop, isVisible);
 
