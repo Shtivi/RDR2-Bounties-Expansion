@@ -46,6 +46,7 @@ void main()
 
 			Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 3)));
 			getGroundPos(vehPos, &vehPos);
+
 			//setVehicleCargo(createVehicle(VehicleHash::Wagon02X, vehPos), VehicleCargoHash::CampCargo1);
 
 			//Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
@@ -55,18 +56,17 @@ void main()
 			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
 			//AI::TASK_HANDS_UP(target, -1, player, -1, 0);
 
-			Conversation conv;
-			//conv.addLine(player, "ROB_ESCALATED_TOUGH");
-			conv.addLine(player, "ROB_PULL_GUN");
-			conv.play();
 
 			//playAmbientSpeech(player, "ROB_AGAIN_THREATEN");
 
 			//Ped horse = createPed("A_C_Horse_Morgan_BayRoan", toVector3(-308.29, 1359.79, 157.94), 139.169);
 			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 
-			//createProp("s_lootablebedchest", propPos);
-			//createProp("s_agedpiraterum01x", propPos);
+			//Vector3 propPos = add(&playerPos, &(multiply(&forwardVec, 3)));
+			//getGroundPos(propPos, &propPos);
+			//Object chest = createProp("p_boxmeddeposit01x", propPos);
+			//createProp("p_moneystack01x", propPos);
+			//createProp("p_moneystack01x", propPos);
 
 			//Object box = createProp("s_lootablemoneybox", propPos);
 			//float heading = 90 + ENTITY::GET_ENTITY_HEADING(box);

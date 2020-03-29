@@ -1,14 +1,25 @@
 #pragma once
 
+enum RobberyProgress
+{
+	NONE,
+	TARGET_RESISTING,
+	WAITING_FOR_INTIMIDATION,
+	TARGET_GAVE_UP,
+	FINISHED
+};
+
 class AndrewClarkExecutor : public BaseMissionExecutor
 {
 private:
-	Prompt* threatPrompt;
 	Vehicle wagon;
-	vector<Object> campProps;
-	bool isTargetAlerted;
-	bool targetRobbed;
 	Object stash;
+	vector<Object> campProps;
+	Prompt* threatPrompt;
+	bool isTargetAlerted;
+	bool isTargetScared;
+	bool targetRobbed;
+	RobberyProgress robberyProgress;
 
 public:
 	AndrewClarkExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);

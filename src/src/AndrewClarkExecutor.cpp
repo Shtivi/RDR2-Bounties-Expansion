@@ -1,6 +1,5 @@
 #include "Main.h";
 
-
 AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
@@ -8,8 +7,10 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 	setRequiredDistanceToLocateTarget(15);
 	setMustBeCloseToLocate(true);
 	isTargetAlerted = false;
-	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	targetRobbed = false;
+	isTargetScared = false;
+	robberyProgress = RobberyProgress::NONE;
+	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	stash = NULL;
 }
 
@@ -33,18 +34,14 @@ void AndrewClarkExecutor::update()
 
 	if (isTargetAlerted)
 	{
-		if (!targetRobbed && PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), target))
+		if (!isTargetScared && PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), target))
 		{
 			AI::TASK_HANDS_UP(target, -1, player, -1, 0);
 			playAmbientSpeech(target, "WHOA");
-			threatPrompt->show();
+			isTargetScared = true;
 		}
 
-		if (!targetRobbed && threatPrompt->isActivatedByPlayer())
-		{
-			playTargetRobbery();
-			targetRobbed = true;
-		}
+		playTargetRobbery();
 	}
 
 }
@@ -71,14 +68,13 @@ void AndrewClarkExecutor::prepareSet()
 	campProps.push_back(createProp("p_amb_tent01x", tentPos, tentHeading));
 	campProps.push_back(createProp("p_bedrollopen03x", tentPos, tentHeading));
 
-	AI::_0x524B54361229154F(target, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_SIT_GROUND"), -1, true, true, 0, true);
-
-	// stash1: 
-	// -430.063, 1333.71, 170.503
-	// heading: 96.1381
-
-	stash = createProp("s_lootablebedchest", toVector3(-404.823, 1271.93, 154.836), 343.23);
+	Vector3 stashPos = toVector3(-408.529, 1264.26, 159.21);
+	stash = createProp("p_boxmeddeposit01x", stashPos, 141.608);
 	campProps.push_back(stash);
+	campProps.push_back(createProp("p_moneystack01x", stashPos));
+	campProps.push_back(createProp("p_moneystack01x", stashPos));
+
+	AI::_0x524B54361229154F(target, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_SIT_GROUND"), -1, true, true, 0, true);
 }
 
 void AndrewClarkExecutor::onTargetLocated()
@@ -117,22 +113,74 @@ void AndrewClarkExecutor::cleanup()
 
 void AndrewClarkExecutor::playTargetRobbery()
 {
-	threatPrompt->hide();
-
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Conversation robberyInteraction;
-	robberyInteraction.addLine(new RobberyAimAtVictim(player, target));
-	robberyInteraction.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
-	robberyInteraction.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
-	robberyInteraction.addLine(new RobberyWarningShot(player, target));
-	robberyInteraction.addLine(player, "ROB_PULL_GUN");
-	robberyInteraction.addLine(target, "HAND_OVER_MONEY");
-	robberyInteraction.play();
 
-	goToStash();
+	if (robberyProgress == RobberyProgress::NONE)
+	{
+		if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), target))
+		{
+			threatPrompt->show();
+		}
+		else
+		{
+			threatPrompt->hide();
+		}
+
+		if (threatPrompt->isActivatedByPlayer())
+		{
+			robberyProgress = RobberyProgress::TARGET_RESISTING;
+			threatPrompt->hide();
+		}
+	}
+	else if (robberyProgress == RobberyProgress::TARGET_RESISTING)
+	{
+		//robberyInteraction.addLine(new RobberyAimAtVictim(player, target));
+		robberyInteraction.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
+		robberyInteraction.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
+		robberyInteraction.play();
+		robberyProgress = RobberyProgress::WAITING_FOR_INTIMIDATION;
+		threatPrompt->setText("Give Me The Money Or Else...");
+	}
+	else if (robberyProgress == RobberyProgress::WAITING_FOR_INTIMIDATION)
+	{
+		threatPrompt->show();
+
+		if (threatPrompt->isActivatedByPlayer())
+		{
+			robberyInteraction.addLine(player, "ROB_AGAIN_THREATEN");
+			robberyInteraction.addLine(target, "RT_NO_TIME_FOR_THIS");
+			robberyInteraction.play();
+		}
+
+		if (PED::IS_PED_SHOOTING(player))
+		{
+			robberyProgress = RobberyProgress::TARGET_GAVE_UP;
+		}
+	}
+	else if (robberyProgress == RobberyProgress::TARGET_GAVE_UP)
+	{
+		if (threatPrompt->isActivatedByPlayer())
+		{
+			threatPrompt->hide();
+			robberyInteraction.addLine(player, "ROB_PULL_GUN");
+			robberyInteraction.addLine(target, "HAND_OVER_MONEY");
+			robberyInteraction.play();
+			goToStash();
+			robberyProgress = RobberyProgress::FINISHED;
+		}
+	}
 }
 
 void AndrewClarkExecutor::goToStash()
 {
-	//AI::TASK_GO_TO_ENTITY(target, stash, 30000, 0.8f, 2, 0, 0);
+	if (ENTITY::IS_ENTITY_DEAD(target))
+	{
+		return;
+	}
+
+	string msg = string("Follow ").append(getMissionData()->targetName).append(" to the stash.");
+	showSubtitle(msg.c_str());
+	AI::CLEAR_PED_TASKS(target, 1, 1);
+	AI::TASK_GO_TO_ENTITY(target, stash, 30000, 0.3f, 2, 0, 0);
 }
