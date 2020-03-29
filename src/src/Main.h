@@ -36,6 +36,7 @@
 #include "world.h";
 #include "Vehicles.h";
 #include "Ped.h";
+#include "Conversation.h";
 #include "blips.h";
 #include "Prompt.h";
 #include "GUIDrawer.h";

@@ -11,6 +11,12 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 
 void AndrewClarkExecutor::update()
 {
+	// ROB:
+	// RE_BUB_V1_PLAYER_ASK_1ST_ROB_A
+	// RE_BUB_V1_PLAYER_ASK_2ND_ROB_A
+	// RE_AMD_LWL_V2_ROB_DEALERS
+	// Leave that safe: RE_LSF_BIV_V1_ROB
+
 	BaseMissionExecutor::update();
 	Ped player = PLAYER::PLAYER_PED_ID();
 
@@ -18,13 +24,14 @@ void AndrewClarkExecutor::update()
 	{
 		isTargetAlerted = true;
 		//PED::_0xFE07FF6495D52E2A(target, 0, 0, 0);
-		AI::TASK_TURN_PED_TO_FACE_ENTITY(target, player, 8000, 0, 0, 0);
+		AI::TASK_TURN_PED_TO_FACE_ENTITY(target, player, 3000, 0, 0, 0);
 	}
 }
 
 Ped AndrewClarkExecutor::spawnTarget()
 {
 	Ped target = createPed("A_M_M_GriFancyTravellers_01", toVector3(-311.059, 1355.05, 158.291), 283.609);
+	AUDIO::SET_AMBIENT_VOICE_NAME(target, "0971_a_m_m_roughtravellers_white_02");
 	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
 	return target;

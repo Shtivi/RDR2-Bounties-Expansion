@@ -82,6 +82,9 @@
     <ClCompile Include="Ped.cpp">
       <Filter>Src\Game\Ped</Filter>
     </ClCompile>
+    <ClCompile Include="Conversation.cpp">
+      <Filter>Src\Game\Ped</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -178,6 +181,9 @@
       <Filter>Src\Game\Vehicle</Filter>
     </ClInclude>
     <ClInclude Include="Ped.h">
+      <Filter>Src\Game\Ped</Filter>
+    </ClInclude>
+    <ClInclude Include="Conversation.h">
       <Filter>Src\Game\Ped</Filter>
     </ClInclude>
   </ItemGroup>
