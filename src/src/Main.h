@@ -34,6 +34,7 @@
 #include "Logger.h";
 #include "Math.h";
 #include "world.h";
+#include "Weapons.h";
 #include "Vehicles.h";
 #include "Ped.h";
 #include "Conversation.h";

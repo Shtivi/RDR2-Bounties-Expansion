@@ -39,6 +39,7 @@
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Vehicles.cpp" />
+    <ClCompile Include="Weapons.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +76,7 @@
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vehicles.h" />
+    <ClInclude Include="Weapons.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

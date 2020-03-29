@@ -18,6 +18,7 @@ private:
 	Prompt* threatPrompt;
 	bool isTargetAlerted;
 	bool isTargetScared;
+	bool spawnedBountyHunters;
 	RobberyProgress robberyProgress;
 	vector<Ped> bountyHunters;
 	vector<Ped> horses;
@@ -35,4 +36,5 @@ private:
 	void playTargetRobbery();
 	void goToStash();
 	void spawnBountyHunters();
+	void addBountyHunter(Ped horse, bool isDriver);
 };

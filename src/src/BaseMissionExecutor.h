@@ -15,10 +15,11 @@ private:
 	bool mustBeCloseToLocate;
 	int targetAreaRadius;
 
-	Blip posterBlip;
 	Object poster;
+	Blip posterBlip;
 	Blip targetAreaBlip;
 	Blip policeLocBlip;
+	Blip cellBlip;
 	Blip targetBlip;
 
 protected:

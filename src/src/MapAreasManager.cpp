@@ -61,7 +61,7 @@ MapArea* MapAreasManager::createValentine()
 {
 	Vector3 policeDeptCoords = toVector3(-275.256, 801.303, 118.397);
 	Vector3 cellCoords = toVector3(-275.918, 810.098, 118.376);
-	Vector3 posterCoords = toVector3(-298.459, 785.939, 118.204);
+	Vector3 posterCoords = toVector3(-272.947, 799.64, 119.412);
 
-	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 191.451248);
+	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 15.019545);
 }

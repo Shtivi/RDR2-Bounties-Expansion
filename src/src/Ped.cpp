@@ -59,3 +59,8 @@ void playAmbientSpeech(Ped ped, char* speechName, char* voice)
 
 	invoke<BOOL>(0x8E04FEDD28D42462, ped, &args);
 }
+
+void giveSaddleToHorse(Ped horse, HorseSaddleHashes saddleHash)
+{
+	PED::_0xD3A7B003ED343FD9(horse, (Hash)saddleHash, true, false, false); 
+}

@@ -2,6 +2,8 @@
 
 using namespace std;
 
+const char BOUNTY_FAILED_REPLAY[] = "You may restart failed bounty missions after a few game hours.";
+
 BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMgr, BountyMissionsFactory* missionsFactory)
 {
 	this->progress = progress;
@@ -44,6 +46,7 @@ void BountiesManager::update()
 			std::string msg = "mission failed: ";
 			msg = msg.append(curr->getMissionData()->targetName);
 			log(msg);
+			setHelpMessage(BOUNTY_FAILED_REPLAY);
 		}
 		else
 		{

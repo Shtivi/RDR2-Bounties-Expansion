@@ -100,6 +100,9 @@
     <ClCompile Include="RobberyAimAtVictim.cpp">
       <Filter>Src\Game\Ped\Interaction\RobberyInteraction</Filter>
     </ClCompile>
+    <ClCompile Include="Weapons.cpp">
+      <Filter>Src\Game\Weapons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="RobberyInteraction.h">
       <Filter>Src\Game\Ped\Interaction\RobberyInteraction</Filter>
     </ClInclude>
+    <ClInclude Include="Weapons.h">
+      <Filter>Src\Game\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -256,6 +262,9 @@
     </Filter>
     <Filter Include="Src\Game\Ped\Interaction\RobberyInteraction">
       <UniqueIdentifier>{14748df6-76e8-49b5-adc8-22f3cfff73bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Weapons">
+      <UniqueIdentifier>{4e49644c-be2c-4318-b364-f84ca5900299}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

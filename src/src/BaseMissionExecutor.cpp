@@ -1,5 +1,7 @@
 #include "Main.h"
 
+const char BOUNTY_COMPLETED[] = "Bounty completed!";
+
 BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 {
 	this->areasMgr = areasMgr;
@@ -250,6 +252,7 @@ void BaseMissionExecutor::fail(const char* reason)
 
 	if (reason)
 	{
+		//string text = string("Bounty failed: ").append(reason);
 		showSubtitle(reason);
 	}
 
@@ -344,7 +347,7 @@ void BaseMissionExecutor::onTargetCaptured()
 void BaseMissionExecutor::onArrivalToPoliceStation()
 {
 	deleteBlipSafe(&policeLocBlip);
-	policeLocBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
+	cellBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
 	
 	std::stringstream text;
 	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in the ~COLOR_YELLOW~Cell";
@@ -355,13 +358,13 @@ void BaseMissionExecutor::onTargetHandedOver()
 {
 	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
 	deleteBlipSafe(&targetBlip);
-	deleteBlipSafe(&policeLocBlip);
+	deleteBlipSafe(&cellBlip);
 }
 
 void BaseMissionExecutor::onRewardCollected()
 {
 	CASH::PLAYER_ADD_CASH(missionData->reward * 100, 0);
-	showSubtitle("Bounty completed!");
+	setHelpMessage(BOUNTY_COMPLETED);
 }
 
 void BaseMissionExecutor::onFinished(bool shouldCleanup)
@@ -379,6 +382,7 @@ void BaseMissionExecutor::cleanup()
 	deleteBlipSafe(&targetBlip);
 	deleteBlipSafe(&targetAreaBlip);
 	deleteBlipSafe(&policeLocBlip);
+	deleteBlipSafe(&cellBlip);
 	releaseEntitySafe(&target);
 }
 

@@ -34,9 +34,11 @@ void main()
 	{
 		bountiesMgr->update();
 		menu->update();
+		//printHelpMessage();
 
 		if (IsKeyJustUp(VK_KEY_Z))
 		{
+
 			Ped player = PLAYER::PLAYER_PED_ID();
 			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
@@ -44,18 +46,56 @@ void main()
 			Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 3)));
 			getGroundPos(vehPos, &vehPos);
 
-			Vector3 pedPos = getRandomPositionInRange(playerPos, 6);
-			Vector3 realPos;
-			if (!PATHFIND::GET_SAFE_COORD_FOR_PED(pedPos.x, pedPos.y, pedPos.z, true, &realPos, 16))
-			{
-				Ped ped = createPed("G_M_M_BountyHunters_01", pedPos);
-				AUDIO::SET_AMBIENT_VOICE_NAME(ped, "0740_G_M_M_BOUNTYHUNTERS_01_WHITE_02");
-				playAmbientSpeech(ped, "ITS_THEM_EXTREME");
-			}
-			else
-			{
-				showSubtitle("wasnt found");
-			}
+			Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
+			AUDIO::SET_AMBIENT_VOICE_NAME(target, "0788_A_M_M_LOWERSDTOWNFOLK_01_WHITE_01");
+			PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
+			WAIT(1000);
+			//playAmbientSpeech(target, "INTIMIDATED_ROB"); // i dont have a damm thing to give you
+			Conversation conv;
+			conv.addLine(target, "INTIMIDATED_ROB");
+			//conv.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
+			conv.addLine(target, "INTIMIDATED_AGAIN_ROB");
+			conv.addLine(target, "HAND_OVER_MONEY");
+
+			conv.play();
+
+			//Vector3 pedPos = getRandomPositionInRange(playerPos, 6);
+			//Vector3 realPos;
+			//if (!PATHFIND::GET_SAFE_COORD_FOR_PED(pedPos.x, pedPos.y, pedPos.z, true, &realPos, 16))
+			//{
+			//	Ped ped = createPed("G_M_M_BountyHunters_01", pedPos);
+			//	AUDIO::SET_AMBIENT_VOICE_NAME(ped, "0740_G_M_M_BOUNTYHUNTERS_01_WHITE_02");
+			//	playAmbientSpeech(ped, "ITS_THEM_EXTREME");
+			//}
+			//else
+			//{
+			//	showSubtitle("wasnt found");
+			//}
+
+			//Vector3 enemiesSourcePos = getRandomPedPositionInRange(playerPos, 45);
+
+			//Ped horse1 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(enemiesSourcePos, 3));
+			//Ped horse2 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(enemiesSourcePos, 3));
+			//giveSaddleToHorse(horse1, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_004);
+			//giveSaddleToHorse(horse2, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_002);
+
+			//vector<Ped> bountyHunters;
+			//Ped driver1 = createPedOnHorse("G_M_M_BountyHunters_01", horse1, -1);
+			//Ped driver2 = createPedOnHorse("G_M_M_BountyHunters_01", horse2, -1);
+			//bountyHunters.push_back(createPedOnHorse("G_M_M_BountyHunters_01", horse1, 0));
+			//bountyHunters.push_back(driver1);
+			//bountyHunters.push_back(driver2);
+
+			//vector<Ped>::iterator pedItr;
+			//for (pedItr = bountyHunters.begin(); pedItr != bountyHunters.end(); pedItr++)
+			//{
+			//	Ped curr = *pedItr;
+			//	createBlip(curr, BLIP_STYLE_ENEMY);
+			//	giveWeaponToPed(curr, WeaponHash::RepeaterCarbine, 60);
+			//	pedEquipBestWeapon(curr);
+			//	AI::TASK_COMBAT_PED(curr, player, 0, 16);
+			//}
 
 			//Vector3 propPos = add(&playerPos, &(multiply(&forwardVec, 3)));
 			//getGroundPos(propPos, &propPos);

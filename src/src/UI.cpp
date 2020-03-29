@@ -2,6 +2,7 @@
 
 Prompt* inspectPosterPrompt;
 BountiesMenu* menu;
+char helpMessageText[150];
 
 void initializeUI()
 {
@@ -9,6 +10,8 @@ void initializeUI()
 	inspectPosterPrompt->hide();
 
 	menu = new BountiesMenu();
+
+	clearHelpMessage();
 }
 
 void showSubtitle(const char* text)
@@ -21,4 +24,31 @@ void showSubtitle(const char* text)
 void displayDebugText(const char* text)
 {
 	UI::DRAW_TEXT((char*)UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", text), 0, 0);
+}
+
+void clearHelpMessage()
+{
+	for (int i = 0; i < 150; i++)
+	{
+		helpMessageText[i] = 0;
+	}
+}
+
+void setHelpMessage(const char* text)
+{
+	int i = 0;
+	while (i < 150 && text[i])
+	{
+		helpMessageText[i] = text[i];
+		i++;
+	}
+}
+
+void printHelpMessage()
+{
+	if (helpMessageText[0])
+	{
+		showHelpMessage(helpMessageText);
+		clearHelpMessage();
+	}
 }
