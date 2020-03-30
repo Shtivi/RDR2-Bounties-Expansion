@@ -103,6 +103,9 @@
     <ClCompile Include="Weapons.cpp">
       <Filter>Src\Game\Weapons</Filter>
     </ClCompile>
+    <ClCompile Include="ExecuteVictimInteraction.h">
+      <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">

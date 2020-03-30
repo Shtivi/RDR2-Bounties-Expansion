@@ -4,10 +4,12 @@ class EliasTraditionExecutor : public BaseMissionExecutor
 {
 private:
 	vector<Ped> enemies;
+	Object campfire;
 	Ped horse;
 	Ped killer;
 	Ped victim;
 	bool executedVictim;
+	bool executionCleanedUp;
 	bool enemiesAlerted;
 
 public:
@@ -25,6 +27,7 @@ private:
 	void addGuard(Ped guard);
 	void updateEnemies();
 	void playVictimExecution();
+	void cleanUpExecution();
 	void releaseUnnecessaryEntities();
 	void cleanup();
 };

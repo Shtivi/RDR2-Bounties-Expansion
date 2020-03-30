@@ -46,29 +46,6 @@ void main()
 			Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 3)));
 			getGroundPos(vehPos, &vehPos);
 
-			Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
-			AUDIO::SET_AMBIENT_VOICE_NAME(target, "0974_A_M_M_ROUGHTRAVELLERS_WHITE_05");
-			PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
-			Conversation conv;
-			//conv.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
-			//conv.addLine(target, "INTIMIDATED_ROB");
-			//conv.addLine(player, "ROB_THREATEN");
-			//conv.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
-			//conv.addLine(player, "ROB_AGAIN_REJECT_OFFER");
-			//conv.addLine(target, "HAND_OVER_MONEY");
-			//conv.addDelay(1000);
-			//conv.addLine(player, "ROB_AGAIN_REJECT_OFFER");
-			conv.addLine(target, "FINAL_WARNING");
-			conv.addDelay(500);
-			conv.addLine(target, "GENERIC_INSULT_HIGH_NEUTRAL");
-			conv.addDelay(500);
-			conv.addLine(target, "GENERIC_FRIGHTENED_HIGH");
-			conv.addDelay(500);
-			conv.addLine(target, "PLEAD_HOGTIED");
-			WAIT(1000);
-			conv.play();
-
 			//Vector3 pedPos = getRandomPositionInRange(playerPos, 6);
 			//Vector3 realPos;
 			//if (!PATHFIND::GET_SAFE_COORD_FOR_PED(pedPos.x, pedPos.y, pedPos.z, true, &realPos, 16))

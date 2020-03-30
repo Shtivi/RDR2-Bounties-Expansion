@@ -19,6 +19,7 @@
     <ClCompile Include="ConversationLine.cpp" />
     <ClCompile Include="Delay.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
+    <ClCompile Include="ExecuteVictimInteraction.h" />
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="HelpMessages.cpp" />
     <ClCompile Include="JacobSeedExecutor.cpp" />
