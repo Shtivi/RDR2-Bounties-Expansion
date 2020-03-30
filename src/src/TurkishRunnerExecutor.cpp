@@ -8,8 +8,11 @@ TurkishRunnerExecutor::TurkishRunnerExecutor(BountyMissionData missionData, MapA
 	setTargetAreaRadius(150);
 	setRequiredDistanceToLocateTarget(45);
 	setMustBeCloseToLocate(true);
-	enemiesAlerted = false;
+	enemiesStatus = EnemiesMode::IDLE;
 	campfirePos = toVector3(-2815.12, -2613.38, 92.7243);
+	
+	campfire = NULL;
+	horse = NULL;
 }
 
 void TurkishRunnerExecutor::update()
@@ -18,41 +21,46 @@ void TurkishRunnerExecutor::update()
 	releaseUnnecessaryEntities();
 
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (getMissionStage() == BountyMissionStage::CaptureTarget && distanceBetweenEntities(target, player) < 30 && !enemiesAlerted)
+	if (getMissionStage() == BountyMissionStage::CaptureTarget)
 	{
-		vector<Ped>::iterator pedItr;
-		for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+		float distanceToTarget = distanceBetweenEntities(target, player);
+		switch (enemiesStatus)
 		{
-			WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
-
-			if (*pedItr == target)
+		case EnemiesMode::IDLE:
+			if (distanceToTarget <= 20)
 			{
-				Object seq;
-				AI::OPEN_SEQUENCE_TASK(&seq);
-				AI::_0x92DB0739813C5186(0, horse, -1, -1, 2.0f, 1, 0, 0); // Mount the horse
-				AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
-				AI::CLOSE_SEQUENCE_TASK(seq);
-
-				AI::CLEAR_PED_TASKS(target, 1, 1);
-				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				stopwatch.start();
+				enterAlertMode();
 			}
-			else
+			break;
+
+		case EnemiesMode::ALERTED:
+			if (stopwatch.getElapsedSecondsRealTime() >= 60 || distanceToTarget <= 15)
 			{
-				Object seq;
-				AI::OPEN_SEQUENCE_TASK(&seq);
-				AI::TASK_AIM_GUN_AT_ENTITY(0, player, 3000, 1, 1);
-				AI::TASK_COMBAT_PED(0, player, 0, 16);
-				AI::CLOSE_SEQUENCE_TASK(seq);
-
-				AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
-				AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+				stopwatch.start();
+				enterWarningMode();
 			}
+			break;
+		case EnemiesMode::WARNING:
+			if (stopwatch.getElapsedSecondsRealTime() >= 60)
+			{
+				enterCombatMode();
+			}
+			break;
 		}
 
-		enemiesAlerted = true;
+		if (enemiesStatus < EnemiesMode::COMBAT && distanceToTarget <= 35)
+		{
+			if (distanceToTarget <= 12 || PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()) || PED::IS_PED_SHOOTING(player))
+			{
+				enterCombatMode();
+			}
+		}
 	}
 
-	if (getMissionStage() == BountyMissionStage::CaptureTarget && enemiesAlerted && !ENTITY::IS_ENTITY_DEAD(target))
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && 
+		enemiesStatus >= EnemiesMode::ALERTED && 
+		!ENTITY::IS_ENTITY_DEAD(target))
 	{
 		if (distanceBetweenEntities(target, player) > 100)
 		{
@@ -69,6 +77,7 @@ void TurkishRunnerExecutor::update()
 Ped TurkishRunnerExecutor::spawnTarget()
 {
 	Ped target = createPed("G_M_M_UniBanditos_01", toVector3(-2817.15, -2614.94, 92.8264));
+	AUDIO::SET_AMBIENT_VOICE_NAME(target, "1021_G_M_M_UNIBANDITOS_01_HISPANIC_03");
 	return target;
 }
 
@@ -168,6 +177,68 @@ void TurkishRunnerExecutor::releaseUnnecessaryEntities()
 			{
 				releaseEntitySafe(&(*pedItr));
 			}
+		}
+	}
+}
+
+void TurkishRunnerExecutor::enterAlertMode()
+{
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	{
+		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
+	}
+	
+	playAmbientSpeech(target, "GET_LOST");
+	enemiesStatus == EnemiesMode::ALERTED;
+}
+
+void TurkishRunnerExecutor::enterWarningMode()
+{
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	{
+		pedEquipBestWeapon(*pedItr);
+		AI::TASK_AIM_GUN_AT_ENTITY(*pedItr, target, -1, 0, 0);
+	}
+
+	playAmbientSpeech(target, "FINAL_WARNING");
+	enemiesStatus == EnemiesMode::WARNING;
+}
+
+void TurkishRunnerExecutor::enterCombatMode()
+{
+	enemiesStatus == EnemiesMode::COMBAT;
+
+
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	{
+		WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+
+		if (*pedItr == target)
+		{
+			Object seq;
+			AI::OPEN_SEQUENCE_TASK(&seq);
+			AI::_0x92DB0739813C5186(0, horse, -1, -1, 2.0f, 1, 0, 0); // Mount the horse
+			AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
+			AI::CLOSE_SEQUENCE_TASK(seq);
+
+			AI::CLEAR_PED_TASKS(target, 1, 1);
+			AI::TASK_PERFORM_SEQUENCE(target, seq);
+			playAmbientSpeech(target, "ITS_MALE_EXTREME");
+		}
+		else
+		{
+			Object seq;
+			AI::OPEN_SEQUENCE_TASK(&seq);
+			//AI::TASK_AIM_GUN_AT_ENTITY(0, player, 3000, 1, 1);
+			//AI::TASK_COMBAT_PED(0, player, 0, 16);
+			AI::CLOSE_SEQUENCE_TASK(seq);
+
+			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
+			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 		}
 	}
 }

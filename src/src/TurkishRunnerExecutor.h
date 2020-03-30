@@ -1,15 +1,23 @@
 #pragma once
 
+enum EnemiesMode
+{
+	IDLE,
+	ALERTED,
+	WARNING,
+	COMBAT
+};
+
 class TurkishRunnerExecutor : public BaseMissionExecutor
 {
 private:
 	Vector3 campfirePos;
 	Object campfire;
 	Ped horse;
-	std::vector<Ped> enemies;
-	std::vector<Ped> horses;
-
-	bool enemiesAlerted;
+	vector<Ped> enemies;
+	vector<Ped> horses;
+	EnemiesMode enemiesStatus;
+	GameStopwatch stopwatch;
 
 public:
 	TurkishRunnerExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -27,4 +35,7 @@ private:
 	void addEnemy(Ped ped);
 	void addHorse(const char* model, Vector3 pos);
 	void addHorse(Ped horse);
+	void enterAlertMode();
+	void enterWarningMode();
+	void enterCombatMode();
 };

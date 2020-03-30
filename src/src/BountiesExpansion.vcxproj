@@ -20,6 +20,7 @@
     <ClCompile Include="Delay.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="ExecuteVictimInteraction.h" />
+    <ClCompile Include="GameStopwatch.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="HelpMessages.cpp" />
     <ClCompile Include="JacobSeedExecutor.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="RobberyAimAtVictim.cpp" />
     <ClCompile Include="RobberyWarningShot.cpp" />
     <ClCompile Include="script.cpp" />
+    <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="SyncPlayable.cpp" />
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -74,6 +76,7 @@
     <ClInclude Include="AttachedRopesHanding.h" />
     <ClInclude Include="RobberyInteraction.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vehicles.h" />

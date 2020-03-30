@@ -32,6 +32,7 @@
 #pragma comment(lib, "../../inc/MinHook/libMinHook.x64.lib")
 
 #include "Logger.h";
+#include "Stopwatch.h";
 #include "Math.h";
 #include "world.h";
 #include "Weapons.h";

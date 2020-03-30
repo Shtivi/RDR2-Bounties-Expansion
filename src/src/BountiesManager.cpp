@@ -110,13 +110,6 @@ void BountiesManager::loadActiveMissions()
 
 			missionItr++;
 		}
-
-		if (missionItr == missionIds->end())
-		{
-			string msg = "no available missions in: ";
-			msg = msg.append(currArea->name);
-			log(msg);
-		}
 	}
 }
 
