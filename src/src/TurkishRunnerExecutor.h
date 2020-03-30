@@ -18,6 +18,7 @@ private:
 	vector<Ped> horses;
 	EnemiesMode enemiesStatus;
 	GameStopwatch stopwatch;
+	bool toleratePlayer;
 
 public:
 	TurkishRunnerExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -35,6 +36,7 @@ private:
 	void addEnemy(Ped ped);
 	void addHorse(const char* model, Vector3 pos);
 	void addHorse(Ped horse);
+	void enterIdleMode();
 	void enterAlertMode();
 	void enterWarningMode();
 	void enterCombatMode();

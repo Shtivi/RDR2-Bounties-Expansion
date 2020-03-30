@@ -41,6 +41,11 @@ void Stopwatch::start(time_t startTime)
 	hasStarted = true;
 }
 
+void Stopwatch::stop()
+{
+	hasStarted = false;
+}
+
 time_t Stopwatch::getCurrentTime()
 {
 	return time(0);

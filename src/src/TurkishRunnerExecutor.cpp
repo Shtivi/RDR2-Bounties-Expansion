@@ -2,6 +2,12 @@
 
 using namespace std;
 
+const int IDLE_DIST = 35;
+const int ALERT_DIST = 25;
+const int WARN_DIST = 20;
+const int HEARING_RANGE = 35;
+const int COMBAT_RANGE = 12;
+
 TurkishRunnerExecutor::TurkishRunnerExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
@@ -10,7 +16,7 @@ TurkishRunnerExecutor::TurkishRunnerExecutor(BountyMissionData missionData, MapA
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
 	campfirePos = toVector3(-2815.12, -2613.38, 92.7243);
-	
+	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
 }
@@ -24,43 +30,71 @@ void TurkishRunnerExecutor::update()
 	if (getMissionStage() == BountyMissionStage::CaptureTarget)
 	{
 		float distanceToTarget = distanceBetweenEntities(target, player);
+		displayDebugText(to_string(distanceToTarget).c_str());
 		switch (enemiesStatus)
 		{
 		case EnemiesMode::IDLE:
-			if (distanceToTarget <= 20)
+			if (distanceToTarget <= ALERT_DIST)
 			{
-				stopwatch.start();
-				enterAlertMode();
+				if (toleratePlayer)
+				{
+					stopwatch.start();
+					enterAlertMode();
+				}
+				else
+				{
+					enterCombatMode();
+				}
 			}
 			break;
 
 		case EnemiesMode::ALERTED:
-			if (stopwatch.getElapsedSecondsRealTime() >= 60 || distanceToTarget <= 15)
+			if (stopwatch.getElapsedSecondsRealTime() >= 5)
 			{
-				stopwatch.start();
-				enterWarningMode();
+				if (toleratePlayer)
+				{
+					stopwatch.start();
+					enterWarningMode();
+				}
+				else
+				{
+					enterCombatMode();
+				}
+			}
+			else if (distanceToTarget >= IDLE_DIST)
+			{
+				stopwatch.stop();
+				enterIdleMode();
 			}
 			break;
+
 		case EnemiesMode::WARNING:
-			if (stopwatch.getElapsedSecondsRealTime() >= 60)
+			if (stopwatch.getElapsedSecondsRealTime() >= 4)
 			{
-				enterCombatMode();
+				if (distanceToTarget <= WARN_DIST)
+				{
+					enterCombatMode();
+				}
+				else if (distanceToTarget >= ALERT_DIST)
+				{
+					toleratePlayer = false;
+					stopwatch.stop();
+					enterAlertMode();
+				}
 			}
 			break;
 		}
 
-		if (enemiesStatus < EnemiesMode::COMBAT && distanceToTarget <= 35)
+		if (enemiesStatus < EnemiesMode::COMBAT && distanceToTarget <= HEARING_RANGE)
 		{
-			if (distanceToTarget <= 12 || PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()) || PED::IS_PED_SHOOTING(player))
+			if (distanceToTarget <= COMBAT_RANGE || PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()) || PED::IS_PED_SHOOTING(player))
 			{
 				enterCombatMode();
 			}
 		}
 	}
 
-	if (getMissionStage() == BountyMissionStage::CaptureTarget && 
-		enemiesStatus >= EnemiesMode::ALERTED && 
-		!ENTITY::IS_ENTITY_DEAD(target))
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && enemiesStatus >= EnemiesMode::ALERTED && !ENTITY::IS_ENTITY_DEAD(target))
 	{
 		if (distanceBetweenEntities(target, player) > 100)
 		{
@@ -95,6 +129,8 @@ void TurkishRunnerExecutor::prepareSet()
 	addEnemy(toVector3(-2817.03, -2610.64, 92.7105));
 	addEnemy(toVector3(-2812.38, -2614.95, 92.5829));
 	addEnemy(toVector3(-2812.46, -2612.73, 92.5725));
+
+	enterIdleMode();
 }
 
 void TurkishRunnerExecutor::onTargetLocated()
@@ -136,18 +172,10 @@ void TurkishRunnerExecutor::addEnemy(Vector3 pos)
 
 void TurkishRunnerExecutor::addEnemy(Ped ped)
 {
-	char* scenarioName = enemies.size() % 2 == 0 ? "WORLD_HUMAN_SIT_GROUND" : "WORLD_HUMAN_SIT_GROUND_COFFEE_DRINK";
 	enemies.push_back(ped);
 
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
 	AI::CLEAR_PED_TASKS(ped, true, true);
-
-	Object seq;
-	AI::OPEN_SEQUENCE_TASK(&seq);
-	AI::TASK_TURN_PED_TO_FACE_COORD(0, campfirePos.x, campfirePos.y, campfirePos.z, 1000);
-	AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true); // PLAY SCENARIO
-	AI::CLOSE_SEQUENCE_TASK(seq);
-	AI::TASK_PERFORM_SEQUENCE(ped, seq);
 }
 
 void TurkishRunnerExecutor::addHorse(const char* model, Vector3 pos)
@@ -181,16 +209,44 @@ void TurkishRunnerExecutor::releaseUnnecessaryEntities()
 	}
 }
 
+void TurkishRunnerExecutor::enterIdleMode()
+{
+	char* scenarioName;
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	{
+		scenarioName = enemies.size() % 2 == 0 ? "WORLD_HUMAN_SIT_GROUND" : "WORLD_HUMAN_SIT_GROUND_COFFEE_DRINK";
+		Object seq;
+		AI::OPEN_SEQUENCE_TASK(&seq);
+		AI::TASK_TURN_PED_TO_FACE_COORD(0, campfirePos.x, campfirePos.y, campfirePos.z, 1000);
+		AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true); // PLAY SCENARIO
+		AI::CLOSE_SEQUENCE_TASK(seq);
+		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+	}
+
+	enemiesStatus = EnemiesMode::IDLE;
+}
+
 void TurkishRunnerExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
 		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
+		AI::TASK_TURN_PED_TO_FACE_ENTITY(*pedItr, PLAYER::PLAYER_PED_ID(), -1, 0, 0, 0);
 	}
 	
-	playAmbientSpeech(target, "GET_LOST");
-	enemiesStatus == EnemiesMode::ALERTED;
+	if (enemiesStatus == EnemiesMode::IDLE)
+	{
+		playAmbientSpeech(target, "GET_LOST");
+	}
+	else if (enemiesStatus == EnemiesMode::WARNING)
+	{
+		playAmbientSpeech(target, "WON_DISPUTE");
+	}
+
+	enemiesStatus = EnemiesMode::ALERTED;
 }
 
 void TurkishRunnerExecutor::enterWarningMode()
@@ -199,22 +255,21 @@ void TurkishRunnerExecutor::enterWarningMode()
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
 		pedEquipBestWeapon(*pedItr);
-		AI::TASK_AIM_GUN_AT_ENTITY(*pedItr, target, -1, 0, 0);
 	}
 
 	playAmbientSpeech(target, "FINAL_WARNING");
-	enemiesStatus == EnemiesMode::WARNING;
+	enemiesStatus = EnemiesMode::WARNING;
 }
 
 void TurkishRunnerExecutor::enterCombatMode()
 {
-	enemiesStatus == EnemiesMode::COMBAT;
-
+	enemiesStatus = EnemiesMode::COMBAT;
 
 	Ped player = PLAYER::PLAYER_PED_ID();
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
+		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
 		WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
 
 		if (*pedItr == target)
@@ -233,8 +288,7 @@ void TurkishRunnerExecutor::enterCombatMode()
 		{
 			Object seq;
 			AI::OPEN_SEQUENCE_TASK(&seq);
-			//AI::TASK_AIM_GUN_AT_ENTITY(0, player, 3000, 1, 1);
-			//AI::TASK_COMBAT_PED(0, player, 0, 16);
+			AI::TASK_COMBAT_PED(0, player, 0, 16);
 			AI::CLOSE_SEQUENCE_TASK(seq);
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
