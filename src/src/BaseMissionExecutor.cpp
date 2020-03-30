@@ -160,6 +160,10 @@ void BaseMissionExecutor::update()
 		{
 			fail("Bounty failed. The target was wanted alive!");
 		}
+		else if (ENTITY::IS_ENTITY_DEAD(player))
+		{
+			fail();
+		}
 	}
 
 	if (stage > BountyMissionStage::CaptureTarget && stage < BountyMissionStage::CollectReward)
