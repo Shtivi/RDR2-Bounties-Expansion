@@ -88,7 +88,7 @@ void BaseMissionExecutor::update()
 	}
 	else if (stage == BountyMissionStage::CollectPoster)
 	{
-		if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 1.5f &&
+		if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 3.0f &&
 			PED::IS_PED_ON_FOOT(player))
 		{
 			inspectPosterPrompt->show();
@@ -252,7 +252,6 @@ void BaseMissionExecutor::fail(const char* reason)
 
 	if (reason)
 	{
-		//string text = string("Bounty failed: ").append(reason);
 		showSubtitle(reason);
 	}
 

@@ -19,6 +19,7 @@ private:
 	bool isTargetAlerted;
 	bool isTargetScared;
 	bool spawnedBountyHunters;
+	int robberyAttempts;
 	RobberyProgress robberyProgress;
 	vector<Ped> bountyHunters;
 	vector<Ped> horses;

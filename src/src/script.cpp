@@ -47,17 +47,26 @@ void main()
 			getGroundPos(vehPos, &vehPos);
 
 			Ped target = createPed("A_M_M_GriFancyTravellers_01", vehPos);
-			AUDIO::SET_AMBIENT_VOICE_NAME(target, "0788_A_M_M_LOWERSDTOWNFOLK_01_WHITE_01");
+			AUDIO::SET_AMBIENT_VOICE_NAME(target, "0974_A_M_M_ROUGHTRAVELLERS_WHITE_05");
 			PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, true);
-			WAIT(1000);
-			//playAmbientSpeech(target, "INTIMIDATED_ROB"); // i dont have a damm thing to give you
 			Conversation conv;
-			conv.addLine(target, "INTIMIDATED_ROB");
+			//conv.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
+			//conv.addLine(target, "INTIMIDATED_ROB");
+			//conv.addLine(player, "ROB_THREATEN");
 			//conv.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
-			conv.addLine(target, "INTIMIDATED_AGAIN_ROB");
-			conv.addLine(target, "HAND_OVER_MONEY");
-
+			//conv.addLine(player, "ROB_AGAIN_REJECT_OFFER");
+			//conv.addLine(target, "HAND_OVER_MONEY");
+			//conv.addDelay(1000);
+			//conv.addLine(player, "ROB_AGAIN_REJECT_OFFER");
+			conv.addLine(target, "FINAL_WARNING");
+			conv.addDelay(500);
+			conv.addLine(target, "GENERIC_INSULT_HIGH_NEUTRAL");
+			conv.addDelay(500);
+			conv.addLine(target, "GENERIC_FRIGHTENED_HIGH");
+			conv.addDelay(500);
+			conv.addLine(target, "PLEAD_HOGTIED");
+			WAIT(1000);
 			conv.play();
 
 			//Vector3 pedPos = getRandomPositionInRange(playerPos, 6);

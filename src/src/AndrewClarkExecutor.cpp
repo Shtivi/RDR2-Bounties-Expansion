@@ -11,6 +11,7 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 	isTargetAlerted = false;
 	isTargetScared = false;
 	spawnedBountyHunters = false;
+	robberyAttempts = 0;
 	robberyProgress = RobberyProgress::NONE;
 	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	stash = NULL;
@@ -24,7 +25,9 @@ void AndrewClarkExecutor::update()
 	if (distanceBetweenEntities(player, target) < 12 && !isTargetAlerted)
 	{
 		isTargetAlerted = true;
-		AI::TASK_TURN_PED_TO_FACE_ENTITY(target, player, 3000, 0, 0, 0);
+		PED::_0xFE07FF6495D52E2A(target, 0, 0, 0);
+		WAIT(500);
+		AI::TASK_TURN_PED_TO_FACE_ENTITY(target, player, -1, 0, 0, 0);
 		playAmbientSpeech(target, "GET_LOST");
 	}
 
@@ -51,15 +54,6 @@ void AndrewClarkExecutor::update()
 			spawnBountyHunters();
 			spawnedBountyHunters = true;
 		}
-		//else if (bountyHunters.size() > 0)
-		//{
-		//	Ped bountyHunter = bountyHunters[0];
-		//	if (distanceBetweenEntities(bountyHunter, player) <= 15)
-		//	{
-		//		AUDIO::SET_AMBIENT_VOICE_NAME(bountyHunter, "0740_G_M_M_BOUNTYHUNTERS_01_WHITE_02");
-		//		playAmbientSpeech(bountyHunter, "ITS_THEM_EXTREME");
-		//	}
-		//}
 	}
 }
 
@@ -169,20 +163,36 @@ void AndrewClarkExecutor::playTargetRobbery()
 		robberyInteraction.addLine(target, "INTIMIDATED_ROB");
 		robberyInteraction.play();
 		robberyProgress = RobberyProgress::WAITING_FOR_INTIMIDATION;
-		threatPrompt->setText("Give Me The Money Or Else...");
+		robberyAttempts = 0;
 	}
 	else if (robberyProgress == RobberyProgress::WAITING_FOR_INTIMIDATION)
 	{
+		threatPrompt->setText("Give Me The Money Or Else...");
 		threatPrompt->show();
 
 		if (threatPrompt->isActivatedByPlayer())
 		{
-			robberyInteraction.addLine(player, "ROB_AGAIN_THREATEN");
-			robberyInteraction.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
+			robberyAttempts++;
+			threatPrompt->hide();
+			if (robberyAttempts == 1)
+			{
+				robberyInteraction.addLine(player, "ROB_THREATEN");
+				robberyInteraction.addLine(target, "RT_INTIMIDATED_ROB_NOT_INTIMIDATED");
+			}
+			else
+			{
+				robberyInteraction.play();robberyInteraction.addLine(player, "ROB_AGAIN_THREATEN");
+				robberyInteraction.addLine(target, "STOP_THAT");
+			}
 			robberyInteraction.play();
+			threatPrompt->show();
 		}
 
-		if (PED::IS_PED_SHOOTING(player))
+		//if (PED::IS_PED_SHOOTING(player))
+		//{
+		//	robberyProgress = RobberyProgress::TARGET_GAVE_UP;
+		//}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(target, player, 0, 0))
 		{
 			robberyProgress = RobberyProgress::TARGET_GAVE_UP;
 		}
