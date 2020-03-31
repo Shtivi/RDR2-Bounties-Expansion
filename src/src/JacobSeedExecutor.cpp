@@ -1,6 +1,6 @@
 #include "Main.h";
 
-const float COMBAT_RANGE = 28.0f;
+const float COMBAT_RANGE = 18.0f;
 const int LEMOYNE_RAIDERS_MODELS_COUNT = 2;
 char* const LEMOYNE_RAIDERS_MODELS[LEMOYNE_RAIDERS_MODELS_COUNT] = {"g_m_o_uniexconfeds_01", "g_m_y_uniexconfeds_01"/*, "g_m_y_uniexconfeds_02"*/};
 const Hash GATLING_POLICE_WAGON_VEHICLE = 0xB31F8075;
@@ -12,8 +12,6 @@ JacobSeedExecutor::JacobSeedExecutor(BountyMissionData missionData, MapAreasMana
 	setTargetAreaRadius(140);
 	enemiesAlerted = false;
 	finishedAlertingEnemies = false;
-
-
 }
 
 void JacobSeedExecutor::update()
@@ -31,10 +29,13 @@ void JacobSeedExecutor::update()
 		enemyShootGatling(shooter);
 		enemyDriveGatling(target);
 
+		playAmbientSpeech(target, "ITS_THEM_EXTREME");
+
 		for (it = enemies.begin(); it != enemies.end(); ++it)
 		{
 			if (*it != shooter && *it != target)
 			{
+				PED::_0xFE07FF6495D52E2A(*it, 0, 0, 0);
 				AI::TASK_COMBAT_PED(*it, player, 0, 16);
 			}
 		}
@@ -196,7 +197,7 @@ void JacobSeedExecutor::enemyDriveGatling(Ped enemy)
 
 	Object seq;
 	AI::OPEN_SEQUENCE_TASK(&seq);
-	AI::TASK_ENTER_VEHICLE(0, gatlingWagon, 20000, -1, 2, 1, 0);
+	AI::TASK_ENTER_VEHICLE(0, gatlingWagon, 20000, -1, 3.0f, 1, 0);
 	AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(enemy, seq);

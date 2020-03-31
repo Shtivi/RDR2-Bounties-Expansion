@@ -54,29 +54,14 @@ void main()
 			Vector3 pos2 = add(&playerPos, &(multiply(&forwardVec, 10)));
 			getGroundPos(&pos2);
 
-			//Ped target = createPed("A_C_Bear_01", pos2);
-			//giveWeaponToPed(target, WeaponHash::MeleeMachete, 0, true);
-			Ped ped = createPed(F_LOWER_TOWN_FOLK, vehPos);
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
-			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, 1);
-			WAIT(1000);
-			AI::_0x779A2FFACEFAEA7B(ped, player, 0, 1, 3.0f, 1, 0);
+			//WAIT(1000);
+			//AI::_0x779A2FFACEFAEA7B(ped, player, 0, 1, 3.0f, 1, 0);
 			//AI::_0x779A2FFACEFAEA7B(target, ped, -754963320, 1, 2.0f, 1, 0);
-			WAIT(10000);
-			//ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
-			/*AUDIO::SET_AMBIENT_VOICE_NAME(target, "1021_G_M_M_UNIBANDITOS_01_HISPANIC_03");
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(target, 1);
 			Conversation conv;
-			conv.addLine(target, "GET_LOST");
-			conv.addDelay(500);
-			conv.addLine(target, "FINAL_WARNING");
-			conv.addDelay(1000);
-			conv.addLine(target, "ITS_MALE_EXTREME");
+			conv.addLine(player, "BRA_V2_ILO_SURRENDER");
+			conv.addLine(player, "BRA_V3_ILO_SURRENDER");
 			WAIT(1000);
-			pedEquipBestWeapon(target);
-			AI::TASK_AIM_GUN_AT_ENTITY(target, player, 90000, 0, 0);
 			conv.play();
-			PED::EXPLODE_PED_HEAD(target, WeaponHash::ShotgunDoublebarrel);*/
 
 			//Vector3 pedPos = getRandomPositionInRange(playerPos, 6);
 			//Vector3 realPos;

@@ -159,6 +159,7 @@ void AndrewClarkExecutor::playTargetRobbery()
 	}
 	else if (robberyProgress == RobberyProgress::TARGET_RESISTING)
 	{
+		// conv.addLine(player, "RE_GP_MNT_V2_GREET_ROB_POST");
 		robberyInteraction.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
 		robberyInteraction.addLine(target, "INTIMIDATED_ROB");
 		robberyInteraction.play();
