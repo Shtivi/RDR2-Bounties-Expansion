@@ -9,6 +9,8 @@ BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreas
 	this->stage = BountyMissionStage::MissionInitialization;
 	this->status = BountyMissionStatus::Unavailable;
 
+	inspectPosterPrompt = new Prompt("Inspect bounty", GAMEPLAY::GET_HASH_KEY("INPUT_MERCY_KILL"), SemiHold);
+	inspectPosterPrompt->hide();
 	setTargetAreaRadius(AREA_RADIUS);
 	setRequiredDistanceToLocateTarget(REQUIRED_DIST_TO_LOCATE);
 	setMustBeCloseToLocate(false);
