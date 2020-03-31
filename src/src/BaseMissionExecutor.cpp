@@ -9,6 +9,8 @@ BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreas
 	this->stage = BountyMissionStage::MissionInitialization;
 	this->status = BountyMissionStatus::Unavailable;
 
+	inspectPosterPrompt = new Prompt("Inspect bounty", GAMEPLAY::GET_HASH_KEY("INPUT_MERCY_KILL"), SemiHold);
+	inspectPosterPrompt->hide();
 	setTargetAreaRadius(AREA_RADIUS);
 	setRequiredDistanceToLocateTarget(REQUIRED_DIST_TO_LOCATE);
 	setMustBeCloseToLocate(false);
@@ -61,25 +63,6 @@ void BaseMissionExecutor::update()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
-
-	// TODO: delete this code
-	if (IsKeyJustUp(VK_KEY_N))
-	{
-		nextStage();
-
-		if (stage == BountyMissionStage::CaptureTarget)
-		{
-			if (missionData->requiredTargetCondition == TargetCondition::Alive)
-			{
-				//ENTITY::SET_ENTITY_COORDS(target, getArea()->cellCoords->x, getArea()->cellCoords->y, getArea()->cellCoords->z, 0, 0, 0, 0);
-				ENTITY::SET_ENTITY_COORDS(target, playerPos.x, playerPos.y, playerPos.z, 0, 0, 0, 0);
-			}
-			else
-			{
-				ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
-			}
-		}
-	}
 
 	if (stage == BountyMissionStage::MissionInitialization)
 	{
@@ -291,7 +274,7 @@ void BaseMissionExecutor::onPosterCollected()
 		AI::TASK_PERFORM_SEQUENCE(player, seq);
 		inspectPosterPrompt->hide();
 
-		WAIT(5000);
+		WAIT(8000);
 
 		menu->showMissionDetails(missionData);
 		ENTITY::DELETE_ENTITY(&poster);

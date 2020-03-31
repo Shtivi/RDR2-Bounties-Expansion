@@ -6,6 +6,7 @@ const int REQUIRED_DIST_TO_LOCATE = 25;
 class BaseMissionExecutor
 {
 private:
+	Prompt* inspectPosterPrompt;
 	BountyMissionData* missionData;
 	BountyMissionStage stage;
 	BountyMissionStatus status;

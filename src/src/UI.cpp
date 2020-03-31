@@ -1,12 +1,11 @@
 #include "Main.h";
 
-Prompt* inspectPosterPrompt;
 BountiesMenu* menu;
 
 void initializeUI()
 {
-	inspectPosterPrompt = new Prompt("Inspect bounty", GAMEPLAY::GET_HASH_KEY("INPUT_MERCY_KILL"), SemiHold);
-	inspectPosterPrompt->hide();
+	//inspectPosterPrompt = new Prompt("Inspect bounty", GAMEPLAY::GET_HASH_KEY("INPUT_MERCY_KILL"), SemiHold);
+	//inspectPosterPrompt->hide();
 
 	menu = new BountiesMenu();
 
