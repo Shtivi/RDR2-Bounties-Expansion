@@ -13,8 +13,6 @@ MapAreasManager* areasMgr;
 BountyMissionsFactory* missionsFactory;
 BountiesManager* bountiesMgr;
 
-GameStopwatch* stopwatch;
-
 void initialize()
 {
 	initializeLogger();
@@ -31,9 +29,6 @@ void initialize()
 void main()
 {
 	initialize();
-
-	stopwatch = new GameStopwatch();
-	stopwatch->start();
 
 	while (true)
 	{
