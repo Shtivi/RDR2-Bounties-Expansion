@@ -1,6 +1,6 @@
 # Red Dead Redemption 2: Bounties Expansion
 This mod adds some new bounty missions to Red Dead Redemption 2 single player.  
-Up to version 1.0.0 there are 4 bounty missions this mod adds.   
+Up to version 1.0.0 there are 4 new bounties.   
 
 ### Installation:
 - Download and install AB's ScripthookRDR2: http://www.dev-c.com/rdr2/scripthookrdr2/ (make sure you install the asi loader).
