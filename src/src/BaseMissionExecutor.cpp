@@ -306,6 +306,8 @@ void BaseMissionExecutor::onPosterCollected()
 		<< missionData->reward << "$, "
 		<< condition;
 	setBlipLabel(targetAreaBlip, label.str().c_str());
+
+	log(string("collected poster for: ").append(getMissionData()->targetName).append(" in ").append(getArea()->name));
 }
 
 void BaseMissionExecutor::onArrivalToArea()
@@ -324,6 +326,8 @@ void BaseMissionExecutor::onArrivalToArea()
 	std::stringstream text;
 	text << "Locate and capture ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~. " << gender << " is wanted " << condition << ".";
 	showSubtitle(text.str().c_str());
+
+	log(string("mission started: ").append(getMissionData()->targetName).append(" in ").append(getArea()->name));
 }
 
 void BaseMissionExecutor::onTargetLocated()
