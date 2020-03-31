@@ -16,7 +16,7 @@ Blip createBlip(Vector3 pos, Hash blipType, Hash blipSprite)
 
 Blip createBlip(Entity entity, Hash blipType, Hash blipSprite)
 {
-	Blip blip = RADAR::_0x23F74C2FDA6E7C61(blipType, entity); // Add blip for dummy prop
+	Blip blip = RADAR::_0x23F74C2FDA6E7C61(blipType, entity); 
 
 	if (blipSprite != 0)
 	{

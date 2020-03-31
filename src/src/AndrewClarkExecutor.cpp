@@ -1,7 +1,7 @@
 #include "Main.h";
 
 const char ROBBERY_HINT[] = "Hint: Andrew was found guilty of stealing money from the bank he had been working for...";
-
+const char ROBBERY_ESCALATE_HINT[] = "Try to make Andrew understand that you're serious.";
 const int OFFSET_FROM_TARGET = 4;
 const int ROBBERY_DISTANCE = OFFSET_FROM_TARGET + 2;
 
@@ -57,7 +57,7 @@ void AndrewClarkExecutor::update()
 		float distanceToPolice = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 1), *(getArea()->policeDeptCoords));
 		if (distanceToPolice < 220 && !spawnedBountyHunters)
 		{
-			spawnBountyHunters();
+			//spawnBountyHunters();
 			spawnedBountyHunters = true;
 		}
 	}
@@ -115,7 +115,7 @@ void AndrewClarkExecutor::onTargetLocated()
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(player, seq);
 
-	//setHelpMessage(ROBBERY_HINT);
+	setHelpMessage(ROBBERY_HINT);
 }
 
 void AndrewClarkExecutor::cleanup()
@@ -195,6 +195,11 @@ void AndrewClarkExecutor::playTargetRobbery()
 			}
 			robberyInteraction.play();
 			threatPrompt->show();
+
+			if (robberyAttempts > 2)
+			{
+				setHelpMessage(ROBBERY_ESCALATE_HINT);
+			}
 		}
 
 		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(target, player, 0, 0))

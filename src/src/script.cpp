@@ -34,7 +34,7 @@ void main()
 	{
 		bountiesMgr->update();
 		menu->update();
-		//printHelpMessage();
+		printHelpMessage();
 
 		//if (IsKeyJustUp(VK_KEY_Z))
 		//{

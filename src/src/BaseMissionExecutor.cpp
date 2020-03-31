@@ -64,6 +64,8 @@ void BaseMissionExecutor::update()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 
+	//displayDebugText(to_string(RADAR::DOES_BLIP_EXIST(policeLocBlip)).c_str());
+
 	//if (IsKeyJustUp(VK_KEY_N))
 	//{
 	//	nextStage();
@@ -171,6 +173,9 @@ void BaseMissionExecutor::update()
 	{
 		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
 		{
+			deleteBlipSafe(&policeLocBlip);
+			deleteBlipSafe(&cellBlip);
+
 			stage = BountyMissionStage::CaptureTarget;
 
 			std::stringstream text;
@@ -245,7 +250,7 @@ void BaseMissionExecutor::nextStage()
 
 		case BountyMissionStage::CollectReward:			
 			onRewardCollected();
-			onFinished();
+			onFinished(true);
 			stage = BountyMissionStage::Finished; 
 			break;
 	}

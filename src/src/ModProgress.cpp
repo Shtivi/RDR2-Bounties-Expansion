@@ -66,10 +66,9 @@ BountyMissionStatus ModProgress::getMissionProgress(int missionId)
 
 	if (it == cache.end())
 	{
-		string logTxt = string("mission status for mission id: ").append(to_string(missionId)).append(" was not found");
-		log(logTxt);
-		cache[missionId] = BountyMissionStatus::Unavailable;
-		return BountyMissionStatus::Unavailable;
+		setMissionProgress(missionId, BountyMissionStatus::Pending);
+		save();
+		return BountyMissionStatus::Pending;
 	}
 
 	return it->second;;

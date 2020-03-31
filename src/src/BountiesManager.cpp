@@ -128,10 +128,6 @@ void BountiesManager::startNextMission(BaseMissionExecutor* after)
 		{
 			nextMission->setMissionStatus(progress->getMissionProgress(nextMissionId));
 		}
-		else
-		{
-			nextMission->setMissionStatus(BountyMissionStatus::Pending);
-		}
 
 		progress->allowMission(nextMissionId);
 		missionExecutors.push_back(nextMission);
