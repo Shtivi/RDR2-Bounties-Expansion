@@ -274,7 +274,7 @@ void BaseMissionExecutor::onPosterCollected()
 		AI::TASK_PERFORM_SEQUENCE(player, seq);
 		inspectPosterPrompt->hide();
 
-		WAIT(5000);
+		WAIT(8000);
 
 		menu->showMissionDetails(missionData);
 		ENTITY::DELETE_ENTITY(&poster);
