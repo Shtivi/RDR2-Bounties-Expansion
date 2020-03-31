@@ -64,6 +64,24 @@ void BaseMissionExecutor::update()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 
+	//if (IsKeyJustUp(VK_KEY_N))
+	//{
+	//	nextStage();
+
+	//	if (stage == BountyMissionStage::CaptureTarget)
+	//	{
+	//		if (missionData->requiredTargetCondition == TargetCondition::Alive)
+	//		{
+	//			//ENTITY::SET_ENTITY_COORDS(target, getArea()->cellCoords->x, getArea()->cellCoords->y, getArea()->cellCoords->z, 0, 0, 0, 0);
+	//			ENTITY::SET_ENTITY_COORDS(target, playerPos.x, playerPos.y, playerPos.z, 0, 0, 0, 0);
+	//		}
+	//		else
+	//		{
+	//			ENTITY::SET_ENTITY_HEALTH(target, 0, 0);
+	//		}
+	//	}
+	//}
+
 	if (stage == BountyMissionStage::MissionInitialization)
 	{
 		initialize();
@@ -354,7 +372,7 @@ void BaseMissionExecutor::onTargetHandedOver()
 void BaseMissionExecutor::onRewardCollected()
 {
 	CASH::PLAYER_ADD_CASH(missionData->reward * 100, 0);
-	setHelpMessage(BOUNTY_COMPLETED);
+	showSubtitle(BOUNTY_COMPLETED);
 }
 
 void BaseMissionExecutor::onFinished(bool shouldCleanup)

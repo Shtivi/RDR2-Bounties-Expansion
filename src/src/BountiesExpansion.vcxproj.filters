@@ -281,5 +281,8 @@
     <Filter Include="Src\Script\Stopwatch">
       <UniqueIdentifier>{5a0b2eb8-9ead-4236-b7b4-9f5f31941990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Game\BountyMissions\BernardTheBear">
+      <UniqueIdentifier>{81d6e49d-3d9f-4d1c-a220-4edd0651eff7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
