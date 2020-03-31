@@ -1,6 +1,6 @@
 #pragma once
 
-enum BountyMissionStage
+enum class BountyMissionStage : int
 {
 	MissionInitialization = -1,
 	CollectPoster = 0,
@@ -13,7 +13,8 @@ enum BountyMissionStage
 	Finished = 7
 };
 
-enum BountyMissionStatus {
+enum class BountyMissionStatus : int
+{
 	Unavailable = -1,
 	Pending = 0,
 	CollectedPoster = 1,
@@ -22,13 +23,13 @@ enum BountyMissionStatus {
 	Failed = 4
 };
 
-enum TargetCondition
+enum class TargetCondition
 {
 	Alive,
 	DeadOrAlive
 };
 
-enum MapAreas
+enum class MapAreas
 {
 	Blackwater = 1,
 	Rhodes,

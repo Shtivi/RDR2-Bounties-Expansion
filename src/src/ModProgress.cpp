@@ -45,7 +45,7 @@ void ModProgress::save()
 		while (it != cache.end())
 		{
 			std::stringstream output;
-			output << it->first << " " << it->second;
+			; output << it->first << " " << static_cast<int>(it->second);
 			file << output.str();
 
 			it++;
@@ -142,5 +142,5 @@ void ModProgress::parseToCache(std::string inputLine)
 	id = std::stoi(idStr);
 	status = std::stoi(statusStr);
 
-	cache[id] = (BountyMissionStatus)status;
+	cache[id] = static_cast<BountyMissionStatus>(status);
 }

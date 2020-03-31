@@ -3,9 +3,9 @@
 
 MapAreasManager::MapAreasManager()
 {
-	cache[Blackwater] = createBlackwater();
-	cache[Rhodes] = createRhodes();
-	cache[Valentine] = createValentine();
+	cache[MapAreas::Blackwater] = createBlackwater();
+	cache[MapAreas::Rhodes]		= createRhodes();
+	cache[MapAreas::Valentine]	= createValentine();
 }
 
 

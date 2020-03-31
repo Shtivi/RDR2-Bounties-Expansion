@@ -6,8 +6,8 @@ BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreas
 {
 	this->areasMgr = areasMgr;
 	this->missionData = new BountyMissionData(missionData);
-	this->stage = MissionInitialization;
-	this->status = Unavailable;
+	this->stage = BountyMissionStage::MissionInitialization;
+	this->status = BountyMissionStatus::Unavailable;
 
 	setTargetAreaRadius(AREA_RADIUS);
 	setRequiredDistanceToLocateTarget(REQUIRED_DIST_TO_LOCATE);
@@ -67,9 +67,9 @@ void BaseMissionExecutor::update()
 	{
 		nextStage();
 
-		if (stage == CaptureTarget)
+		if (stage == BountyMissionStage::CaptureTarget)
 		{
-			if (missionData->requiredTargetCondition == Alive)
+			if (missionData->requiredTargetCondition == TargetCondition::Alive)
 			{
 				//ENTITY::SET_ENTITY_COORDS(target, getArea()->cellCoords->x, getArea()->cellCoords->y, getArea()->cellCoords->z, 0, 0, 0, 0);
 				ENTITY::SET_ENTITY_COORDS(target, playerPos.x, playerPos.y, playerPos.z, 0, 0, 0, 0);
