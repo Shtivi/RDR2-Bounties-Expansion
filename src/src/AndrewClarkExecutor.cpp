@@ -2,6 +2,9 @@
 
 const char ROBBERY_HINT[] = "Hint: Andrew was found guilty of stealing money from the bank he had been working for...";
 
+const int OFFSET_FROM_TARGET = 4;
+const int ROBBERY_DISTANCE = OFFSET_FROM_TARGET + 2;
+
 AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
@@ -22,27 +25,30 @@ void AndrewClarkExecutor::update()
 	BaseMissionExecutor::update();
 	Ped player = PLAYER::PLAYER_PED_ID();
 
-	if (distanceBetweenEntities(player, target) < 12 && !isTargetAlerted)
+	if (getMissionStage() >= BountyMissionStage::LocateTarget)
 	{
-		isTargetAlerted = true;
-		PED::_0xFE07FF6495D52E2A(target, 0, 0, 0);
-		WAIT(500);
-		AI::TASK_TURN_PED_TO_FACE_ENTITY(target, player, -1, 0, 0, 0);
-		playAmbientSpeech(target, "GET_LOST");
-	}
-
-	if (isTargetAlerted)
-	{
-		if (!isTargetScared && PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), target))
+		if (distanceBetweenEntities(player, target) < 12 && !isTargetAlerted)
 		{
-			AI::TASK_HANDS_UP(target, -1, player, -1, 0);
-			playAmbientSpeech(target, "WHOA");
-			isTargetScared = true;
+			isTargetAlerted = true;
+			PED::_0xFE07FF6495D52E2A(target, 0, 0, 0);
+			WAIT(500);
+			AI::TASK_TURN_PED_TO_FACE_ENTITY(target, player, -1, 0, 0, 0);
+			playAmbientSpeech(target, "GET_LOST");
 		}
 
-		if (getMissionStage() == BountyMissionStage::CaptureTarget)
+		if (isTargetAlerted)
 		{
-			playTargetRobbery();
+			Hash playerCurrWeapon;
+			WEAPON::GET_CURRENT_PED_WEAPON(player, &playerCurrWeapon, true, 0, false);
+
+			if (getMissionStage() == BountyMissionStage::CaptureTarget && playerCurrWeapon != GAMEPLAY::GET_HASH_KEY("WEAPON_LASSO"))
+			{
+				playTargetRobbery();
+			}
+			else
+			{
+				threatPrompt->hide();
+			}
 		}
 	}
 
@@ -105,11 +111,11 @@ void AndrewClarkExecutor::onTargetLocated()
 	{
 		AI::TASK_LEAVE_ANY_VEHICLE(0, 0, 0);
 	}
-	AI::TASK_GO_TO_ENTITY(0, target, 10000, 5, 1, 0, 0);
+	AI::TASK_GO_TO_ENTITY(0, target, 10000, OFFSET_FROM_TARGET, 1, 0, 0);
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(player, seq);
 
-	setHelpMessage(ROBBERY_HINT);
+	//setHelpMessage(ROBBERY_HINT);
 }
 
 void AndrewClarkExecutor::cleanup()
@@ -142,7 +148,7 @@ void AndrewClarkExecutor::playTargetRobbery()
 
 	if (robberyProgress == RobberyProgress::NONE)
 	{
-		if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), target))
+		if (distanceBetweenEntities(player, target) < OFFSET_FROM_TARGET)
 		{
 			threatPrompt->show();
 		}
@@ -160,6 +166,8 @@ void AndrewClarkExecutor::playTargetRobbery()
 	else if (robberyProgress == RobberyProgress::TARGET_RESISTING)
 	{
 		// conv.addLine(player, "RE_GP_MNT_V2_GREET_ROB_POST");
+		robberyInteraction.addLine(new RobberyAimAtVictim(player, target));
+		robberyInteraction.addLine(target, "WHOA");
 		robberyInteraction.addLine(player, "RE_AMD_LWL_V2_ROB_DEALERS");
 		robberyInteraction.addLine(target, "INTIMIDATED_ROB");
 		robberyInteraction.play();
@@ -189,10 +197,6 @@ void AndrewClarkExecutor::playTargetRobbery()
 			threatPrompt->show();
 		}
 
-		//if (PED::IS_PED_SHOOTING(player))
-		//{
-		//	robberyProgress = RobberyProgress::TARGET_GAVE_UP;
-		//}
 		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(target, player, 0, 0))
 		{
 			robberyProgress = RobberyProgress::TARGET_GAVE_UP;

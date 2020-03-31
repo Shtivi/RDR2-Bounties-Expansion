@@ -30,7 +30,7 @@ void EliasTraditionExecutor::update()
 		playVictimExecution();
 	}
 	
-	if (executedVictim && ENTITY::IS_ENTITY_DEAD(victim) && !executionCleanedUp)
+	if (executedVictim && victim && ENTITY::DOES_ENTITY_EXIST(victim) && ENTITY::IS_ENTITY_DEAD(victim) && !executionCleanedUp)
 	{
 		executionCleanedUp = true;
 		cleanUpExecution();
