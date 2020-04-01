@@ -51,5 +51,6 @@ typedef struct
 	DWORD _paddingy;
 	float z;
 	DWORD _paddingz;
+
 } Vector3;
 static_assert(sizeof(Vector3) == 24, "");

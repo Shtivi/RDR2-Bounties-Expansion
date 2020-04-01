@@ -112,6 +112,9 @@
     <ClCompile Include="GameStopwatch.cpp">
       <Filter>Src\Script\Stopwatch</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Src\Game\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -222,6 +225,9 @@
     <ClInclude Include="Stopwatch.h">
       <Filter>Src\Script\Stopwatch</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Src\Game\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -283,6 +289,9 @@
     </Filter>
     <Filter Include="Src\Game\BountyMissions\AndrewClark\RobberyInteraction">
       <UniqueIdentifier>{14748df6-76e8-49b5-adc8-22f3cfff73bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Camera">
+      <UniqueIdentifier>{483092fe-f952-461b-a215-27f7890bcedd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

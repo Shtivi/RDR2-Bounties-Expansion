@@ -15,6 +15,7 @@
     <ClCompile Include="BountiesManager.cpp" />
     <ClCompile Include="BountiesMenu.cpp" />
     <ClCompile Include="BountyMissionsFactory.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Conversation.cpp" />
     <ClCompile Include="ConversationLine.cpp" />
     <ClCompile Include="Delay.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="BountyDefinitions.h" />
     <ClInclude Include="BountyMissionData.h" />
     <ClInclude Include="BountyMissionsFactory.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Conversation.h" />
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />

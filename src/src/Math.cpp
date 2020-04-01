@@ -88,3 +88,65 @@ float get_vector_length(Vector3* vector) {
 	double z = (double)vector->z;
 	return(float)sqrt(x * x + y * y + z * z);
 }
+
+Vector3 cross(Vector3 left, Vector3 right)
+{
+	Vector3 result;
+	result.x = left.y * right.z - left.z * right.y;
+	result.y = left.z * right.x - left.x * right.z;
+	result.z = left.x * right.y - left.y * right.x;
+	return result;
+}
+
+Vector3 getUpVector(Entity entity)
+{
+	return cross(getRightVector(entity), ENTITY::GET_ENTITY_FORWARD_VECTOR(entity));
+}
+
+Vector3 getRightVector(Entity entity)
+{
+	const double D2R = 0.01745329251994329576923690768489;
+	Vector3 rotation = ENTITY::GET_ENTITY_ROTATION(entity, 2);
+	double num1 = cos(rotation.y * D2R);
+	double x = num1 * cos(-rotation.z * D2R);
+	double y = num1 * sin(rotation.z * D2R);
+	double z = sin(-rotation.y * D2R);
+	return toVector3((float)x, (float)y, (float)z);
+}
+
+Vector3 operator+(Vector3 const& v, Vector3 const& u)
+{
+	Vector3 result;
+	result.x = u.x + v.x;
+	result.y = u.y + v.y;
+	result.z = u.z + v.z;
+	return result;
+}
+
+Vector3 operator*(Vector3 const& u, float a)
+{
+	Vector3 result;
+	result.x = u.x * a;
+	result.y = u.y * a;
+	result.z = u.z * a;
+	return result;
+}
+
+Vector3 operator*(float a, Vector3 const& u)
+{
+	return u * a;
+}
+
+Vector3 operator-(Vector3 const& v, Vector3 const& u)
+{
+	return v + (u * (-1));
+}
+
+Vector3 operator* (Vector3 const& left, Vector3 const& right)
+{
+	Vector3 result;
+	result.x = left.y * right.z - left.z * right.y;
+	result.y = left.z * right.x - left.x * right.z;
+	result.z = left.x * right.y - left.y * right.x;
+	return result;
+};

@@ -34,13 +34,14 @@
 #include "Logger.h";
 #include "Stopwatch.h";
 #include "Math.h";
-#include "world.h";
 #include "Weapons.h";
 #include "Vehicles.h";
+#include "Camera.h";
 #include "Ped.h";
 #include "Conversation.h";
 #include "RobberyInteraction.h";
 #include "blips.h";
+#include "world.h";
 #include "Prompt.h";
 #include "GUIDrawer.h";
 #include "AttachedRope.h";
