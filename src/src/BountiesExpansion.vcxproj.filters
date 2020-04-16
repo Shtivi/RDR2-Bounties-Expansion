@@ -112,8 +112,14 @@
     <ClCompile Include="GameStopwatch.cpp">
       <Filter>Src\Script\Stopwatch</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Src\Game\Camera</Filter>
+    <ClCompile Include="JesseHillExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\JesseHill</Filter>
+    </ClCompile>
+    <ClCompile Include="QuentinChigurhExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\QuentinChigurh</Filter>
+    </ClCompile>
+    <ClCompile Include="TucoVillaExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\TucoVilla</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,8 +231,14 @@
     <ClInclude Include="Stopwatch.h">
       <Filter>Src\Script\Stopwatch</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Src\Game\Camera</Filter>
+    <ClInclude Include="JesseHillExecutor.h">
+      <Filter>Src\Game\BountyMissions\JesseHill</Filter>
+    </ClInclude>
+    <ClInclude Include="QuentinChigurhExecutor.h">
+      <Filter>Src\Game\BountyMissions\QuentinChigurh</Filter>
+    </ClInclude>
+    <ClInclude Include="TucoVillaExecutor.h">
+      <Filter>Src\Game\BountyMissions\TucoVilla</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,14 +296,20 @@
     <Filter Include="Src\Script\Stopwatch">
       <UniqueIdentifier>{5a0b2eb8-9ead-4236-b7b4-9f5f31941990}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\BountyMissions\BernardTheBear">
-      <UniqueIdentifier>{81d6e49d-3d9f-4d1c-a220-4edd0651eff7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Game\BountyMissions\AndrewClark\RobberyInteraction">
       <UniqueIdentifier>{14748df6-76e8-49b5-adc8-22f3cfff73bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\Camera">
-      <UniqueIdentifier>{483092fe-f952-461b-a215-27f7890bcedd}</UniqueIdentifier>
+    <Filter Include="Src\Game\BountyMissions\JesseHill">
+      <UniqueIdentifier>{ee3fca34-f875-4cad-a058-4f3ff073997e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\BernardTheBear">
+      <UniqueIdentifier>{433f0fa1-c11d-4f22-b340-052cf209d334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\QuentinChigurh">
+      <UniqueIdentifier>{44f7db77-dad7-4b8b-ad5d-6902af723603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\TucoVilla">
+      <UniqueIdentifier>{91a17424-9a72-4d21-b998-40e1cbda3adb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

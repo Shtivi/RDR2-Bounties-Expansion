@@ -11,11 +11,11 @@
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="Autosave.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
+    <ClCompile Include="JesseHillExecutor.cpp" />
     <ClCompile Include="blips.cpp" />
     <ClCompile Include="BountiesManager.cpp" />
     <ClCompile Include="BountiesMenu.cpp" />
     <ClCompile Include="BountyMissionsFactory.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Conversation.cpp" />
     <ClCompile Include="ConversationLine.cpp" />
     <ClCompile Include="Delay.cpp" />
@@ -35,11 +35,13 @@
     <ClCompile Include="Prompt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
+    <ClCompile Include="QuentinChigurhExecutor.cpp" />
     <ClCompile Include="RobberyAimAtVictim.cpp" />
     <ClCompile Include="RobberyWarningShot.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="SyncPlayable.cpp" />
+    <ClCompile Include="TucoVillaExecutor.cpp" />
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Vehicles.cpp" />
@@ -55,13 +57,13 @@
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="Autosave.h" />
     <ClInclude Include="BaseMissionExecutor.h" />
+    <ClInclude Include="JesseHillExecutor.h" />
     <ClInclude Include="blips.h" />
     <ClInclude Include="BountiesManager.h" />
     <ClInclude Include="BountiesMenu.h" />
     <ClInclude Include="BountyDefinitions.h" />
     <ClInclude Include="BountyMissionData.h" />
     <ClInclude Include="BountyMissionsFactory.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Conversation.h" />
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />
@@ -76,9 +78,11 @@
     <ClInclude Include="Prompt.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
+    <ClInclude Include="QuentinChigurhExecutor.h" />
     <ClInclude Include="RobberyInteraction.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="Stopwatch.h" />
+    <ClInclude Include="TucoVillaExecutor.h" />
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vehicles.h" />
@@ -110,7 +114,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <OutDir>D:\Program Files\Rockstar Games\Red Dead Redemption 2\</OutDir>
+    <OutDir>C:\Program Files\Rockstar Games\Red Dead Redemption 2\RDR2-Bounties-Expansion-master\src\x64\Release\</OutDir>
     <IntDir>tmp\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

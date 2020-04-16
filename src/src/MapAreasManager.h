@@ -16,4 +16,5 @@ private:
 	MapArea* createBlackwater();
 	MapArea* createRhodes();
 	MapArea* createValentine();
+	MapArea* createTumbleweed();
 };

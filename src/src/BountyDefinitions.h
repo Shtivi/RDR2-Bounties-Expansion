@@ -36,5 +36,6 @@ enum class MapAreas
 	Valentine,
 	SaintDenis,
 	Strawberry,
-	Annesburg
+	Annesburg,
+	Tumbleweed
 };

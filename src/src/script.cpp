@@ -36,55 +36,42 @@ void main()
 		menu->update();
 		printHelpMessage();
 
+		//if (IsKeyJustUp(VK_KEY_Z))
+		//{
 
-		if (IsKeyJustUp(VK_KEY_Z))
-		{
+		//	Ped player = PLAYER::PLAYER_PED_ID();
+		//	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+		//	Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
 
-			Ped player = PLAYER::PLAYER_PED_ID();
-			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-			Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
+		//	Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 3)));
+		//	getGroundPos(vehPos, &vehPos);
 
-			Vector3 vehPos = add(&playerPos, &(multiply(&forwardVec, 5)));
-			getGroundPos(vehPos, &vehPos);
-			Ped ped = createPed(F_LOWER_TOWN_FOLK, vehPos);
+		//	RaycastResult ray = raycast(playerPos, forwardVec, 10);
+		//	if (ray.didHit)
+		//	{
+		//		log(to_string(ENTITY::GET_ENTITY_HEADING(player)));
+		//		log(ray.hitPos);
+		//	}
+		//	else
+		//	{
+		//		log("didnt hit");
+		//	}
+		//}
+		//else if (IsKeyJustUp(VK_KEY_X))
+		//{
+		//	Ped player = PLAYER::PLAYER_PED_ID();
+		//	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+		//	float ground;
+		//	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
 
-			Vector3 camPos = playerPos + (-3 * forwardVec  + getUpVector(player));
-			//Vector3 camPos = playerPos + forwardVec;
-			GameCamera camera(camPos, 30);
-			camera.setIsActive(true);
-			camera.pointAt(ped);
-			GameCamera::setScriptCamsRendering(true);
-			WAIT(5000);
-			camera.destroy();
-			GameCamera::setScriptCamsRendering(false);
+		//	std::stringstream output;
+		//	output << "\n"
+		//		<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
+		//		<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
+		//		<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
 
-
-			/*RaycastResult ray = raycast(playerPos, forwardVec, 10);
-			if (ray.didHit)
-			{
-				log(to_string(ENTITY::GET_ENTITY_HEADING(player)));
-				log(ray.hitPos);
-			}
-			else
-			{
-				log("didnt hit");
-			}*/
-		}
-		else if (IsKeyJustUp(VK_KEY_X))
-		{
-			Ped player = PLAYER::PLAYER_PED_ID();
-			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-			float ground;
-			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
-
-			std::stringstream output;
-			output << "\n"
-				<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
-				<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
-				<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
-
-			log(output.str().c_str());
-		}
+		//	log(output.str().c_str());
+		//}
 
 
 		WAIT(0);
