@@ -52,7 +52,14 @@
 #include "BountyMissionData.h";
 #include "BaseMissionExecutor.h";
 #include "EliasTraditionExecutor.h";
+#include "TreasuryPeteExecutor.h";
 #include "TurkishRunnerExecutor.h";
+#include "JaneBullionExecutor.h";
+#include "RobertCorbucciExecutor.h";
+#include "ClintonvonHagenExecutor.h";
+#include "JuanCortezExecutor.h";
+#include "RichardMooreExecutor.h";
+#include "ArchStantonExecutor.h";
 #include "JacobSeedExecutor.h";
 #include "AndrewClarkExecutor.h";
 #include "TucoVillaExecutor.h";

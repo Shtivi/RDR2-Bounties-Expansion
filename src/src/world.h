@@ -11,6 +11,7 @@ char* const F_LOWER_TOWN_FOLK = "A_F_M_LowerSDTownfolk_01";
 char* const M_LOWER_TOWN_FOLK = "A_M_M_LowerSDTownfolk_01";
 char* const M_BOUNTY_TARGET = "G_M_M_UniRanchers_01";
 char* const M_BOUNTY_MEXICAN = "G_M_M_UniBanditos_01";
+char* const M_BOUNTY_FANCY = "MSP_SAINTDENIS1_MALES_01";
 
 typedef struct RaycastResult
 {

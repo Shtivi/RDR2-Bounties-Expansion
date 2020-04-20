@@ -37,5 +37,6 @@ enum class MapAreas
 	SaintDenis,
 	Strawberry,
 	Annesburg,
-	Tumbleweed
+	Tumbleweed,
+	Armadillo
 };

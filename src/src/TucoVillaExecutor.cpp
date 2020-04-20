@@ -108,7 +108,7 @@ void TucoVillaExecutor::update()
 		{
 			showSubtitle("The target is getting too far!");
 		}
-		else if (distanceBetweenEntities(target, player) > 100)
+		if (distanceBetweenEntities(target, player) > 120)
 		{
 			fail("Bounty failed, target lost");
 		}
@@ -132,8 +132,7 @@ void TucoVillaExecutor::enterIdleMode()
 	{
 		Object seq;
 		AI::OPEN_SEQUENCE_TASK(&seq);
-		AI::TASK_TURN_PED_TO_FACE_COORD(0, campfirePos.x, campfirePos.y, campfirePos.z, 1000);
-		AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true); // PLAY SCENARIO
+		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 	}
@@ -242,6 +241,8 @@ void TucoVillaExecutor::prepareSet()
 	addEnemy(toVector3(-5040.875, -3627.315, -5.063022));
 	addEnemy(toVector3(-5049.285, -3618.483, -5.362561));
 	addEnemy(toVector3(-5056.274, -3639.233, -3.844062));
+	addEnemy(toVector3(-5062.674, -3626.799, -4.959296));
+	addEnemy(toVector3(-5066.182, -3635.668, -3.349133));
 
 	enterIdleMode();
 }

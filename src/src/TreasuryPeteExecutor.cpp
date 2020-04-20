@@ -3,25 +3,25 @@
 using namespace std;
 
 const int IDLE_DIST = 45;
-const int ALERT_DIST = 35;
-const int WARN_DIST = 30;
+const int ALERT_DIST = 40;
+const int WARN_DIST = 35;
 const int HEARING_RANGE = 45;
 const int COMBAT_RANGE = 12;
 
-JesseHillExecutor::JesseHillExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+TreasuryPeteExecutor::TreasuryPeteExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
 	setTargetAreaRadius(130);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(-5705.996, -2390.512, 4.240256);
+	campfirePos = toVector3(2884.414, -244.7007, 41.77635);
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
 }
 
-void JesseHillExecutor::update()
+void TreasuryPeteExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
@@ -114,14 +114,16 @@ void JesseHillExecutor::update()
 
 }
 
-Ped JesseHillExecutor::spawnTarget()
+Ped TreasuryPeteExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(-5710.177, -2386.995, 6.257581);
-	Ped target = createPed(M_BOUNTY_TARGET, targetPos);
+	Vector3 targetPos = toVector3(2889.372, -249.994, 42.73455);
+	Ped target = createPed("MSP_MOB1_MALES_01", targetPos);
+	giveWeaponToPed(target, PistolMauser, 0x743D4F54, false);
+	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	return target;
 }
 
-void JesseHillExecutor::enterIdleMode()
+void TreasuryPeteExecutor::enterIdleMode()
 {
 	char* scenarioName;
 	Ped player = PLAYER::PLAYER_PED_ID();
@@ -138,7 +140,7 @@ void JesseHillExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void JesseHillExecutor::enterAlertMode()
+void TreasuryPeteExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -159,7 +161,7 @@ void JesseHillExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void JesseHillExecutor::enterWarningMode()
+void TreasuryPeteExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -171,7 +173,7 @@ void JesseHillExecutor::enterWarningMode()
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void JesseHillExecutor::enterCombatMode()
+void TreasuryPeteExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
 
@@ -224,28 +226,28 @@ void JesseHillExecutor::enterCombatMode()
 	}
 }
 
-void JesseHillExecutor::prepareSet()
+void TreasuryPeteExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-5695.089, -2379.958, 4.456663));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(2889.896, -231.8964, 42.43585));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-5693.293, -2376.194, 5.328225));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5687.966, -2379.522, 3.616471));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(2888.997, -228.5483, 42.28429));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(2888.105, -225.22, 42.27705));
 
 	addEnemy(target);
-	addEnemy(toVector3(-5711.004, -2391.769, 6.44563));
-	addEnemy(toVector3(-5706.604, -2387.53, 5.327281));
-	addEnemy(toVector3(-5701.083, -2383.894, 4.922241));
-	addEnemy(toVector3(-5698.187, -2389.69, 3.816682));
-	addEnemy(toVector3(-5704.169, -2405.032, 4.893043));
-	addEnemy(toVector3(-5687.943, -2381.427, 3.032831));
-	addEnemy(toVector3(-5685.831, -2386.835, 2.014514));
+	addEnemy(toVector3(2889.784, -228.2473, 42.33517));
+	addEnemy(toVector3(2877.008, -233.9549, 42.39757));
+	addEnemy(toVector3(2868.363, -250.5205, 42.18322));
+	addEnemy(toVector3(2901.757, -247.6406, 41.97012));
+	addEnemy(toVector3(2885.934, -249.5695, 42.74379));
+	addEnemy(toVector3(2887.713, -241.9694, 42.63535));
+	addEnemy(toVector3(2880.708, -235.3412, 42.42608));
 
 	enterIdleMode();
 }
 
-void JesseHillExecutor::onTargetLocated()
+void TreasuryPeteExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
 
@@ -259,7 +261,7 @@ void JesseHillExecutor::onTargetLocated()
 	}
 }
 
-void JesseHillExecutor::createEnemyBlips()
+void TreasuryPeteExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -271,7 +273,7 @@ void JesseHillExecutor::createEnemyBlips()
 	}
 }
 
-void JesseHillExecutor::releaseUnnecessaryEntities()
+void TreasuryPeteExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -290,13 +292,14 @@ void JesseHillExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void JesseHillExecutor::addEnemy(Vector3 pos)
+void TreasuryPeteExecutor::addEnemy(Vector3 pos)
 {
-	Ped enemyPed = createPed("G_M_M_UniBanditos_01", pos);
+	Ped enemyPed = createPed("G_M_M_UniCriminals_01", pos);
+	PED::SET_PED_RELATIONSHIP_GROUP_HASH(enemyPed, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	addEnemy(enemyPed);
 }
 
-void JesseHillExecutor::addEnemy(Ped ped)
+void TreasuryPeteExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
 
@@ -304,20 +307,20 @@ void JesseHillExecutor::addEnemy(Ped ped)
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void JesseHillExecutor::addHorse(const char* model, Vector3 pos)
+void TreasuryPeteExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void JesseHillExecutor::addHorse(Ped horse)
+void TreasuryPeteExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void JesseHillExecutor::cleanup()
+void TreasuryPeteExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);

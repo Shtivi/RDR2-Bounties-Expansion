@@ -8,9 +8,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AndrewClarkExecutor.cpp" />
+    <ClCompile Include="ArchStantonExecutor.cpp" />
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="Autosave.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
+    <ClCompile Include="ClintonvonHagenExecutor.cpp" />
+    <ClCompile Include="JaneBullionExecutor.cpp" />
     <ClCompile Include="JesseHillExecutor.cpp" />
     <ClCompile Include="blips.cpp" />
     <ClCompile Include="BountiesManager.cpp" />
@@ -25,6 +28,7 @@
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="HelpMessages.cpp" />
     <ClCompile Include="JacobSeedExecutor.cpp" />
+    <ClCompile Include="JuanCortezExecutor.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MapArea.cpp" />
@@ -36,11 +40,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
     <ClCompile Include="QuentinChigurhExecutor.cpp" />
+    <ClCompile Include="RichardMooreExecutor.cpp" />
     <ClCompile Include="RobberyAimAtVictim.cpp" />
     <ClCompile Include="RobberyWarningShot.cpp" />
+    <ClCompile Include="RobertCorbucciExecutor.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="SyncPlayable.cpp" />
+    <ClCompile Include="TreasuryPeteExecutor.cpp" />
     <ClCompile Include="TucoVillaExecutor.cpp" />
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -54,9 +61,12 @@
     <ClInclude Include="..\..\inc\natives.h" />
     <ClInclude Include="..\..\inc\types.h" />
     <ClInclude Include="AndrewClarkExecutor.h" />
+    <ClInclude Include="ArchStantonExecutor.h" />
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="Autosave.h" />
     <ClInclude Include="BaseMissionExecutor.h" />
+    <ClInclude Include="ClintonvonHagenExecutor.h" />
+    <ClInclude Include="JaneBullionExecutor.h" />
     <ClInclude Include="JesseHillExecutor.h" />
     <ClInclude Include="blips.h" />
     <ClInclude Include="BountiesManager.h" />
@@ -68,6 +78,7 @@
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />
     <ClInclude Include="JacobSeedExecutor.h" />
+    <ClInclude Include="JuanCortezExecutor.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MapArea.h" />
@@ -79,9 +90,12 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
     <ClInclude Include="QuentinChigurhExecutor.h" />
+    <ClInclude Include="RichardMooreExecutor.h" />
     <ClInclude Include="RobberyInteraction.h" />
+    <ClInclude Include="RobertCorbucciExecutor.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="Stopwatch.h" />
+    <ClInclude Include="TreasuryPeteExecutor.h" />
     <ClInclude Include="TucoVillaExecutor.h" />
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />

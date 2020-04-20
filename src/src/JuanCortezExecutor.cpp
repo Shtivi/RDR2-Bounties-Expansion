@@ -8,20 +8,20 @@ const int WARN_DIST = 30;
 const int HEARING_RANGE = 45;
 const int COMBAT_RANGE = 12;
 
-JesseHillExecutor::JesseHillExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+JuanCortezExecutor::JuanCortezExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
 	setTargetAreaRadius(130);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(-5705.996, -2390.512, 4.240256);
+	campfirePos = toVector3(-3473.444, -3470.146, -0.5704689);
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
 }
 
-void JesseHillExecutor::update()
+void JuanCortezExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
@@ -114,14 +114,14 @@ void JesseHillExecutor::update()
 
 }
 
-Ped JesseHillExecutor::spawnTarget()
+Ped JuanCortezExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(-5710.177, -2386.995, 6.257581);
-	Ped target = createPed(M_BOUNTY_TARGET, targetPos);
+	Vector3 targetPos = toVector3(-3484.982, -3468.916, 0.1763178);
+	Ped target = createPed(M_BOUNTY_MEXICAN, targetPos);
 	return target;
 }
 
-void JesseHillExecutor::enterIdleMode()
+void JuanCortezExecutor::enterIdleMode()
 {
 	char* scenarioName;
 	Ped player = PLAYER::PLAYER_PED_ID();
@@ -138,7 +138,7 @@ void JesseHillExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void JesseHillExecutor::enterAlertMode()
+void JuanCortezExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -159,7 +159,7 @@ void JesseHillExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void JesseHillExecutor::enterWarningMode()
+void JuanCortezExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -171,7 +171,7 @@ void JesseHillExecutor::enterWarningMode()
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void JesseHillExecutor::enterCombatMode()
+void JuanCortezExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
 
@@ -224,28 +224,28 @@ void JesseHillExecutor::enterCombatMode()
 	}
 }
 
-void JesseHillExecutor::prepareSet()
+void JuanCortezExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-5695.089, -2379.958, 4.456663));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-3487.41, -3447.831, -0.3391106));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-5693.293, -2376.194, 5.328225));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5687.966, -2379.522, 3.616471));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-3491.532, -3449.195, -1.005791));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-3496.613, -3447.968, -2.279717));
 
 	addEnemy(target);
-	addEnemy(toVector3(-5711.004, -2391.769, 6.44563));
-	addEnemy(toVector3(-5706.604, -2387.53, 5.327281));
-	addEnemy(toVector3(-5701.083, -2383.894, 4.922241));
-	addEnemy(toVector3(-5698.187, -2389.69, 3.816682));
-	addEnemy(toVector3(-5704.169, -2405.032, 4.893043));
-	addEnemy(toVector3(-5687.943, -2381.427, 3.032831));
-	addEnemy(toVector3(-5685.831, -2386.835, 2.014514));
+	addEnemy(toVector3(-3490.821, -3471.66, -0.8529761));
+	addEnemy(toVector3(-3489.565, -3457.741, -0.3901024));
+	addEnemy(toVector3(-3474.539, -3441.546, 1.599929));
+	addEnemy(toVector3(-3463.471, -3465.179, 7.021726));
+	addEnemy(toVector3(-3476.162, -3480.753, -0.585605));
+	addEnemy(toVector3(-3484.94, -3466.709, 0.1678917));
+	addEnemy(toVector3(-3482.338, -3470.292, 0.1725022));
 
 	enterIdleMode();
 }
 
-void JesseHillExecutor::onTargetLocated()
+void JuanCortezExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
 
@@ -259,7 +259,7 @@ void JesseHillExecutor::onTargetLocated()
 	}
 }
 
-void JesseHillExecutor::createEnemyBlips()
+void JuanCortezExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -271,7 +271,7 @@ void JesseHillExecutor::createEnemyBlips()
 	}
 }
 
-void JesseHillExecutor::releaseUnnecessaryEntities()
+void JuanCortezExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -290,13 +290,13 @@ void JesseHillExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void JesseHillExecutor::addEnemy(Vector3 pos)
+void JuanCortezExecutor::addEnemy(Vector3 pos)
 {
 	Ped enemyPed = createPed("G_M_M_UniBanditos_01", pos);
 	addEnemy(enemyPed);
 }
 
-void JesseHillExecutor::addEnemy(Ped ped)
+void JuanCortezExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
 
@@ -304,20 +304,20 @@ void JesseHillExecutor::addEnemy(Ped ped)
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void JesseHillExecutor::addHorse(const char* model, Vector3 pos)
+void JuanCortezExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void JesseHillExecutor::addHorse(Ped horse)
+void JuanCortezExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void JesseHillExecutor::cleanup()
+void JuanCortezExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);

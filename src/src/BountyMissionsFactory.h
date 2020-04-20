@@ -22,4 +22,11 @@ private:
 	JesseHillExecutor* jesseHillExecutor();
 	QuentinChigurhExecutor* quentinChigurhExecutor();
 	TucoVillaExecutor* tucoVillaExecutor();
+	ArchStantonExecutor* archStantonExecutor();
+	RichardMooreExecutor* richardMooreExecutor();
+	JuanCortezExecutor* juanCortezExecutor();
+	ClintonvonHagenExecutor* clintonvonHagenExecutor();
+	TreasuryPeteExecutor* treasuryPeteExecutor();
+	RobertCorbucciExecutor* robertCorbucciExecutor();
+	JaneBullionExecutor* janeBullionExecutor();
 };

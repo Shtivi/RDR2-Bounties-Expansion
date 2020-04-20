@@ -7,6 +7,8 @@ MapAreasManager::MapAreasManager()
 	cache[MapAreas::Rhodes]		= createRhodes();
 	cache[MapAreas::Valentine]	= createValentine();
 	cache[MapAreas::Tumbleweed] = createTumbleweed();
+	cache[MapAreas::Armadillo] = createArmadillo();
+	cache[MapAreas::SaintDenis] = createSaintDenis();
 }
 
 
@@ -70,8 +72,26 @@ MapArea* MapAreasManager::createValentine()
 MapArea* MapAreasManager::createTumbleweed()
 {
 	Vector3 policeDeptCoords = toVector3(-5527.188, -2927.814, -1.360926);
-	Vector3 cellCoords = toVector3(-5527.188, -2927.814, -1.360926);
+	Vector3 cellCoords = toVector3(-5527.188, -2927.814, -2.360926);
 	Vector3 posterCoords = toVector3(-5531.845, -2931.186, -1.92352);
 
 	return new MapArea("Tumbleweed", policeDeptCoords, posterCoords, cellCoords, 294.79);
+}
+
+MapArea* MapAreasManager::createArmadillo()
+{
+	Vector3 policeDeptCoords = toVector3(-3619.911, -2605.103, -13.33457);
+	Vector3 cellCoords = toVector3(-3619.911, -2605.103, -14.33457);
+	Vector3 posterCoords = toVector3(-3625.664, -2603.477, -13.32546);
+
+	return new MapArea("Armadillo", policeDeptCoords, posterCoords, cellCoords, 293.79);
+}
+
+MapArea* MapAreasManager::createSaintDenis()
+{
+	Vector3 policeDeptCoords = toVector3(2502.79, -1308.546, 47.95366);
+	Vector3 cellCoords = toVector3(2502.79, -1308.546, 47.95366);
+	Vector3 posterCoords = toVector3(2516.739, -1305.807, 49.26161);
+
+	return new MapArea("SaintDenis", policeDeptCoords, posterCoords, cellCoords, 91.36);
 }

@@ -108,7 +108,7 @@ void QuentinChigurhExecutor::update()
 		{
 			showSubtitle("The target is getting too far!");
 		}
-		else if (distanceBetweenEntities(target, player) > 100)
+		if (distanceBetweenEntities(target, player) > 120)
 		{
 			fail("Bounty failed, target lost");
 		}
@@ -132,8 +132,7 @@ void QuentinChigurhExecutor::enterIdleMode()
 	{
 		Object seq;
 		AI::OPEN_SEQUENCE_TASK(&seq);
-		AI::TASK_TURN_PED_TO_FACE_COORD(0, campfirePos.x, campfirePos.y, campfirePos.z, 1000);
-		AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true); // PLAY SCENARIO
+		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 	}
@@ -242,6 +241,8 @@ void QuentinChigurhExecutor::prepareSet()
 	addEnemy(toVector3(-6445.851, -3533.706, -25.39349));
 	addEnemy(toVector3(-6441.13, -3542.264, -25.82212));
 	addEnemy(toVector3(-6439.328, -3519.762, -26.16308));
+	addEnemy(toVector3(-6461.821, -3515.334, -24.86029));
+	addEnemy(toVector3(-6468.761, -3520.76, -25.1124));
 
 	enterIdleMode();
 }
