@@ -18,9 +18,11 @@ private:
 public:
 	BountiesManager(ModProgress* progress, MapAreasManager* areasMgr, BountyMissionsFactory* missionsFactory);
 	void update();
+	void resetMissions(MapAreas area);
 
 private:
 	void loadActiveMissions();
 	void startNextMission(BaseMissionExecutor* after);
 	void updateFailedMissions();
+	bool isExecutorLoaded(BaseMissionExecutor* executor);
 };

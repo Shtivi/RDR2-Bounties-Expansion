@@ -64,12 +64,9 @@ void BaseMissionExecutor::update()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 
-	//displayDebugText(to_string(RADAR::DOES_BLIP_EXIST(policeLocBlip)).c_str());
-
 	//if (IsKeyJustUp(VK_KEY_N))
 	//{
 	//	nextStage();
-
 	//	if (stage == BountyMissionStage::CaptureTarget)
 	//	{
 	//		if (missionData->requiredTargetCondition == TargetCondition::Alive)
