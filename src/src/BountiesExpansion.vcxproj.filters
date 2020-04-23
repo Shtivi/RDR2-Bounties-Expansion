@@ -112,8 +112,35 @@
     <ClCompile Include="GameStopwatch.cpp">
       <Filter>Src\Script\Stopwatch</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Src\Game\Camera</Filter>
+    <ClCompile Include="JesseHillExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\JesseHill</Filter>
+    </ClCompile>
+    <ClCompile Include="QuentinChigurhExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\QuentinChigurh</Filter>
+    </ClCompile>
+    <ClCompile Include="TucoVillaExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\TucoVilla</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchStantonExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\ArchStanton</Filter>
+    </ClCompile>
+    <ClCompile Include="RichardMooreExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\RichardMoore</Filter>
+    </ClCompile>
+    <ClCompile Include="JuanCortezExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\JuanCortez</Filter>
+    </ClCompile>
+    <ClCompile Include="ClintonvonHagenExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\ClintonvonHagen</Filter>
+    </ClCompile>
+    <ClCompile Include="TreasuryPeteExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\TreasuryPete</Filter>
+    </ClCompile>
+    <ClCompile Include="RobertCorbucciExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\RobertCorbucci</Filter>
+    </ClCompile>
+    <ClCompile Include="JaneBullionExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\JaneBullion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,8 +252,35 @@
     <ClInclude Include="Stopwatch.h">
       <Filter>Src\Script\Stopwatch</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Src\Game\Camera</Filter>
+    <ClInclude Include="JesseHillExecutor.h">
+      <Filter>Src\Game\BountyMissions\JesseHill</Filter>
+    </ClInclude>
+    <ClInclude Include="QuentinChigurhExecutor.h">
+      <Filter>Src\Game\BountyMissions\QuentinChigurh</Filter>
+    </ClInclude>
+    <ClInclude Include="TucoVillaExecutor.h">
+      <Filter>Src\Game\BountyMissions\TucoVilla</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchStantonExecutor.h">
+      <Filter>Src\Game\BountyMissions\ArchStanton</Filter>
+    </ClInclude>
+    <ClInclude Include="RichardMooreExecutor.h">
+      <Filter>Src\Game\BountyMissions\RichardMoore</Filter>
+    </ClInclude>
+    <ClInclude Include="JuanCortezExecutor.h">
+      <Filter>Src\Game\BountyMissions\JuanCortez</Filter>
+    </ClInclude>
+    <ClInclude Include="ClintonvonHagenExecutor.h">
+      <Filter>Src\Game\BountyMissions\ClintonvonHagen</Filter>
+    </ClInclude>
+    <ClInclude Include="TreasuryPeteExecutor.h">
+      <Filter>Src\Game\BountyMissions\TreasuryPete</Filter>
+    </ClInclude>
+    <ClInclude Include="RobertCorbucciExecutor.h">
+      <Filter>Src\Game\BountyMissions\RobertCorbucci</Filter>
+    </ClInclude>
+    <ClInclude Include="JaneBullionExecutor.h">
+      <Filter>Src\Game\BountyMissions\JaneBullion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -257,9 +311,6 @@
     <Filter Include="Src\Game\ModProgress">
       <UniqueIdentifier>{304e4802-3468-45cc-ba72-42c6b67b91ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\BountyMissions\ElsieGreen">
-      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Game\BountyMissions\AlejandroHernandez">
       <UniqueIdentifier>{7d21da97-5ed7-4912-9fcd-09fc08266b7a}</UniqueIdentifier>
     </Filter>
@@ -284,14 +335,44 @@
     <Filter Include="Src\Script\Stopwatch">
       <UniqueIdentifier>{5a0b2eb8-9ead-4236-b7b4-9f5f31941990}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\BountyMissions\BernardTheBear">
-      <UniqueIdentifier>{81d6e49d-3d9f-4d1c-a220-4edd0651eff7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Game\BountyMissions\AndrewClark\RobberyInteraction">
       <UniqueIdentifier>{14748df6-76e8-49b5-adc8-22f3cfff73bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\Camera">
-      <UniqueIdentifier>{483092fe-f952-461b-a215-27f7890bcedd}</UniqueIdentifier>
+    <Filter Include="Src\Game\BountyMissions\BernardTheBear">
+      <UniqueIdentifier>{433f0fa1-c11d-4f22-b340-052cf209d334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\QuentinChigurh">
+      <UniqueIdentifier>{44f7db77-dad7-4b8b-ad5d-6902af723603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\TucoVilla">
+      <UniqueIdentifier>{91a17424-9a72-4d21-b998-40e1cbda3adb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\ArchStanton">
+      <UniqueIdentifier>{1d87b91e-d612-4cc2-bae0-f8fa98d44096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\RichardMoore">
+      <UniqueIdentifier>{1c2b32f1-3bc7-47a1-b141-0197cb408355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\JuanCortez">
+      <UniqueIdentifier>{3d71b22e-27c6-43fb-ab08-9a6d51b13804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\ClintonvonHagen">
+      <UniqueIdentifier>{7d0af393-c40b-436c-b881-700ecda636d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\TreasuryPete">
+      <UniqueIdentifier>{88e3a328-acbb-4254-a964-1e6d53a76c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\JesseHill">
+      <UniqueIdentifier>{ee3fca34-f875-4cad-a058-4f3ff073997e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\RobertCorbucci">
+      <UniqueIdentifier>{13a7900d-35d5-4e64-85e7-20d941cdcf6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\ElsieGreen">
+      <UniqueIdentifier>{c88306d9-f633-4c36-ba1d-a353e4b24b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\JaneBullion">
+      <UniqueIdentifier>{80a8fa0d-2441-4ca2-9962-90c830e49db9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

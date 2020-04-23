@@ -9,6 +9,9 @@ const Hash BLIP_SPRITE_BOUNTY_TARGET = 0x5846C31D;
 char* const SKINNER_BROTHER_MODEL = "g_m_m_unimountainmen_01";
 char* const F_LOWER_TOWN_FOLK = "A_F_M_LowerSDTownfolk_01";
 char* const M_LOWER_TOWN_FOLK = "A_M_M_LowerSDTownfolk_01";
+char* const M_BOUNTY_TARGET = "G_M_M_UniRanchers_01";
+char* const M_BOUNTY_MEXICAN = "G_M_M_UniBanditos_01";
+char* const M_BOUNTY_FANCY = "MSP_SAINTDENIS1_MALES_01";
 
 typedef struct RaycastResult
 {

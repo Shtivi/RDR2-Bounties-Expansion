@@ -19,4 +19,14 @@ private:
 	TurkishRunnerExecutor* turkishRunnerExecutor();
 	JacobSeedExecutor* jacobSeedExecutor();
 	AndrewClarkExecutor* andrewClarkExecutor();
+	JesseHillExecutor* jesseHillExecutor();
+	QuentinChigurhExecutor* quentinChigurhExecutor();
+	TucoVillaExecutor* tucoVillaExecutor();
+	ArchStantonExecutor* archStantonExecutor();
+	RichardMooreExecutor* richardMooreExecutor();
+	JuanCortezExecutor* juanCortezExecutor();
+	ClintonvonHagenExecutor* clintonvonHagenExecutor();
+	TreasuryPeteExecutor* treasuryPeteExecutor();
+	RobertCorbucciExecutor* robertCorbucciExecutor();
+	JaneBullionExecutor* janeBullionExecutor();
 };
