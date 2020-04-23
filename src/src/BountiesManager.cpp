@@ -13,6 +13,38 @@ BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMg
 	loadActiveMissions();
 }
 
+void BountiesManager::resetMissions(MapAreas areaId)
+{
+	MapArea* area = areasMgr->getMapArea(areaId);
+	
+	string msg("reseting missions in ");
+	msg = msg.append(area->name);
+	log(msg);
+	
+	set<int>::iterator missionsItr = area->getMissionIds()->begin();
+	while (missionsItr != area->getMissionIds()->end())
+	{
+		BaseMissionExecutor* executor = missionsFactory->fromMissionId(*missionsItr);
+		
+		string msg("reseting: ");
+		msg = msg.append(executor->getMissionData()->targetName);
+
+		progress->allowMission(*missionsItr);
+		executor->setMissionStatus(BountyMissionStatus::Pending);
+
+		if (!isExecutorLoaded(executor))
+		{
+			missionExecutors.push_back(executor);
+			msg = msg.append(", was not loaded");
+		}
+
+		log(msg);
+		missionsItr++;
+	}
+
+	progress->save();
+}
+
 void BountiesManager::update()
 {
 	BaseMissionExecutor* curr;
@@ -171,4 +203,20 @@ void BountiesManager::updateFailedMissions()
 			it++;
 		}
 	}
+}
+
+bool BountiesManager::isExecutorLoaded(BaseMissionExecutor* executor)
+{
+	vector<BaseMissionExecutor*>::iterator executorsItr = missionExecutors.begin();
+	while (executorsItr != missionExecutors.end())
+	{
+		if ((*executorsItr)->getMissionData()->id == executor->getMissionData()->id)
+		{
+			return true;
+		}
+
+		executorsItr++;
+	}
+
+	return false;
 }

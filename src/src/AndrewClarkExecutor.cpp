@@ -57,7 +57,7 @@ void AndrewClarkExecutor::update()
 		float distanceToPolice = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 1), *(getArea()->policeDeptCoords));
 		if (distanceToPolice < 220 && !spawnedBountyHunters)
 		{
-			//spawnBountyHunters();
+			spawnBountyHunters();
 			spawnedBountyHunters = true;
 		}
 	}
