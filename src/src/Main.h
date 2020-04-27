@@ -38,6 +38,7 @@
 #include "Weapons.h";
 #include "Vehicles.h";
 #include "Ped.h";
+#include "PedBehavior.h";
 #include "Conversation.h";
 #include "RobberyInteraction.h";
 #include "blips.h";

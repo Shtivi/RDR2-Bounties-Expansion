@@ -1,0 +1,16 @@
+#pragma once
+#include "EliasTraditionExecutor.h";
+#include "TreasuryPeteExecutor.h";
+#include "TurkishRunnerExecutor.h";
+#include "JaneBullionExecutor.h";
+#include "RobertCorbucciExecutor.h";
+#include "ClintonvonHagenExecutor.h";
+#include "JuanCortezExecutor.h";
+#include "RichardMooreExecutor.h";
+#include "ArchStantonExecutor.h";
+#include "JacobSeedExecutor.h";
+#include "AndrewClarkExecutor.h";
+#include "TucoVillaExecutor.h";
+#include "JesseHillExecutor.h";
+#include "QuentinChigurhExecutor.h";
+#include "BountyMissionsFactory.h";

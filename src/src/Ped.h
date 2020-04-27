@@ -78,3 +78,7 @@ Ped createPedOnHorse(char* model, Ped horse, int seatIndex = 1);
 bool isPedHogtied(Ped ped);
 void playAmbientSpeech(Ped ped, char* speechName, char* voice = NULL);
 void giveSaddleToHorse(Ped horse, HorseSaddleHashes saddleHash);
+vector<Ped>* getPedGroupMembers(Group groupIndex);
+vector<Ped> getNearbyPeds(Ped origin, int limit);
+vector<Ped> getNearbyPeds(Ped origin, int limit, float radius);
+vector<Ped> getNearbyDeadBodies(Ped origin, int limit, float radius);
