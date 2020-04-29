@@ -142,6 +142,12 @@
     <ClCompile Include="JaneBullionExecutor.cpp">
       <Filter>Src\Game\BountyMissions\JaneBullion</Filter>
     </ClCompile>
+    <ClCompile Include="GushkalaInataExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\GushkalaInata</Filter>
+    </ClCompile>
+    <ClCompile Include="ChesterBurnettExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\ChesterBurnett</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\types.h">
@@ -282,6 +288,12 @@
     <ClInclude Include="JaneBullionExecutor.h">
       <Filter>Src\Game\BountyMissions\JaneBullion</Filter>
     </ClInclude>
+    <ClInclude Include="GushkalaInataExecutor.h">
+      <Filter>Src\Game\BountyMissions\GushkalaInata</Filter>
+    </ClInclude>
+    <ClInclude Include="ChesterBurnettExecutor.h">
+      <Filter>Src\Game\BountyMissions\ChesterBurnett</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -373,6 +385,12 @@
     </Filter>
     <Filter Include="Src\Game\BountyMissions\JaneBullion">
       <UniqueIdentifier>{80a8fa0d-2441-4ca2-9962-90c830e49db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\GushkalaInata">
+      <UniqueIdentifier>{4bf2cb49-0dee-4267-934e-cea8081a2466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\BountyMissions\ChesterBurnett">
+      <UniqueIdentifier>{a7b93fb2-9aad-4250-976a-df817905b0f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

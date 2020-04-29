@@ -53,6 +53,8 @@
 #include "BaseMissionExecutor.h";
 #include "EliasTraditionExecutor.h";
 #include "TreasuryPeteExecutor.h";
+#include "ChesterBurnettExecutor.h";
+#include "GushkalaInataExecutor.h";
 #include "TurkishRunnerExecutor.h";
 #include "JaneBullionExecutor.h";
 #include "RobertCorbucciExecutor.h";

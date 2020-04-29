@@ -40,18 +40,20 @@ void BountyMissionsFactory::initializeCache()
 {
 	executorsCache[1] = eliasTraditionExecutor();
 	executorsCache[2] = turkishRunnerExecutor();
-	executorsCache[3] = jacobSeedExecutor();
-	executorsCache[4] = andrewClarkExecutor();
-	executorsCache[5] = jesseHillExecutor();
-	executorsCache[6] = quentinChigurhExecutor();
-	executorsCache[7] = tucoVillaExecutor();
-	executorsCache[8] = archStantonExecutor();
-	executorsCache[9] = richardMooreExecutor();
-	executorsCache[10] = juanCortezExecutor();
-	executorsCache[11] = clintonvonHagenExecutor();
-	executorsCache[12] = treasuryPeteExecutor();
-	executorsCache[13] = robertCorbucciExecutor();
-	executorsCache[14] = janeBullionExecutor();
+	executorsCache[3] = gushkalaInataExecutor();
+	executorsCache[4] = jacobSeedExecutor();
+	executorsCache[5] = andrewClarkExecutor();
+	executorsCache[6] = chesterBurnettExecutor();
+	executorsCache[7] = jesseHillExecutor();
+	executorsCache[8] = quentinChigurhExecutor();
+	executorsCache[9] = tucoVillaExecutor();
+	executorsCache[10] = archStantonExecutor();
+	executorsCache[11] = richardMooreExecutor();
+	executorsCache[12] = juanCortezExecutor();
+	executorsCache[13] = clintonvonHagenExecutor();
+	executorsCache[14] = treasuryPeteExecutor();
+	executorsCache[15] = robertCorbucciExecutor();
+	executorsCache[16] = janeBullionExecutor();
 
 	map<int, BaseMissionExecutor*>::iterator it = executorsCache.begin();
 	BaseMissionExecutor* curr;
@@ -101,10 +103,28 @@ TurkishRunnerExecutor* BountyMissionsFactory::turkishRunnerExecutor()
 	return new TurkishRunnerExecutor(data, areasMgr);
 }
 
-JacobSeedExecutor* BountyMissionsFactory::jacobSeedExecutor()
+GushkalaInataExecutor* BountyMissionsFactory::gushkalaInataExecutor()
 {
 	BountyMissionData data;
 	data.id = 3;
+	data.area = MapAreas::Blackwater;
+	data.missionName = "GushkalaInata";
+	data.crime = "Robbing";
+	data.description = "Gushkala Inata known as Hidden Snake among his people\npractices a particular skill when it comes to crime.\nHe is known to rob and kill people who cross his\npath and then hides the forest of Tall of Trees.\nSo far not a single lawman has been able\nto find him, hence a bounty has been\nput on his head for capture.";
+	data.requiredTargetCondition = TargetCondition::Alive;
+	data.reward = 165;
+	data.rewardStr = "$165";
+	data.startPosition = toVector3(-2340, -1424.82, 145.453);
+	data.isTargetMale = true;
+	data.targetName = "Gushkala Inata";
+
+	return new GushkalaInataExecutor(data, areasMgr);
+}
+
+JacobSeedExecutor* BountyMissionsFactory::jacobSeedExecutor()
+{
+	BountyMissionData data;
+	data.id = 4;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "Jacob Seed";
 	data.crime = "Fire Arms Theft";
@@ -122,7 +142,7 @@ JacobSeedExecutor* BountyMissionsFactory::jacobSeedExecutor()
 AndrewClarkExecutor* BountyMissionsFactory::andrewClarkExecutor()
 {
 	BountyMissionData data;
-	data.id = 4;
+	data.id = 5;
 	data.area = MapAreas::Valentine;
 	data.missionName = "Andrew Clark";
 	data.crime = "Fraud and Theft";
@@ -137,10 +157,28 @@ AndrewClarkExecutor* BountyMissionsFactory::andrewClarkExecutor()
 	return new AndrewClarkExecutor(data, areasMgr);
 }
 
+ChesterBurnettExecutor* BountyMissionsFactory::chesterBurnettExecutor()
+{
+	BountyMissionData data;
+	data.id = 6;
+	data.area = MapAreas::Valentine;
+	data.missionName = "ChesterBurnett";
+	data.crime = "Murder";
+	data.description = "Chester Burnett is a murdering crook on the run\nfrom the law. One of four passengers last seen\nleaving Strawberry. It is thought due to\na blizzard they have been keeping shelter in colter.\nOne of these passengers is Burnett. Be careful however,\nwe do not want any innocent blood shet, so\nif you kill or capture the wrong man by\n accident you will not be paid.";
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
+	data.reward = 130;
+	data.rewardStr = "$130";
+	data.startPosition = toVector3(-1353.869, 2440.07, 308.4282);
+	data.isTargetMale = true;
+	data.targetName = "Chester Burnett";
+
+	return new ChesterBurnettExecutor(data, areasMgr);
+}
+
 JesseHillExecutor* BountyMissionsFactory::jesseHillExecutor()
 {
 	BountyMissionData data;
-	data.id = 5;
+	data.id = 7;
 	data.area = MapAreas::Tumbleweed;
 	data.missionName = "Jesse Hill";
 	data.crime = "Murder";
@@ -158,7 +196,7 @@ JesseHillExecutor* BountyMissionsFactory::jesseHillExecutor()
 QuentinChigurhExecutor* BountyMissionsFactory::quentinChigurhExecutor()
 {
 	BountyMissionData data;
-	data.id = 6;
+	data.id = 8;
 	data.area = MapAreas::Tumbleweed;
 	data.missionName = "Quentin Chigurh";
 	data.crime = "Train Robbery";
@@ -176,7 +214,7 @@ QuentinChigurhExecutor* BountyMissionsFactory::quentinChigurhExecutor()
 TucoVillaExecutor* BountyMissionsFactory::tucoVillaExecutor()
 {
 	BountyMissionData data;
-	data.id = 7;
+	data.id = 9;
 	data.area = MapAreas::Tumbleweed;
 	data.missionName = "Tuco Villa";
 	data.crime = "Double Murder";
@@ -194,7 +232,7 @@ TucoVillaExecutor* BountyMissionsFactory::tucoVillaExecutor()
 ArchStantonExecutor* BountyMissionsFactory::archStantonExecutor()
 {
 	BountyMissionData data;
-	data.id = 8;
+	data.id = 10;
 	data.area = MapAreas::Armadillo;
 	data.missionName = "Arch Stanton";
 	data.crime = "Stagecoach robbery";
@@ -212,7 +250,7 @@ ArchStantonExecutor* BountyMissionsFactory::archStantonExecutor()
 RichardMooreExecutor* BountyMissionsFactory::richardMooreExecutor()
 {
 	BountyMissionData data;
-	data.id = 9;
+	data.id = 11;
 	data.area = MapAreas::Armadillo;
 	data.missionName = "Richard Moore";
 	data.crime = "Murder and Robbery";
@@ -230,7 +268,7 @@ RichardMooreExecutor* BountyMissionsFactory::richardMooreExecutor()
 JuanCortezExecutor* BountyMissionsFactory::juanCortezExecutor()
 {
 	BountyMissionData data;
-	data.id = 10;
+	data.id = 12;
 	data.area = MapAreas::Armadillo;
 	data.missionName = "Juan Cortez";
 	data.crime = "Murder";
@@ -248,7 +286,7 @@ JuanCortezExecutor* BountyMissionsFactory::juanCortezExecutor()
 ClintonvonHagenExecutor* BountyMissionsFactory::clintonvonHagenExecutor()
 {
 	BountyMissionData data;
-	data.id = 11;
+	data.id = 13;
 	data.area = MapAreas::SaintDenis;
 	data.missionName = "Clinton von Hagen";
 	data.crime = "Murder";
@@ -266,7 +304,7 @@ ClintonvonHagenExecutor* BountyMissionsFactory::clintonvonHagenExecutor()
 TreasuryPeteExecutor* BountyMissionsFactory::treasuryPeteExecutor()
 {
 	BountyMissionData data;
-	data.id = 12;
+	data.id = 14;
 	data.area = MapAreas::SaintDenis;
 	data.missionName = "TreasuryPete";
 	data.crime = "Bank Robbery";
@@ -284,7 +322,7 @@ TreasuryPeteExecutor* BountyMissionsFactory::treasuryPeteExecutor()
 RobertCorbucciExecutor* BountyMissionsFactory::robertCorbucciExecutor()
 {
 	BountyMissionData data;
-	data.id = 13;
+	data.id = 15;
 	data.area = MapAreas::SaintDenis;
 	data.missionName = "RobertCorbucci";
 	data.crime = "Murder";
@@ -302,7 +340,7 @@ RobertCorbucciExecutor* BountyMissionsFactory::robertCorbucciExecutor()
 JaneBullionExecutor* BountyMissionsFactory::janeBullionExecutor()
 {
 	BountyMissionData data;
-	data.id = 14;
+	data.id = 16;
 	data.area = MapAreas::SaintDenis;
 	data.missionName = "JaneBullion";
 	data.crime = "Multiple counts of theft";
