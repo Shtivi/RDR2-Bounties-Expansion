@@ -114,7 +114,7 @@ GushkalaInataExecutor* BountyMissionsFactory::gushkalaInataExecutor()
 	data.requiredTargetCondition = TargetCondition::Alive;
 	data.reward = 165;
 	data.rewardStr = "$165";
-	data.startPosition = toVector3(-2340, -1424.82, 145.453);
+	data.startPosition = toVector3(-2324.694, -1440.603, 151.5746);
 	data.isTargetMale = true;
 	data.targetName = "Gushkala Inata";
 
