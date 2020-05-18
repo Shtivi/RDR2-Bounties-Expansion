@@ -11,7 +11,7 @@ const int COMBAT_RANGE = 3;
 GushkalaInataExecutor::GushkalaInataExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(150);
+	setTargetAreaRadius(100);
 	setRequiredDistanceToLocateTarget(3);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
