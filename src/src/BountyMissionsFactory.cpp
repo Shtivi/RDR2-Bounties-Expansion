@@ -110,7 +110,7 @@ GushkalaInataExecutor* BountyMissionsFactory::gushkalaInataExecutor()
 	data.area = MapAreas::Blackwater;
 	data.missionName = "GushkalaInata";
 	data.crime = "Robbing";
-	data.description = "Gushkala Inata known as Hidden Snake among his people\npractices a particular skill when it comes to crime.\nHe is known to rob and kill people who cross his\npath and then hides the forest of Tall of Trees.\nSo far not a single lawman has been able\nto find him, hence a bounty has been\nput on his head for capture.";
+	data.description = "Gushkala Inata known as Hidden Snake\npractices a particular skill when it comes to crime.\nHe is known to rob and kill people who cross his\npath and then hides the forest of Tall of Trees.\nSo far not a single lawman has been able\nto find him, hence a bounty has been\nput on his head for capture.";
 	data.requiredTargetCondition = TargetCondition::Alive;
 	data.reward = 165;
 	data.rewardStr = "$165";
@@ -164,7 +164,7 @@ ChesterBurnettExecutor* BountyMissionsFactory::chesterBurnettExecutor()
 	data.area = MapAreas::Valentine;
 	data.missionName = "ChesterBurnett";
 	data.crime = "Murder";
-	data.description = "Chester Burnett is a murdering crook on the run\nfrom the law. One of four passengers last seen\nleaving Strawberry. It is thought due to\na blizzard they have been keeping shelter in colter.\nOne of these passengers is Burnett. Be careful however,\nwe do not want any innocent blood shet, so\nif you kill or capture the wrong man by\n accident you will not be paid.";
+	data.description = "Chester Burnett is a murdering crook on the run\nfrom the law. One of four passengers last seen\nleaving Strawberry. It is thought due to\na blizzard they have been keeping shelter in colter.\nOne of these passengers is Burnett. Be careful \nhowever, we do not want any innocent bloodshed,\nso if you kill or capture the wrong man by\n accident you will not be paid.";
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 130;
 	data.rewardStr = "$130";
