@@ -17,8 +17,10 @@ private:
 	void initializeCache();
 	EliasTraditionExecutor* eliasTraditionExecutor();
 	TurkishRunnerExecutor* turkishRunnerExecutor();
+	GushkalaInataExecutor* gushkalaInataExecutor();
 	JacobSeedExecutor* jacobSeedExecutor();
 	AndrewClarkExecutor* andrewClarkExecutor();
+	ChesterBurnettExecutor* chesterBurnettExecutor();
 	JesseHillExecutor* jesseHillExecutor();
 	QuentinChigurhExecutor* quentinChigurhExecutor();
 	TucoVillaExecutor* tucoVillaExecutor();

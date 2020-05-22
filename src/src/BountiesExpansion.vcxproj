@@ -12,7 +12,9 @@
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="Autosave.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
+    <ClCompile Include="ChesterBurnettExecutor.cpp" />
     <ClCompile Include="ClintonvonHagenExecutor.cpp" />
+    <ClCompile Include="GushkalaInataExecutor.cpp" />
     <ClCompile Include="JaneBullionExecutor.cpp" />
     <ClCompile Include="JesseHillExecutor.cpp" />
     <ClCompile Include="blips.cpp" />
@@ -65,7 +67,9 @@
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="Autosave.h" />
     <ClInclude Include="BaseMissionExecutor.h" />
+    <ClInclude Include="ChesterBurnettExecutor.h" />
     <ClInclude Include="ClintonvonHagenExecutor.h" />
+    <ClInclude Include="GushkalaInataExecutor.h" />
     <ClInclude Include="JaneBullionExecutor.h" />
     <ClInclude Include="JesseHillExecutor.h" />
     <ClInclude Include="blips.h" />
@@ -128,7 +132,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <OutDir>C:\Program Files\Rockstar Games\Red Dead Redemption 2\RDR2-Bounties-Expansion-master\src\x64\Release\</OutDir>
+    <OutDir>..\..</OutDir>
     <IntDir>tmp\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
