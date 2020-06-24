@@ -16,9 +16,6 @@
     <ClCompile Include="AttachedRopesHandling.cpp">
       <Filter>Src\AttachedRopes</Filter>
     </ClCompile>
-    <ClCompile Include="world.cpp">
-      <Filter>Src\Game</Filter>
-    </ClCompile>
     <ClCompile Include="BaseMissionExecutor.cpp">
       <Filter>Src\Game\BountyMissions</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
     </ClCompile>
     <ClCompile Include="EliasTraditionExecutor.cpp">
       <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
-    </ClCompile>
-    <ClCompile Include="blips.cpp">
-      <Filter>Src\Game</Filter>
     </ClCompile>
     <ClCompile Include="GUIDrawer.cpp">
       <Filter>Src\UI</Filter>
@@ -77,7 +71,7 @@
       <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
     </ClCompile>
     <ClCompile Include="Vehicles.cpp">
-      <Filter>Src\Game\Vehicle</Filter>
+      <Filter>Src\Game\World\Vehicle</Filter>
     </ClCompile>
     <ClCompile Include="Ped.cpp">
       <Filter>Src\Game\Ped</Filter>
@@ -101,7 +95,7 @@
       <Filter>Src\Game\BountyMissions\AndrewClark\RobberyInteraction</Filter>
     </ClCompile>
     <ClCompile Include="Weapons.cpp">
-      <Filter>Src\Game\Weapons</Filter>
+      <Filter>Src\Game\World\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="ExecuteVictimInteraction.h">
       <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
@@ -142,6 +136,21 @@
     <ClCompile Include="JaneBullionExecutor.cpp">
       <Filter>Src\Game\BountyMissions\JaneBullion</Filter>
     </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Src\Game\World</Filter>
+    </ClCompile>
+    <ClCompile Include="blips.cpp">
+      <Filter>Src\Game\World\Blips</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericGuardingBehavior.cpp">
+      <Filter>Src\Game\Ped\Guarding</Filter>
+    </ClCompile>
+    <ClCompile Include="GuardsGroup.cpp">
+      <Filter>Src\Game\Ped\Guarding</Filter>
+    </ClCompile>
+    <ClCompile Include="PedBehavior.cpp">
+      <Filter>Src\Game\Ped</Filter>
+    </ClCompile>
     <ClCompile Include="GushkalaInataExecutor.cpp">
       <Filter>Src\Game\BountyMissions\GushkalaInata</Filter>
     </ClCompile>
@@ -177,9 +186,6 @@
     <ClInclude Include="AttachedRopesHanding.h">
       <Filter>Src\AttachedRopes</Filter>
     </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Src\Game</Filter>
-    </ClInclude>
     <ClInclude Include="BountyMissionData.h">
       <Filter>Src\Game\BountyMissions</Filter>
     </ClInclude>
@@ -206,9 +212,6 @@
     </ClInclude>
     <ClInclude Include="EliasTraditionExecutor.h">
       <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
-    </ClInclude>
-    <ClInclude Include="blips.h">
-      <Filter>Src\Game</Filter>
     </ClInclude>
     <ClInclude Include="GUIDrawer.h">
       <Filter>Src\UI</Filter>
@@ -241,7 +244,7 @@
       <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
     </ClInclude>
     <ClInclude Include="Vehicles.h">
-      <Filter>Src\Game\Vehicle</Filter>
+      <Filter>Src\Game\World\Vehicle</Filter>
     </ClInclude>
     <ClInclude Include="Ped.h">
       <Filter>Src\Game\Ped</Filter>
@@ -253,7 +256,7 @@
       <Filter>Src\Game\BountyMissions\AndrewClark\RobberyInteraction</Filter>
     </ClInclude>
     <ClInclude Include="Weapons.h">
-      <Filter>Src\Game\Weapons</Filter>
+      <Filter>Src\Game\World\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Stopwatch.h">
       <Filter>Src\Script\Stopwatch</Filter>
@@ -294,6 +297,24 @@
     <ClInclude Include="ChesterBurnettExecutor.h">
       <Filter>Src\Game\BountyMissions\ChesterBurnett</Filter>
     </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Src\Game\World</Filter>
+    </ClInclude>
+    <ClInclude Include="blips.h">
+      <Filter>Src\Game\World\Blips</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericGuardingBehavior.h">
+      <Filter>Src\Game\Ped\Guarding</Filter>
+    </ClInclude>
+    <ClInclude Include="GuardsGroup.h">
+      <Filter>Src\Game\Ped\Guarding</Filter>
+    </ClInclude>
+    <ClInclude Include="PedBehavior.h">
+      <Filter>Src\Game\Ped</Filter>
+    </ClInclude>
+    <ClInclude Include="GuardingDefinitions.h">
+      <Filter>Src\Game\Ped\Guarding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -332,17 +353,11 @@
     <Filter Include="Src\Game\BountyMissions\AndrewClark">
       <UniqueIdentifier>{4fc86ec7-af10-4fba-bf6d-146dc4bd3f3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Game\Vehicle">
-      <UniqueIdentifier>{8420c31a-2b40-431e-be72-8561bd4ac2ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Game\Ped">
       <UniqueIdentifier>{9a046c40-3698-4c88-bb4e-70551b41ac91}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Game\Ped\Interaction">
       <UniqueIdentifier>{aac89977-7778-4b3c-9c1f-6c44b1524484}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Game\Weapons">
-      <UniqueIdentifier>{4e49644c-be2c-4318-b364-f84ca5900299}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Script\Stopwatch">
       <UniqueIdentifier>{5a0b2eb8-9ead-4236-b7b4-9f5f31941990}</UniqueIdentifier>
@@ -385,6 +400,21 @@
     </Filter>
     <Filter Include="Src\Game\BountyMissions\JaneBullion">
       <UniqueIdentifier>{80a8fa0d-2441-4ca2-9962-90c830e49db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\World">
+      <UniqueIdentifier>{e4faf086-255b-4f02-aabf-12cc45957997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\World\Vehicle">
+      <UniqueIdentifier>{8420c31a-2b40-431e-be72-8561bd4ac2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\World\Weapons">
+      <UniqueIdentifier>{4e49644c-be2c-4318-b364-f84ca5900299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\World\Blips">
+      <UniqueIdentifier>{a82c431f-7d89-4c37-a523-db8b4f908570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Game\Ped\Guarding">
+      <UniqueIdentifier>{7255d6a9-de25-40a0-87a5-8b9b3a36cf32}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Game\BountyMissions\GushkalaInata">
       <UniqueIdentifier>{4bf2cb49-0dee-4267-934e-cea8081a2466}</UniqueIdentifier>

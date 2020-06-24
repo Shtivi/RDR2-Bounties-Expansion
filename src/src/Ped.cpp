@@ -64,3 +64,83 @@ void giveSaddleToHorse(Ped horse, HorseSaddleHashes saddleHash)
 {
 	PED::_0xD3A7B003ED343FD9(horse, (Hash)saddleHash, true, false, false); 
 }
+
+vector<Ped>* getPedGroupMembers(Group group)
+{
+	if (!PED::DOES_GROUP_EXIST(group))
+	{
+		return NULL;
+	}
+	else
+	{
+		vector<Ped>* results = new vector<Ped>;
+		int count, val1;
+		PED::GET_GROUP_SIZE(group, (Any*)&val1, &count);
+
+		for (int i = 0; i < count; i++)
+		{
+			Ped current = PED::GET_PED_AS_GROUP_MEMBER(group, i);
+			if (ENTITY::DOES_ENTITY_EXIST(current) && !ENTITY::IS_ENTITY_DEAD(current))
+			{
+				results->push_back(current);
+			}
+		}
+
+		Ped leader = PED::_GET_PED_AS_GROUP_LEADER(group);
+		if (ENTITY::DOES_ENTITY_EXIST(leader))
+		{
+			results->push_back(leader);
+		}
+	}
+}
+
+vector<Ped> getNearbyPeds(Ped origin, int limit)
+{
+	return getNearbyPeds(origin, limit, -1);
+}
+
+vector<Ped> getNearbyPeds(Ped origin, int limit, float radius)
+{
+	int arrSize = limit * 2 + 2;
+	int total;
+	Ped results[256];
+	vector<Ped> asVector;
+
+	results[0] = limit;
+	total = PED::GET_PED_NEARBY_PEDS(origin, results, -1, 0);
+
+	for (int i = 0; i < total; i++)
+	{
+		int offset = i * 2 + 2;
+		Ped current = results[offset];
+		if (ENTITY::DOES_ENTITY_EXIST(current))
+		{
+			if (radius == -1 || distanceBetweenEntities(origin, current) <= radius)
+			{
+				asVector.push_back(current);
+			}
+		}
+	}
+
+	return asVector;
+}
+
+vector<Ped> getNearbyDeadBodies(Ped origin, int limit, float radius)
+{
+	vector<Ped> results = getNearbyPeds(origin, limit, radius);
+	vector<Ped>::iterator itr = results.begin();
+	while (itr != results.end())
+	{
+		Ped current = *itr;
+		if (!PED::IS_PED_HUMAN(current) || !ENTITY::IS_ENTITY_DEAD(current))
+		{
+			itr = results.erase(itr);
+		}
+		else
+		{
+			itr++;
+		}
+	}
+
+	return results;
+}

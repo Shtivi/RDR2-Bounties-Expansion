@@ -14,6 +14,8 @@
     <ClCompile Include="BaseMissionExecutor.cpp" />
     <ClCompile Include="ChesterBurnettExecutor.cpp" />
     <ClCompile Include="ClintonvonHagenExecutor.cpp" />
+    <ClCompile Include="GenericGuardingBehavior.cpp" />
+    <ClCompile Include="GuardsGroup.cpp" />
     <ClCompile Include="GushkalaInataExecutor.cpp" />
     <ClCompile Include="JaneBullionExecutor.cpp" />
     <ClCompile Include="JesseHillExecutor.cpp" />
@@ -38,6 +40,7 @@
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="ModProgress.cpp" />
     <ClCompile Include="Ped.cpp" />
+    <ClCompile Include="PedBehavior.cpp" />
     <ClCompile Include="Prompt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
@@ -69,6 +72,9 @@
     <ClInclude Include="BaseMissionExecutor.h" />
     <ClInclude Include="ChesterBurnettExecutor.h" />
     <ClInclude Include="ClintonvonHagenExecutor.h" />
+    <ClInclude Include="GenericGuardingBehavior.h" />
+    <ClInclude Include="GuardingDefinitions.h" />
+    <ClInclude Include="GuardsGroup.h" />
     <ClInclude Include="GushkalaInataExecutor.h" />
     <ClInclude Include="JaneBullionExecutor.h" />
     <ClInclude Include="JesseHillExecutor.h" />
@@ -90,6 +96,7 @@
     <ClInclude Include="Math.h" />
     <ClInclude Include="ModProgress.h" />
     <ClInclude Include="Ped.h" />
+    <ClInclude Include="PedBehavior.h" />
     <ClInclude Include="Prompt.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
