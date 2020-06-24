@@ -70,7 +70,6 @@
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="Autosave.h" />
     <ClInclude Include="BaseMissionExecutor.h" />
-    <ClInclude Include="BountyMissions.h" />
     <ClInclude Include="ChesterBurnettExecutor.h" />
     <ClInclude Include="ClintonvonHagenExecutor.h" />
     <ClInclude Include="GenericGuardingBehavior.h" />

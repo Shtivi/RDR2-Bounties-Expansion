@@ -265,7 +265,7 @@ void GenericGuardingBehavior::search()
 	search(ENTITY::GET_ENTITY_COORDS(ped(), 1, 0));
 }
 
-void GenericGuardingBehavior::search(Vector3 aroundWhere, float radius = GUARD_SUSPECT_RANGE)
+void GenericGuardingBehavior::search(Vector3 aroundWhere, float radius)
 {
 	if (getMode() != TensionMode::Search)
 	{
@@ -420,7 +420,7 @@ void GenericGuardingBehavior::enterWarningMode()
 	setMode(TensionMode::Warn);
 }
 
-void GenericGuardingBehavior::enterSearchMode(Vector3 aroundWhere, float searchRadius = GUARD_SUSPECT_RANGE)
+void GenericGuardingBehavior::enterSearchMode(Vector3 aroundWhere, float searchRadius)
 {
 	AI::CLEAR_PED_TASKS(ped(), 1, 1);
 	pedEquipBestWeapon(ped());

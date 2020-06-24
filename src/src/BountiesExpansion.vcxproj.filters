@@ -297,9 +297,6 @@
     <ClInclude Include="ChesterBurnettExecutor.h">
       <Filter>Src\Game\BountyMissions\ChesterBurnett</Filter>
     </ClInclude>
-    <ClInclude Include="BountyMissions.h">
-      <Filter>Src\Game\BountyMissions</Filter>
-    </ClInclude>
     <ClInclude Include="world.h">
       <Filter>Src\Game\World</Filter>
     </ClInclude>
