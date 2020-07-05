@@ -29,15 +29,23 @@ void GuardsGroup::add(Ped ped, IdlingModifier idlingModifier, RoutineParams rout
 	guards.push_back(guard);
 }
 
-void GuardsGroup::start()
+vector<Ped>* GuardsGroup::peds()
+{
+	vector<Ped>* peds = new vector<Ped>;
+	for (vector<GenericGuardingBehavior*>::iterator itr = guards.begin(); itr != guards.end(); itr++)
+	{
+		peds->push_back((*itr)->ped());
+	}
+	return peds;
+}
+
+void GuardsGroup::start(bool withBlips)
 {
 	for (vector<GenericGuardingBehavior*>::iterator itr = guards.begin(); itr != guards.end(); itr++)
 	{
-		(*itr)->start();
+		(*itr)->start(withBlips);
 		guardsModeSnapshot[(*itr)->ped()] = (*itr)->getMode();
 	}
-
-	debugBlip = createBlip(defensePosition, radius, 0xEC972124);
 }
 
 void GuardsGroup::stop()
@@ -46,8 +54,6 @@ void GuardsGroup::stop()
 	{
 		(*itr)->stop();
 	}
-
-	deleteBlipSafe(&debugBlip);
 }
 
 void GuardsGroup::update()
@@ -116,7 +122,7 @@ void GuardsGroup::clearDeadGuards()
 	{
 		(*itr)->update();
 
-		if (ENTITY::IS_ENTITY_DEAD((*itr)->ped()))
+		if (ENTITY::IS_ENTITY_DEAD((*itr)->ped()) || distanceBetweenEntities((*itr)->ped(), PLAYER::PLAYER_PED_ID()) > 250)
 		{
 			(*itr)->stop();
 			itr = guards.erase(itr);
@@ -125,6 +131,22 @@ void GuardsGroup::clearDeadGuards()
 		{
 			itr++;
 		}
+	}
+}
+
+void GuardsGroup::addBlips()
+{
+	for (vector<GenericGuardingBehavior*>::iterator itr = guards.begin(); itr != guards.end(); itr++)
+	{
+		(*itr)->addEnemyBlip();
+	}
+}
+
+void GuardsGroup::removeBlips()
+{
+	for (vector<GenericGuardingBehavior*>::iterator itr = guards.begin(); itr != guards.end(); itr++)
+	{
+		(*itr)->removeBlip();
 	}
 }
 

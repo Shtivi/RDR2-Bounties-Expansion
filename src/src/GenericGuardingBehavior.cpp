@@ -27,19 +27,22 @@ GenericGuardingBehavior::GenericGuardingBehavior(Ped ped, Vector3 defensePositio
 }
 
 
-void GenericGuardingBehavior::start()
+void GenericGuardingBehavior::start(bool withBlip)
 {
 	PedBehavior::start();
 	setMode(TensionMode::Idle);
 	enterIdleMode();
-	createBlip(ped(), BLIP_STYLE_ENEMY);
+
+	if (withBlip)
+	{
+		addEnemyBlip();
+	}
 }
 
 void GenericGuardingBehavior::stop()
 {
 	PedBehavior::stop();
-	Blip pedBlip = RADAR::GET_BLIP_FROM_ENTITY(ped());
-	deleteBlipSafe(&pedBlip);
+	removeBlip();
 }
 
 void GenericGuardingBehavior::update()
@@ -49,11 +52,6 @@ void GenericGuardingBehavior::update()
 	{
 		return;
 	}
-
-	if (stopwatch.getElapsedSecondsRealTime() == -1.0f)
-		displayDebugText(std::to_string((int)mode).c_str());
-	else
-		displayDebugText(std::to_string((int)stopwatch.getElapsedSecondsRealTime()).c_str());
 
 	Ped player = PLAYER::PLAYER_PED_ID();
 	float distanceFromGuard = distanceBetweenEntities(ped(), player);
@@ -283,6 +281,20 @@ void GenericGuardingBehavior::combat()
 	}
 }
 
+void GenericGuardingBehavior::addEnemyBlip()
+{
+	if (!RADAR::DOES_BLIP_EXIST(RADAR::GET_BLIP_FROM_ENTITY(ped())))
+	{
+		createBlip(ped(), BLIP_STYLE_ENEMY);
+	}
+}
+
+void GenericGuardingBehavior::removeBlip()
+{
+	Blip pedBlip = RADAR::GET_BLIP_FROM_ENTITY(ped());
+	deleteBlipSafe(&pedBlip);
+}
+
 TensionMode GenericGuardingBehavior::getMode()
 {
 	return this->mode;
@@ -453,6 +465,7 @@ void GenericGuardingBehavior::enterCombatMode()
 		AI::TASK_COMBAT_PED(ped(), player, 0, 16);
 	}
 	playAmbientSpeech(ped(), "GET_SUSPECT_MALE");
+	addEnemyBlip();
 }
 
 void GenericGuardingBehavior::setMode(TensionMode mode)

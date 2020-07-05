@@ -124,6 +124,7 @@ void main()
 		else if (IsKeyJustUp(VK_KEY_X))
 		{
 			Ped player = PLAYER::PLAYER_PED_ID();
+			ENTITY::SET_ENTITY_HEALTH(player, PED::GET_PED_MAX_HEALTH(player), 0);
 			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			//float ground;
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
@@ -136,33 +137,33 @@ void main()
 			//log(output.str().c_str());
 
 
-			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-			Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
-			Vector3 pos = playerPos + forwardVec * 4;
-			Vector3 aimPos = pos + forwardVec * 100;
-			Ped ped = createPed("g_m_y_uniexconfeds_01", pos);
-			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
-			//AI::TASK_STAND_GUARD(ped, pos.x, pos.y, pos.z, 0, "WORLD_HUMAN_SMOKE");
-			WAIT(2000);
-			//pedEquipBestWeapon(ped);
-			//PED::SET_PED_KEEP_TASK(ped, true);
-			//AI::CLEAR_PED_TASKS(ped, 1, 1);
-			//AI::_0xC4C32C31920E1B70(ped, player, playerPos.x, playerPos.y, playerPos.z, (Any*)"DEFAULT_SCARED", 10.0f, 10.0f, 0);
-			Conversation conv;
-			conv.addLine(ped, "GENERIC_CURSE_HIGH");
-			conv.addDelay(500);
-			conv.addLine(ped, "GET_SUSPECT_MALE");
-			conv.addDelay(500);
-			conv.addLine(ped, "COME_SEE_THIS");
-			conv.addDelay(500);
-			conv.addLine(ped, "CALLOUT_GET_FLEEING_MALE");
-			conv.addDelay(500);
-			conv.addLine(ped, "CALLOUT_EASY_PICKINGS_MALE");
-			conv.addDelay(500);
-			conv.addLine(ped, "CALL_FOR_SUPPORT");
-			conv.play();
-			//AI::TASK_AIM_GUN_AT_COORD(ped, aimPos.x, aimPos.y, aimPos.z, -1, 1, 1);
-			temp = ped;
+			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+			//Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
+			//Vector3 pos = playerPos + forwardVec * 4;
+			//Vector3 aimPos = pos + forwardVec * 100;
+			//Ped ped = createPed("g_m_y_uniexconfeds_01", pos);
+			//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+			////AI::TASK_STAND_GUARD(ped, pos.x, pos.y, pos.z, 0, "WORLD_HUMAN_SMOKE");
+			//WAIT(2000);
+			////pedEquipBestWeapon(ped);
+			////PED::SET_PED_KEEP_TASK(ped, true);
+			////AI::CLEAR_PED_TASKS(ped, 1, 1);
+			////AI::_0xC4C32C31920E1B70(ped, player, playerPos.x, playerPos.y, playerPos.z, (Any*)"DEFAULT_SCARED", 10.0f, 10.0f, 0);
+			//Conversation conv;
+			//conv.addLine(ped, "GENERIC_CURSE_HIGH");
+			//conv.addDelay(500);
+			//conv.addLine(ped, "GET_SUSPECT_MALE");
+			//conv.addDelay(500);
+			//conv.addLine(ped, "COME_SEE_THIS");
+			//conv.addDelay(500);
+			//conv.addLine(ped, "CALLOUT_GET_FLEEING_MALE");
+			//conv.addDelay(500);
+			//conv.addLine(ped, "CALLOUT_EASY_PICKINGS_MALE");
+			//conv.addDelay(500);
+			//conv.addLine(ped, "CALL_FOR_SUPPORT");
+			//conv.play();
+			////AI::TASK_AIM_GUN_AT_COORD(ped, aimPos.x, aimPos.y, aimPos.z, -1, 1, 1);
+			//temp = ped;
 		}
 
 

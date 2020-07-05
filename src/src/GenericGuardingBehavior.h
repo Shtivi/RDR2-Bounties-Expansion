@@ -27,7 +27,7 @@ public:
 	GenericGuardingBehavior(Ped ped, Vector3 defensePosition, float radius, IdlingModifier idlingModifier, RoutineParams routineParams, set<Ped>* bodiesFound = NULL, bool shouldTolerate = true);
 
 	TensionMode getMode();
-	virtual void start();
+	virtual void start(bool withBlip = false);
 	virtual void update();
 	virtual void stop();
 	void routine();
@@ -39,6 +39,8 @@ public:
 	void search();
 	void search(Vector3 aroundWhere, float radius = GUARD_SUSPECT_RANGE);
 	void combat();
+	void addEnemyBlip();
+	void removeBlip();
 
 protected:
 	void setMode(TensionMode mode);
