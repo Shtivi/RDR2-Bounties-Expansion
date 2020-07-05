@@ -46,7 +46,8 @@ void JesseHillExecutor::prepareSet()
 	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-5693.293, -2376.194, 5.328225));
 	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5687.966, -2379.522, 3.616471));
 
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5711.004, -2391.769, 6.44563)));
+	// Now just add the enemies to the group to make them be controlled by it
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5711.004, -2391.769, 6.44563))); 
 	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5706.604, -2387.53, 5.327281)));
 	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5701.083, -2383.894, 4.922241)));
 	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5698.187, -2389.69, 3.816682)));
