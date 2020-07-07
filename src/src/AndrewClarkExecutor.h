@@ -21,8 +21,6 @@ private:
 	bool spawnedBountyHunters;
 	int robberyAttempts;
 	RobberyProgress robberyProgress;
-	vector<Ped> bountyHunters;
-	vector<Ped> horses;
 
 public:
 	AndrewClarkExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -36,6 +34,4 @@ private:
 
 	void playTargetRobbery();
 	void goToStash();
-	void spawnBountyHunters();
-	void addBountyHunter(Ped horse, bool isDriver);
 };
