@@ -150,6 +150,7 @@ void EliasTraditionExecutor::addGuard(Ped guard)
 	AI::CLEAR_PED_TASKS(guard, true, true);
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(guard, true);
 	AI::TASK_PERFORM_SEQUENCE(guard, seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 }
 
 void EliasTraditionExecutor::playVictimExecution()
@@ -185,6 +186,7 @@ void EliasTraditionExecutor::cleanUpExecution()
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::CLEAR_PED_TASKS(killer, 1, 1);
 	AI::TASK_PERFORM_SEQUENCE(killer, seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 
 	for (it = enemies.begin(); it != enemies.end(); ++it)
 	{

@@ -15,6 +15,8 @@ BaseMissionExecutor::BaseMissionExecutor(BountyMissionData missionData, MapAreas
 	setRequiredDistanceToLocateTarget(REQUIRED_DIST_TO_LOCATE);
 	setMustBeCloseToLocate(false);
 
+	spawnedBountyHunters = false;
+	yellow = false;
 	poster = NULL;
 	posterBlip = NULL;
 	targetAreaBlip = NULL;
@@ -63,6 +65,7 @@ void BaseMissionExecutor::update()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
+	releaseUnnecessaryEntities();
 
 	//if (IsKeyJustUp(VK_KEY_N))
 	//{
@@ -123,6 +126,29 @@ void BaseMissionExecutor::update()
 		{
 			nextStage();
 		}
+		if (distanceBetweenEntities(player, target) <= requiredDistanceToLocate + 30 && !yellow)
+		{
+			RADAR::REMOVE_BLIP(&targetAreaBlip);
+			targetAreaBlip = createBlip(ENTITY::GET_ENTITY_COORDS(target, true, false), targetAreaRadius - 40, 0xC19DA63, 0);
+			yellow = true;
+		}
+		if (distanceBetween(playerPos, missionData->startPosition) > targetAreaRadius)
+		{
+			cleanup();
+			stage = BountyMissionStage::GoToArea;
+			if (yellow == true)
+			{
+				fail("Bounty failed, target lost");
+			}
+		}
+		if (yellow == true)
+		{
+			if (distanceBetweenEntities(target, player) > 100)
+			{
+				PED::DELETE_PED(&target);
+				fail("Bounty failed, target lost");
+			}
+		}
 	}
 	else if (stage == BountyMissionStage::CaptureTarget)
 	{
@@ -134,6 +160,11 @@ void BaseMissionExecutor::update()
 	}
 	else if (stage == BountyMissionStage::ArriveToPoliceStation)
 	{
+		float distanceToPolice = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 1), *(getArea()->policeDeptCoords));
+		if (distanceToPolice < 500 && !spawnedBountyHunters)
+		{
+			spawnBountyHunters();
+		}
 		Vector3 targetPos = ENTITY::GET_ENTITY_COORDS(target, true, false);
 		if (distanceBetween(targetPos, *getArea()->policeDeptCoords) < 20)
 		{
@@ -270,10 +301,16 @@ void BaseMissionExecutor::initialize()
 	status = BountyMissionStatus::Pending;
 
 	Vector3* posterPos = getArea()->bountyPostersCoords;
-
-	poster = createProp("p_cs_newspaper_01x", *posterPos, true);
+	if (missionData->requiredTargetCondition == TargetCondition::Alive)
+	{
+		poster = createProp("p_pos_wantedalive01x", *posterPos, true);
+	}
+	else
+	{
+		poster = createProp("p_pos_wanteddead01x", *posterPos, true);
+	}
 	ENTITY::SET_ENTITY_HEADING(poster, getArea()->bountyPosterHeading);
-	posterBlip = createBlip(poster, 0xEC972124, 0x9E6FEC8F);
+	posterBlip = createBlip(poster, 0xB04092F8, 0x9E6FEC8F);
 	setBlipLabel(posterBlip, "Bounty Poster");
 }
 
@@ -292,6 +329,7 @@ void BaseMissionExecutor::onPosterCollected()
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::CLEAR_PED_TASKS(player,1,1);
 		AI::TASK_PERFORM_SEQUENCE(player, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 		inspectPosterPrompt->hide();
 
 		WAIT(8000);
@@ -316,9 +354,8 @@ void BaseMissionExecutor::onPosterCollected()
 void BaseMissionExecutor::onArrivalToArea()
 {
 	status = BountyMissionStatus::InProgress;
-
-	RADAR::REMOVE_BLIP(&targetAreaBlip);
-	targetAreaBlip = createBlip(missionData->startPosition, targetAreaRadius, 0xC19DA63, 0);
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 	setBlipLabel(targetAreaBlip, "Bounty Hunting");
 
 	target = spawnTarget();
@@ -336,6 +373,10 @@ void BaseMissionExecutor::onArrivalToArea()
 void BaseMissionExecutor::onTargetLocated()
 {
 	decorateTarget();
+	if (ENTITY::IS_ENTITY_DEAD(target))
+	{
+		deleteBlipSafe(&targetBlip);
+	}
 	RADAR::REMOVE_BLIP(&targetAreaBlip);
 
 	const char* gender = missionData->isTargetMale ? "He" : "She";
@@ -347,8 +388,13 @@ void BaseMissionExecutor::onTargetLocated()
 
 void BaseMissionExecutor::onTargetCaptured()
 {
-	policeLocBlip = createBlip(*getArea()->policeDeptCoords, 0x1857A152);
-
+	if (ENTITY::IS_ENTITY_DEAD(target))
+	{
+		decorateTarget();
+	}
+	Vector3* posterPos = getArea()->policeDeptCoords;
+	dummyProp = createProp("p_shotGlass01x", *posterPos, true, false, false);
+	policeLocBlip = createBlip(dummyProp, 0x1857A152);
 	std::stringstream text;
 	text << "Take ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ to the ~COLOR_YELLOW~Police Department";
 	showSubtitle(text.str().c_str());
@@ -356,8 +402,11 @@ void BaseMissionExecutor::onTargetCaptured()
 
 void BaseMissionExecutor::onArrivalToPoliceStation()
 {
+	OBJECT::DELETE_OBJECT(&dummyProp);
 	deleteBlipSafe(&policeLocBlip);
-	cellBlip = createBlip(*getArea()->cellCoords, 0xC19DA63);
+	Vector3* posterPos = getArea()->cellCoords;
+	dummyProp = createProp("p_shotGlass01x", *posterPos, true, false, false);
+	cellBlip = createBlip(dummyProp, 0xC19DA63);
 	
 	std::stringstream text;
 	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in the ~COLOR_YELLOW~Cell";
@@ -366,8 +415,8 @@ void BaseMissionExecutor::onArrivalToPoliceStation()
 
 void BaseMissionExecutor::onTargetHandedOver()
 {
-	Blip targetBlip = RADAR::GET_BLIP_FROM_ENTITY(target);
 	deleteBlipSafe(&targetBlip);
+	OBJECT::DELETE_OBJECT(&dummyProp);
 	deleteBlipSafe(&cellBlip);
 }
 
@@ -387,13 +436,91 @@ void BaseMissionExecutor::onFinished(bool shouldCleanup)
 	}
 }
 
+void BaseMissionExecutor::spawnBountyHunters()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+	Vector3 enemiesSourcePos = getRandomPedPositionInRange(playerPos, 60);
+	log(playerPos);
+	log(enemiesSourcePos);
+
+	Ped horse1 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
+	Ped horse2 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
+	Ped horse3 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
+	horses.push_back(horse1);
+	horses.push_back(horse2);
+	horses.push_back(horse3);
+	giveSaddleToHorse(horse1, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_004);
+	giveSaddleToHorse(horse2, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_002);
+	giveSaddleToHorse(horse3, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_002);
+
+	addBountyHunter(horse1, true);
+	addBountyHunter(horse2, true);
+	addBountyHunter(horse3, true);
+	WAIT(1000);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = bountyHunters.begin(); pedItr != bountyHunters.end(); pedItr++)
+	{
+		Ped curr = *pedItr;
+		AI::TASK_COMBAT_PED(curr, player, 0, 16);
+	}
+	spawnedBountyHunters = true;
+}
+
+void BaseMissionExecutor::addBountyHunter(Ped horse, bool isDriver)
+{
+	Ped bh = createPedOnHorse("G_M_M_BountyHunters_01", horse, isDriver ? -1 : 0);
+	PED::SET_PED_RELATIONSHIP_GROUP_HASH(bh, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	DECORATOR::DECOR_SET_INT(bh, "honor_override", 0);
+	bountyHunters.push_back(bh);
+	createBlip(bh, BLIP_STYLE_ENEMY);
+	pedEquipBestWeapon(bh);
+}
+
+void BaseMissionExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			if (distanceBetweenEntitiesHor(*it, player) > 250 || ENTITY::IS_ENTITY_DEAD(*it))
+			{
+				releaseEntitySafe(&(*it));
+			}
+		}
+		for (it = bountyHunters.begin(); it != bountyHunters.end(); ++it)
+		{
+			if (distanceBetweenEntitiesHor(*it, player) > 250 || ENTITY::IS_ENTITY_DEAD(*it))
+			{
+				releaseEntitySafe(&(*it));
+			}
+		}
+	}
+}
+
 void BaseMissionExecutor::cleanup()
 {
-	deleteBlipSafe(&targetBlip);
-	deleteBlipSafe(&targetAreaBlip);
-	deleteBlipSafe(&policeLocBlip);
-	deleteBlipSafe(&cellBlip);
-	releaseEntitySafe(&target);
+	if (status == BountyMissionStatus::Completed || status == BountyMissionStatus::Failed)
+	{
+		deleteBlipSafe(&targetBlip);
+		deleteBlipSafe(&targetAreaBlip);
+		deleteBlipSafe(&policeLocBlip);
+		deleteBlipSafe(&cellBlip);
+		releaseEntitySafe(&target);
+	}
+	vector<Ped>::iterator pedItr;
+	for (pedItr = bountyHunters.begin(); pedItr != bountyHunters.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
 }
 
 void BaseMissionExecutor::decorateTarget()

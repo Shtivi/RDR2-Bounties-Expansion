@@ -2,33 +2,36 @@
 
 using namespace std;
 
-const int IDLE_DIST = 45;
+const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
 const int HEARING_RANGE = 45;
-const int COMBAT_RANGE = 12;
+const int COMBAT_RANGE = 20;
 
-ClintonvonHagenExecutor::ClintonvonHagenExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+HarperConnorExecutor::HarperConnorExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
+	setTargetAreaRadius(100);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(1878.301, -548.9763, 42.79025);
+	campfirePos = toVector3(768.0861, -852.4528, 54.38295); //test deze bounty
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
+	weapon == false;
 }
 
-void ClintonvonHagenExecutor::update()
+void HarperConnorExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (getMissionStage() == BountyMissionStage::CaptureTarget)
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	if (getMissionStage() == BountyMissionStage::LocateTarget || getMissionStage() == BountyMissionStage::CaptureTarget)
 	{
-		float distanceToTarget = distanceBetweenEntities(target, player);
+		float distanceToTarget = distanceBetweenEntities(*pedItr, player);
 		switch (enemiesStatus)
 		{
 		case EnemiesMode::IDLE:
@@ -108,22 +111,21 @@ void ClintonvonHagenExecutor::update()
 		}
 		if (distanceBetweenEntities(target, player) > 120)
 		{
+			PED::DELETE_PED(&target);
 			fail("Bounty failed, target lost");
 		}
 	}
 
 }
 
-Ped ClintonvonHagenExecutor::spawnTarget()
+Ped HarperConnorExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(1874.233, -540.7623, 44.48211);
-	Ped target = createPed(M_BOUNTY_FANCY, targetPos);
-	giveWeaponToPed(target, PistolMauser, 0x743D4F54, false);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Vector3 targetPos = toVector3(764.5617, -842.8209, 55.50637);
+	Ped target = createPed("G_M_O_UniExConfeds_01", targetPos);
 	return target;
 }
 
-void ClintonvonHagenExecutor::enterIdleMode()
+void HarperConnorExecutor::enterIdleMode()
 {
 	char* scenarioName;
 	Ped player = PLAYER::PLAYER_PED_ID();
@@ -141,7 +143,7 @@ void ClintonvonHagenExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void ClintonvonHagenExecutor::enterAlertMode()
+void HarperConnorExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -162,19 +164,29 @@ void ClintonvonHagenExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void ClintonvonHagenExecutor::enterWarningMode()
+void HarperConnorExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
-		pedEquipBestWeapon(*pedItr);
+		weapon == true;
+		int iWeapon = rand() % 2 + 1;
+		if (iWeapon == 1)
+		{
+			WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+		}
+		if (iWeapon == 2)
+		{
+			giveWeaponToPed(*pedItr, RevolverSchofield, 0x64356159, true);
+			WEAPON::REMOVE_WEAPON_FROM_PED(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), false, 0);
+		}
 	}
 
 	playAmbientSpeech(target, "FINAL_WARNING");
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void ClintonvonHagenExecutor::enterCombatMode()
+void HarperConnorExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
 
@@ -183,12 +195,22 @@ void ClintonvonHagenExecutor::enterCombatMode()
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
 		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
-		WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
-
+		if (weapon == false)
+		{
+			int iWeapon = rand() % 2 + 1;
+			if (iWeapon == 1)
+			{
+				WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+			}
+			if (iWeapon == 2)
+			{
+				giveWeaponToPed(*pedItr, RevolverSchofield, 0x64356159, true);
+				WEAPON::REMOVE_WEAPON_FROM_PED(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), false, 0);
+			}
+		}
 		if (*pedItr == target)
 		{
-			int iSecret;
-			iSecret = rand() % 2 + 1;
+			int iSecret = rand() % 2 + 1;
 			if (iSecret == 1)
 			{
 
@@ -222,7 +244,7 @@ void ClintonvonHagenExecutor::enterCombatMode()
 			AI::OPEN_SEQUENCE_TASK(&seq);
 			AI::TASK_COMBAT_PED(0, player, 0, 16);
 			AI::CLOSE_SEQUENCE_TASK(seq);
-
+			PED::SET_PED_RELATIONSHIP_GROUP_HASH(*pedItr, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 			AI::CLEAR_SEQUENCE_TASK(&seq);
@@ -230,28 +252,28 @@ void ClintonvonHagenExecutor::enterCombatMode()
 	}
 }
 
-void ClintonvonHagenExecutor::prepareSet()
+void HarperConnorExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(1862.671, -546.8985, 44.31232));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(755.3113, -861.9045, 54.51758));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1860.283, -543.2865, 44.5644));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1858.016, -541.511, 44.58672));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(758.0254, -862.0231, 54.66626));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(761.9842, -862.2714, 54.74209));
 
 	addEnemy(target);
-	addEnemy(toVector3(1882.838, -540.6451, 44.17368));
-	addEnemy(toVector3(1883.176, -531.792, 44.3957));
-	addEnemy(toVector3(1867.759, -551.862, 43.7626));
-	addEnemy(toVector3(1878.939, -558.862, 43.50563));
-	addEnemy(toVector3(1887.32, -546.0612, 43.74894));
-	addEnemy(toVector3(1871.617, -531.5223, 44.57956));
-	addEnemy(toVector3(1877.967, -536.8925, 44.57931));
+	addEnemy(toVector3(762.6347, -850.3631, 55.25639));
+	addEnemy(toVector3(762.7381, -853.0121, 55.34014));
+	addEnemy(toVector3(765.1423, -856.9935, 55.24311));
+	addEnemy(toVector3(779.6448, -844.4714, 55.53098));
+	addEnemy(toVector3(776.5958, -844.3274, 55.55535));
+	addEnemy(toVector3(757.3467, -844.9959, 55.13348));
+	addEnemy(toVector3(754.035, -844.9783, 55.15492));
 
 	enterIdleMode();
 }
 
-void ClintonvonHagenExecutor::onTargetLocated()
+void HarperConnorExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
 
@@ -265,7 +287,7 @@ void ClintonvonHagenExecutor::onTargetLocated()
 	}
 }
 
-void ClintonvonHagenExecutor::createEnemyBlips()
+void HarperConnorExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -277,7 +299,7 @@ void ClintonvonHagenExecutor::createEnemyBlips()
 	}
 }
 
-void ClintonvonHagenExecutor::releaseUnnecessaryEntities()
+void HarperConnorExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -296,34 +318,34 @@ void ClintonvonHagenExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void ClintonvonHagenExecutor::addEnemy(Vector3 pos)
+void HarperConnorExecutor::addEnemy(Vector3 pos)
 {
-	Ped enemyPed = createPed("G_M_M_UniBronteGoons_01", pos);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(enemyPed, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Ped enemyPed = createPed("G_M_Y_UniExConfeds_02", pos);
 	addEnemy(enemyPed);
 }
 
-void ClintonvonHagenExecutor::addEnemy(Ped ped)
+void HarperConnorExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
+
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void ClintonvonHagenExecutor::addHorse(const char* model, Vector3 pos)
+void HarperConnorExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void ClintonvonHagenExecutor::addHorse(Ped horse)
+void HarperConnorExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void ClintonvonHagenExecutor::cleanup()
+void HarperConnorExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);

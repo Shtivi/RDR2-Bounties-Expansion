@@ -2,26 +2,26 @@
 
 using namespace std;
 
-const int IDLE_DIST = 45;
-const int ALERT_DIST = 35;
-const int WARN_DIST = 30;
-const int HEARING_RANGE = 45;
-const int COMBAT_RANGE = 12;
+const int IDLE_DIST = 0;
+const int ALERT_DIST = 0;
+const int WARN_DIST = 0;
+const int HEARING_RANGE = 0;
+const int COMBAT_RANGE = 0;
 
-ClintonvonHagenExecutor::ClintonvonHagenExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+ChesterBurnettExecutor::ChesterBurnettExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
-	setRequiredDistanceToLocateTarget(50);
+	setTargetAreaRadius(50);
+	setRequiredDistanceToLocateTarget(0);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(1878.301, -548.9763, 42.79025);
+	campfirePos = toVector3(-1352.869, 2440.57, 307.4282);
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
 }
 
-void ClintonvonHagenExecutor::update()
+void ChesterBurnettExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
@@ -81,23 +81,63 @@ void ClintonvonHagenExecutor::update()
 			}
 			break;
 		}
-
-		if (enemiesStatus < EnemiesMode::COMBAT && distanceToTarget <= HEARING_RANGE)
+	}
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	{
+		if (*pedItr != target)
 		{
-			if (distanceToTarget <= COMBAT_RANGE || PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()) || PED::IS_PED_SHOOTING(player))
+			if (getMissionStage() == BountyMissionStage::LocateTarget && ENTITY::IS_ENTITY_DEAD(*pedItr) && enemiesStatus < EnemiesMode::COMBAT)
 			{
+				showSubtitle("Bounty Failed, you killed an innocent man.");
+				stopwatch.start();
 				enterCombatMode();
+				AI::_0xFD45175A6DFD7CE9(target, player, 3, 0, -999.0f, -1, 0); // FLEE
+			}
+			if (getMissionStage() == BountyMissionStage::ArriveToPoliceStation && ENTITY::IS_ENTITY_DEAD(*pedItr) && distanceBetweenEntities(*pedItr, player) <= 250)
+			{
+				showSubtitle("Bounty Failed, you killed an innocent man.");
+				stopwatch.start();
+				enterCombatMode();
+				AI::_0xFD45175A6DFD7CE9(target, player, 3, 0, -999.0f, -1, 0); // FLEE
+			}
+			if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, false, false))
+			{
+				AI::TASK_COMBAT_PED(*pedItr, player, 0, 16);
+			}
+			if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), *pedItr))
+			{
+				AI::TASK_COWER(*pedItr, 9999, 0, 0);
+				if (ENTITY::IS_ENTITY_DEAD(target))
+				{
+					AI::TASK_COWER(*pedItr, 9999, 0, 0);
+				}
 			}
 		}
-	}
-
-	if (getMissionStage() == BountyMissionStage::LocateTarget && PED::IS_PED_SHOOTING(player) && enemiesStatus < EnemiesMode::COMBAT)
-	{
-		enterCombatMode();
-	}
-	else if (getMissionStage() == BountyMissionStage::CaptureTarget && PED::IS_PED_SHOOTING(player) && enemiesStatus < EnemiesMode::COMBAT)
-	{
-		enterCombatMode();
+		else
+		{
+			if (ENTITY::IS_ENTITY_DEAD(*pedItr))
+			{
+				setMustBeCloseToLocate(false);
+			}
+			if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, false, false))
+			{
+				AI::TASK_COMBAT_PED(*pedItr, player, 0, 16);
+			}
+			if (PLAYER::IS_PLAYER_FREE_AIMING_AT_ENTITY(PLAYER::PLAYER_ID(), *pedItr))
+			{
+				giveWeaponToPed(target, RevolverCattleman, 0x64356159, true);
+				AI::TASK_COMBAT_PED(*pedItr, player, 0, 16);
+			}
+		}
+		if (PED::IS_PED_SHOOTING(player))
+		{
+			AI::TASK_COWER(*pedItr, 9999, 0, 0);
+		}
+		if (isPedHogtied(target))
+		{
+			setMustBeCloseToLocate(false);
+		}
 	}
 
 	if (getMissionStage() == BountyMissionStage::CaptureTarget && enemiesStatus >= EnemiesMode::ALERTED && !ENTITY::IS_ENTITY_DEAD(target))
@@ -114,16 +154,16 @@ void ClintonvonHagenExecutor::update()
 
 }
 
-Ped ClintonvonHagenExecutor::spawnTarget()
+Ped ChesterBurnettExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(1874.233, -540.7623, 44.48211);
-	Ped target = createPed(M_BOUNTY_FANCY, targetPos);
-	giveWeaponToPed(target, PistolMauser, 0x743D4F54, false);
+	Vector3 targetPos = toVector3(-1349.408, 2446.22, 308.4254);
+	Ped target = createPed("G_M_M_UNIMICAHGOONS_01", targetPos);
+	giveWeaponToPed(target, RevolverCattleman, 0x64356159, false);
 	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	return target;
 }
 
-void ClintonvonHagenExecutor::enterIdleMode()
+void ChesterBurnettExecutor::enterIdleMode()
 {
 	char* scenarioName;
 	Ped player = PLAYER::PLAYER_PED_ID();
@@ -141,20 +181,19 @@ void ClintonvonHagenExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void ClintonvonHagenExecutor::enterAlertMode()
+void ChesterBurnettExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
 		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
-		AI::TASK_TURN_PED_TO_FACE_ENTITY(*pedItr, PLAYER::PLAYER_PED_ID(), -1, 0, 0, 0);
 	}
 
-	if (enemiesStatus == EnemiesMode::IDLE)
+	//if (enemiesStatus == EnemiesMode::IDLE)
 	{
 		playAmbientSpeech(target, "GET_LOST");
 	}
-	else if (enemiesStatus == EnemiesMode::WARNING)
+	//else if (enemiesStatus == EnemiesMode::WARNING)
 	{
 		playAmbientSpeech(target, "WON_DISPUTE");
 	}
@@ -162,7 +201,7 @@ void ClintonvonHagenExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void ClintonvonHagenExecutor::enterWarningMode()
+void ChesterBurnettExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -174,10 +213,9 @@ void ClintonvonHagenExecutor::enterWarningMode()
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void ClintonvonHagenExecutor::enterCombatMode()
+void ChesterBurnettExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
-
 	Ped player = PLAYER::PLAYER_PED_ID();
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -187,27 +225,10 @@ void ClintonvonHagenExecutor::enterCombatMode()
 
 		if (*pedItr == target)
 		{
-			int iSecret;
-			iSecret = rand() % 2 + 1;
-			if (iSecret == 1)
-			{
-
-				Object seq;
-				AI::OPEN_SEQUENCE_TASK(&seq);
-				AI::_0x92DB0739813C5186(0, horse, -1, -1, 2.0f, 1, 0, 0); // Mount the horse
-				AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
-				AI::CLOSE_SEQUENCE_TASK(seq);
-
-				AI::CLEAR_PED_TASKS(target, 1, 1);
-				AI::TASK_PERFORM_SEQUENCE(target, seq);
-				AI::CLEAR_SEQUENCE_TASK(&seq);
-				playAmbientSpeech(target, "ITS_MALE_EXTREME");
-			}
-			else if (iSecret == 2)
 			{
 				Object seq;
 				AI::OPEN_SEQUENCE_TASK(&seq);
-				AI::TASK_COMBAT_PED(target, player, 0, 16);
+				AI::TASK_COMBAT_PED(0, player, 0, 16);
 				AI::CLOSE_SEQUENCE_TASK(seq);
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
@@ -218,9 +239,13 @@ void ClintonvonHagenExecutor::enterCombatMode()
 		}
 		else
 		{
+			if (ENTITY::IS_ENTITY_DEAD(*pedItr))
+			{
+				AI::_0xFD45175A6DFD7CE9(target, player, 3, 0, -999.0f, -1, 0); // FLEE
+			}
 			Object seq;
 			AI::OPEN_SEQUENCE_TASK(&seq);
-			AI::TASK_COMBAT_PED(0, player, 0, 16);
+			AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
 			AI::CLOSE_SEQUENCE_TASK(seq);
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
@@ -228,44 +253,30 @@ void ClintonvonHagenExecutor::enterCombatMode()
 			AI::CLEAR_SEQUENCE_TASK(&seq);
 		}
 	}
+	if (stopwatch.getElapsedSecondsRealTime() >= 4)
+	{
+		fail();
+	}
 }
 
-void ClintonvonHagenExecutor::prepareSet()
+void ChesterBurnettExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(1862.671, -546.8985, 44.31232));
-	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1860.283, -543.2865, 44.5644));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1858.016, -541.511, 44.58672));
-
 	addEnemy(target);
-	addEnemy(toVector3(1882.838, -540.6451, 44.17368));
-	addEnemy(toVector3(1883.176, -531.792, 44.3957));
-	addEnemy(toVector3(1867.759, -551.862, 43.7626));
-	addEnemy(toVector3(1878.939, -558.862, 43.50563));
-	addEnemy(toVector3(1887.32, -546.0612, 43.74894));
-	addEnemy(toVector3(1871.617, -531.5223, 44.57956));
-	addEnemy(toVector3(1877.967, -536.8925, 44.57931));
+	addEnemy(toVector3(-1351.776, 2436.312, 308.4017));
+	addEnemy(toVector3(-1347.818, 2439.917, 308.449));
+	addEnemy(toVector3(-1357.465, 2438.535, 308.4151));
 
 	enterIdleMode();
 }
 
-void ClintonvonHagenExecutor::onTargetLocated()
+void ChesterBurnettExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
-
-	vector<Ped>::iterator pedItr;
-	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
-	{
-		if (*pedItr != target)
-		{
-			createBlip(*pedItr, BLIP_STYLE_ENEMY);
-		}
-	}
 }
 
-void ClintonvonHagenExecutor::createEnemyBlips()
+void ChesterBurnettExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -277,7 +288,7 @@ void ClintonvonHagenExecutor::createEnemyBlips()
 	}
 }
 
-void ClintonvonHagenExecutor::releaseUnnecessaryEntities()
+void ChesterBurnettExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -288,7 +299,7 @@ void ClintonvonHagenExecutor::releaseUnnecessaryEntities()
 
 		for (it = enemies.begin(); it != enemies.end(); ++it)
 		{
-			if (distanceBetweenEntities(*it, player) > 250 ||  ENTITY::IS_ENTITY_DEAD(*it))
+			if (distanceBetweenEntities(*it, player) > 250)
 			{
 				releaseEntitySafe(&(*it));
 			}
@@ -296,34 +307,35 @@ void ClintonvonHagenExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void ClintonvonHagenExecutor::addEnemy(Vector3 pos)
+void ChesterBurnettExecutor::addEnemy(Vector3 pos)
 {
-	Ped enemyPed = createPed("G_M_M_UniBronteGoons_01", pos);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(enemyPed, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Ped enemyPed = createPed("G_M_M_UNIMICAHGOONS_01", pos);
+	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	addEnemy(enemyPed);
 }
 
-void ClintonvonHagenExecutor::addEnemy(Ped ped)
+void ChesterBurnettExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
+
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void ClintonvonHagenExecutor::addHorse(const char* model, Vector3 pos)
+void ChesterBurnettExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void ClintonvonHagenExecutor::addHorse(Ped horse)
+void ChesterBurnettExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void ClintonvonHagenExecutor::cleanup()
+void ChesterBurnettExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);

@@ -11,11 +11,11 @@ const int COMBAT_RANGE = 45;
 JaneBullionExecutor::JaneBullionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
+	setTargetAreaRadius(80);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(1452.436, -1580.775, 71.01614);
+	campfirePos = toVector3(2114.806, -1277.321, 41.13449);
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
@@ -116,7 +116,7 @@ void JaneBullionExecutor::update()
 
 Ped JaneBullionExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(1456.003, -1583.196, 72.01614);
+	Vector3 targetPos = toVector3(2119.548, -1278.9, 42.00526);
 	Ped target = createPed("A_F_M_LowerSDTownfolk_01", targetPos);
 	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	return target;
@@ -134,6 +134,7 @@ void JaneBullionExecutor::enterIdleMode()
 		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -195,17 +196,8 @@ void JaneBullionExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 			}
-		}
-		else
-		{
-			Object seq;
-			AI::OPEN_SEQUENCE_TASK(&seq);
-			AI::TASK_COMBAT_PED(0, player, 0, 16);
-			AI::CLOSE_SEQUENCE_TASK(seq);
-
-			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
-			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 		}
 	}
 }
@@ -214,7 +206,7 @@ void JaneBullionExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(1460.906, -1584.658, 71.8425));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(2115.438, -1283.105, 42.50136));
 	addHorse(horse);
 
 	addEnemy(target);

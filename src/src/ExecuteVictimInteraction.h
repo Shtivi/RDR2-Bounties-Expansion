@@ -25,5 +25,6 @@ public:
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::CLEAR_PED_TASKS(killer, 1, 1);
 		AI::TASK_PERFORM_SEQUENCE(killer, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 };

@@ -184,6 +184,7 @@ void JacobSeedExecutor::enemyShootGatling(Ped enemy)
 	AI::TASK_VEHICLE_SHOOT_AT_PED(0, player, 20);
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(enemy, seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 }
 
 void JacobSeedExecutor::enemyDriveGatling(Ped enemy)
@@ -201,4 +202,5 @@ void JacobSeedExecutor::enemyDriveGatling(Ped enemy)
 	AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(enemy, seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 }

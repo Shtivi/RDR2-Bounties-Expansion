@@ -15,20 +15,25 @@ private:
 	int requiredDistanceToLocate;
 	bool mustBeCloseToLocate;
 	int targetAreaRadius;
+	bool spawnedBountyHunters;
+	bool yellow;
 
 	Object poster;
+	Object dummyProp;
 	Blip posterBlip;
 	Blip targetAreaBlip;
 	Blip policeLocBlip;
 	Blip cellBlip;
 	Blip targetBlip;
+	vector<Ped> bountyHunters;
+	vector<Ped> horses;
 
 protected:
 	Ped target;
 
 public:
 	BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
-
+	bool leave;
 	BountyMissionData* getMissionData();
 	BountyMissionStage getMissionStage();
 	BountyMissionStatus getMissionStatus();
@@ -59,4 +64,7 @@ protected:
 
 private:
 	void decorateTarget();
+	void spawnBountyHunters();
+	void addBountyHunter(Ped horse, bool isDriver);
+	void releaseUnnecessaryEntities();
 };
