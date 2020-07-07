@@ -2,34 +2,36 @@
 
 using namespace std;
 
-const int IDLE_DIST = 45;
+const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
 const int HEARING_RANGE = 45;
-const int COMBAT_RANGE = 12;
+const int COMBAT_RANGE = 20;
 
-TucoVillaExecutor::TucoVillaExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+WilliamRogersExecutor::WilliamRogersExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
+	setTargetAreaRadius(100);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(-5049.499, -3629.097, -5.831096);
+	campfirePos = toVector3(-2480.93, -171.0881, 177.6074);
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
+	weapon == false;
 }
 
-void TucoVillaExecutor::update()
+void WilliamRogersExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
-
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (getMissionStage() == BountyMissionStage::CaptureTarget)
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	if (getMissionStage() == BountyMissionStage::LocateTarget || getMissionStage() == BountyMissionStage::CaptureTarget)
 	{
-		float distanceToTarget = distanceBetweenEntities(target, player);
+		float distanceToTarget = distanceBetweenEntities(*pedItr, player);
 		switch (enemiesStatus)
 		{
 		case EnemiesMode::IDLE:
@@ -46,7 +48,6 @@ void TucoVillaExecutor::update()
 				}
 			}
 			break;
-
 		case EnemiesMode::ALERTED:
 			if (stopwatch.getElapsedSecondsRealTime() >= 5)
 			{
@@ -101,7 +102,6 @@ void TucoVillaExecutor::update()
 	{
 		enterCombatMode();
 	}
-
 	if (getMissionStage() == BountyMissionStage::CaptureTarget && enemiesStatus >= EnemiesMode::ALERTED && !ENTITY::IS_ENTITY_DEAD(target))
 	{
 		if (distanceBetweenEntities(target, player) > 80)
@@ -110,23 +110,24 @@ void TucoVillaExecutor::update()
 		}
 		if (distanceBetweenEntities(target, player) > 120)
 		{
+			PED::DELETE_PED(&target);
 			fail("Bounty failed, target lost");
 		}
 	}
 
 }
 
-Ped TucoVillaExecutor::spawnTarget()
+Ped WilliamRogersExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(-5053.802, -3629.418, -4.846035);
-	Ped target = createPed(M_BOUNTY_MEXICAN, targetPos);
+	Vector3 targetPos = toVector3(-2491.479, -176.6571, 178.9433);
+	Ped target = createPed("G_M_M_UniRanchers_01", targetPos);
 	return target;
 }
 
-void TucoVillaExecutor::enterIdleMode()
+void WilliamRogersExecutor::enterIdleMode()
 {
 	char* scenarioName;
-
+	Ped player = PLAYER::PLAYER_PED_ID();
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
@@ -141,7 +142,7 @@ void TucoVillaExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void TucoVillaExecutor::enterAlertMode()
+void WilliamRogersExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -162,19 +163,29 @@ void TucoVillaExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void TucoVillaExecutor::enterWarningMode()
+void WilliamRogersExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
-		pedEquipBestWeapon(*pedItr);
+		weapon == true;
+		int iWeapon = rand() % 2 + 1;
+		if (iWeapon == 1)
+		{
+			WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+		}
+		if (iWeapon == 2)
+		{
+			giveWeaponToPed(*pedItr, RevolverSchofield, 0x64356159, true);
+			WEAPON::REMOVE_WEAPON_FROM_PED(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), false, 0);
+		}
 	}
 
 	playAmbientSpeech(target, "FINAL_WARNING");
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void TucoVillaExecutor::enterCombatMode()
+void WilliamRogersExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
 
@@ -183,12 +194,22 @@ void TucoVillaExecutor::enterCombatMode()
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
 		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
-		WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
-
+		if (weapon == false)
+		{
+			int iWeapon = rand() % 2 + 1;
+			if (iWeapon == 1)
+			{
+				WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+			}
+			if (iWeapon == 2)
+			{
+				giveWeaponToPed(*pedItr, RevolverSchofield, 0x64356159, true);
+				WEAPON::REMOVE_WEAPON_FROM_PED(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), false, 0);
+			}
+		}
 		if (*pedItr == target)
 		{
-			int iSecret;
-			iSecret = rand() % 2 + 1;
+			int iSecret = rand() % 2 + 1;
 			if (iSecret == 1)
 			{
 
@@ -222,7 +243,7 @@ void TucoVillaExecutor::enterCombatMode()
 			AI::OPEN_SEQUENCE_TASK(&seq);
 			AI::TASK_COMBAT_PED(0, player, 0, 16);
 			AI::CLOSE_SEQUENCE_TASK(seq);
-
+			PED::SET_PED_RELATIONSHIP_GROUP_HASH(*pedItr, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 			AI::CLEAR_SEQUENCE_TASK(&seq);
@@ -230,28 +251,28 @@ void TucoVillaExecutor::enterCombatMode()
 	}
 }
 
-void TucoVillaExecutor::prepareSet()
+void WilliamRogersExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-5039.196, -3637.669, -4.809732));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-2491.998, -186.5505, 177.6704));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-5037.851, -3643.543, -4.794594));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5043.927, -3640.799, -4.168365));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2493.595, -184.4382, 178.0768));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2495.573, -181.8229, 178.7511));
 
 	addEnemy(target);
-	addEnemy(toVector3(-5051.105, -3631.844, -4.539451));
-	addEnemy(toVector3(-5044.654, -3632.503, -4.713427));
-	addEnemy(toVector3(-5040.875, -3627.315, -5.063022));
-	addEnemy(toVector3(-5049.285, -3618.483, -5.362561));
-	addEnemy(toVector3(-5056.274, -3639.233, -3.844062));
-	addEnemy(toVector3(-5062.674, -3626.799, -4.959296));
-	addEnemy(toVector3(-5066.182, -3635.668, -3.349133));
+	addEnemy(toVector3(-2487.212, -166.568, 179.004));
+	addEnemy(toVector3(-2481.792, -164.0055, 179.3437));
+	addEnemy(toVector3(-2473.547, -173.9572, 178.7698));
+	addEnemy(toVector3(-2474.652, -171.3465, 179.0068));
+	addEnemy(toVector3(-2481.017, -178.1557, 178.293));
+	addEnemy(toVector3(-2479.108, -187.1623, 176.2595));
+	addEnemy(toVector3(-2481.832, -188.9205, 175.7917));
 
 	enterIdleMode();
 }
 
-void TucoVillaExecutor::onTargetLocated()
+void WilliamRogersExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
 
@@ -265,7 +286,7 @@ void TucoVillaExecutor::onTargetLocated()
 	}
 }
 
-void TucoVillaExecutor::createEnemyBlips()
+void WilliamRogersExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -277,7 +298,7 @@ void TucoVillaExecutor::createEnemyBlips()
 	}
 }
 
-void TucoVillaExecutor::releaseUnnecessaryEntities()
+void WilliamRogersExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -296,13 +317,13 @@ void TucoVillaExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void TucoVillaExecutor::addEnemy(Vector3 pos)
+void WilliamRogersExecutor::addEnemy(Vector3 pos)
 {
-	Ped enemyPed = createPed("G_M_M_UniBanditos_01", pos);
+	Ped enemyPed = createPed("G_M_M_UniRanchers_01", pos);
 	addEnemy(enemyPed);
 }
 
-void TucoVillaExecutor::addEnemy(Ped ped)
+void WilliamRogersExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
 
@@ -310,20 +331,20 @@ void TucoVillaExecutor::addEnemy(Ped ped)
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void TucoVillaExecutor::addHorse(const char* model, Vector3 pos)
+void WilliamRogersExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void TucoVillaExecutor::addHorse(Ped horse)
+void WilliamRogersExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void TucoVillaExecutor::cleanup()
+void WilliamRogersExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);

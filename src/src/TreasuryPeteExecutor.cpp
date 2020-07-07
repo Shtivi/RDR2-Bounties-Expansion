@@ -117,7 +117,7 @@ void TreasuryPeteExecutor::update()
 Ped TreasuryPeteExecutor::spawnTarget()
 {
 	Vector3 targetPos = toVector3(2889.372, -249.994, 42.73455);
-	Ped target = createPed("MSP_MOB1_MALES_01", targetPos);
+	Ped target = createPed("A_M_O_SDUPPERCLASS_01", targetPos);
 	giveWeaponToPed(target, PistolMauser, 0x743D4F54, false);
 	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	return target;
@@ -135,6 +135,7 @@ void TreasuryPeteExecutor::enterIdleMode()
 		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -199,6 +200,7 @@ void TreasuryPeteExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 			else if (iSecret == 2)
@@ -210,6 +212,7 @@ void TreasuryPeteExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 		}
@@ -222,6 +225,7 @@ void TreasuryPeteExecutor::enterCombatMode()
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
 		}
 	}
 }

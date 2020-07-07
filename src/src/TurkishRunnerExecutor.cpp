@@ -223,6 +223,7 @@ void TurkishRunnerExecutor::enterIdleMode()
 		AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(scenarioName), -1, true, true, 0, true); // PLAY SCENARIO
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -282,6 +283,7 @@ void TurkishRunnerExecutor::enterCombatMode()
 
 			AI::CLEAR_PED_TASKS(target, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(target, seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
 			playAmbientSpeech(target, "ITS_MALE_EXTREME");
 		}
 		else
@@ -293,6 +295,7 @@ void TurkishRunnerExecutor::enterCombatMode()
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
 		}
 	}
 }

@@ -38,7 +38,7 @@ void getGroundPos(Vector3 originalPos, Vector3* outPos)
 float getGroundPos(Vector3 originalPos)
 {
 	float groundZ;
-	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(originalPos.x, originalPos.y, originalPos.z, &groundZ, false);
+	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(originalPos.x, originalPos.y, originalPos.z + 30, &groundZ, false);
 	return groundZ;
 }
 
@@ -48,6 +48,14 @@ float distanceBetweenEntities(Entity entity1, Entity entity2)
 	Vector3 pos2 = ENTITY::GET_ENTITY_COORDS(entity2, 1, 0);
 
 	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, 1);
+}
+
+float distanceBetweenEntitiesHor(Entity entity1, Entity entity2)
+{
+	Vector3 pos1 = ENTITY::GET_ENTITY_COORDS(entity1, 1, 0);
+	Vector3 pos2 = ENTITY::GET_ENTITY_COORDS(entity2, 1, 0);
+
+	return GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(pos1.x, pos1.y, 0, pos2.x, pos2.y, 0, 1);
 }
 
 Object createProp(char* model, Vector3 position, float heading, bool isStatic, bool isVisible)
