@@ -2,33 +2,36 @@
 
 using namespace std;
 
-const int IDLE_DIST = 45;
+const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
 const int HEARING_RANGE = 45;
-const int COMBAT_RANGE = 12;
+const int COMBAT_RANGE = 20;
 
-RobertCorbucciExecutor::RobertCorbucciExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+NateNashobaExecutor::NateNashobaExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
+	setTargetAreaRadius(100);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(1261.292, -419.4841, 94.66013);
+	campfirePos = toVector3(-2575.68, -1371.892, 148.1127);
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
+	weapon == false;
 }
 
-void RobertCorbucciExecutor::update()
+void NateNashobaExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (getMissionStage() == BountyMissionStage::CaptureTarget)
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	if (getMissionStage() == BountyMissionStage::LocateTarget || getMissionStage() == BountyMissionStage::CaptureTarget)
 	{
-		float distanceToTarget = distanceBetweenEntities(target, player);
+		float distanceToTarget = distanceBetweenEntities(*pedItr, player);
 		switch (enemiesStatus)
 		{
 		case EnemiesMode::IDLE:
@@ -108,22 +111,21 @@ void RobertCorbucciExecutor::update()
 		}
 		if (distanceBetweenEntities(target, player) > 120)
 		{
+			PED::DELETE_PED(&target);
 			fail("Bounty failed, target lost");
 		}
 	}
 
 }
 
-Ped RobertCorbucciExecutor::spawnTarget()
+Ped NateNashobaExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(1266.142, -414.9333, 96.9925);
-	Ped target = createPed(M_BOUNTY_FANCY, targetPos);
-	giveWeaponToPed(target, PistolMauser, 0x743D4F54, false);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Vector3 targetPos = toVector3(-2581.988, -1384.003, 149.2432);
+	Ped target = createPed(SKINNER_BROTHER_MODEL, targetPos);
 	return target;
 }
 
-void RobertCorbucciExecutor::enterIdleMode()
+void NateNashobaExecutor::enterIdleMode()
 {
 	char* scenarioName;
 	Ped player = PLAYER::PLAYER_PED_ID();
@@ -141,7 +143,7 @@ void RobertCorbucciExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void RobertCorbucciExecutor::enterAlertMode()
+void NateNashobaExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -162,19 +164,29 @@ void RobertCorbucciExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void RobertCorbucciExecutor::enterWarningMode()
+void NateNashobaExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
-		pedEquipBestWeapon(*pedItr);
+		weapon == true;
+		int iWeapon = rand() % 2 + 1;
+		if (iWeapon == 1)
+		{
+			WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+		}
+		if (iWeapon == 2)
+		{
+			giveWeaponToPed(*pedItr, WeaponBow, 0x38E6F55F, true);
+			WEAPON::REMOVE_WEAPON_FROM_PED(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), false, 0);
+		}
 	}
 
 	playAmbientSpeech(target, "FINAL_WARNING");
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void RobertCorbucciExecutor::enterCombatMode()
+void NateNashobaExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
 
@@ -183,12 +195,22 @@ void RobertCorbucciExecutor::enterCombatMode()
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
 		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
-		WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
-
+		if (weapon == false)
+		{
+			int iWeapon = rand() % 2 + 1;
+			if (iWeapon == 1)
+			{
+				WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
+			}
+			if (iWeapon == 2)
+			{
+				giveWeaponToPed(*pedItr, WeaponBow, 0x38E6F55F, true);
+				WEAPON::REMOVE_WEAPON_FROM_PED(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), false, 0);
+			}
+		}
 		if (*pedItr == target)
 		{
-			int iSecret;
-			iSecret = rand() % 2 + 1;
+			int iSecret = rand() % 2 + 1;
 			if (iSecret == 1)
 			{
 
@@ -222,7 +244,7 @@ void RobertCorbucciExecutor::enterCombatMode()
 			AI::OPEN_SEQUENCE_TASK(&seq);
 			AI::TASK_COMBAT_PED(0, player, 0, 16);
 			AI::CLOSE_SEQUENCE_TASK(seq);
-
+			PED::SET_PED_RELATIONSHIP_GROUP_HASH(*pedItr, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 			AI::CLEAR_SEQUENCE_TASK(&seq);
@@ -230,28 +252,28 @@ void RobertCorbucciExecutor::enterCombatMode()
 	}
 }
 
-void RobertCorbucciExecutor::prepareSet()
+void NateNashobaExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(1274.108, -416.0844, 96.54754));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-2583.661, -1373.742, 148.9621));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1275.101, -419.3702, 96.54288));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1273.547, -422.7119, 96.05209));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2583.376, -1370.467, 149.7572));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2583.127, -1367.585, 150.2169));
 
 	addEnemy(target);
-	addEnemy(toVector3(1268.606, -415.0178, 96.63109));
-	addEnemy(toVector3(1270.231, -423.3733, 95.81705));
-	addEnemy(toVector3(1261.092, -426.003, 94.63454));
-	addEnemy(toVector3(1250.025, -418.1788, 94.90736));
-	addEnemy(toVector3(1257.707, -413.5381, 97.57777));
-	addEnemy(toVector3(1271.717, -438.8706, 93.89452));
-	addEnemy(toVector3(1269.097, -441.278, 93.41737));
+	addEnemy(toVector3(-2580.808, -1386.714, 149.2508));
+	addEnemy(toVector3(-2577.527, -1386.616, 149.2807));
+	addEnemy(toVector3(-2574.525, -1389.367, 149.6264));
+	addEnemy(toVector3(-2574.719, -1383.86, 149.2368));
+	addEnemy(toVector3(-2579.547, -1369.475, 149.7495));
+	addEnemy(toVector3(-2575.337, -1368.521, 149.8804));
+	addEnemy(toVector3(-2579.049, -1377.122, 149.3945));
 
 	enterIdleMode();
 }
 
-void RobertCorbucciExecutor::onTargetLocated()
+void NateNashobaExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
 
@@ -265,7 +287,7 @@ void RobertCorbucciExecutor::onTargetLocated()
 	}
 }
 
-void RobertCorbucciExecutor::createEnemyBlips()
+void NateNashobaExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -277,7 +299,7 @@ void RobertCorbucciExecutor::createEnemyBlips()
 	}
 }
 
-void RobertCorbucciExecutor::releaseUnnecessaryEntities()
+void NateNashobaExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -296,34 +318,34 @@ void RobertCorbucciExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void RobertCorbucciExecutor::addEnemy(Vector3 pos)
+void NateNashobaExecutor::addEnemy(Vector3 pos)
 {
-	Ped enemyPed = createPed("G_M_M_UniBronteGoons_01", pos);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(enemyPed, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Ped enemyPed = createPed(SKINNER_BROTHER_MODEL, pos);
 	addEnemy(enemyPed);
 }
 
-void RobertCorbucciExecutor::addEnemy(Ped ped)
+void NateNashobaExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
+
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void RobertCorbucciExecutor::addHorse(const char* model, Vector3 pos)
+void NateNashobaExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void RobertCorbucciExecutor::addHorse(Ped horse)
+void NateNashobaExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void RobertCorbucciExecutor::cleanup()
+void NateNashobaExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);

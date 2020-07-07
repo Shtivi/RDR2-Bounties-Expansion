@@ -18,5 +18,6 @@ void RobberyWarningShot::play()
 	AI::TASK_SHOOT_AT_COORD(0, aboveHead.x, aboveHead.y, aboveHead.z, 500, -957453492, 0);
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(robber, seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 	WAIT(1000);
 }

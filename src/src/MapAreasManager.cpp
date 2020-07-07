@@ -6,6 +6,7 @@ MapAreasManager::MapAreasManager()
 	cache[MapAreas::Blackwater] = createBlackwater();
 	cache[MapAreas::Rhodes]		= createRhodes();
 	cache[MapAreas::Valentine]	= createValentine();
+	cache[MapAreas::Strawberry] = createStrawberry();
 	cache[MapAreas::Tumbleweed] = createTumbleweed();
 	cache[MapAreas::Armadillo] = createArmadillo();
 	cache[MapAreas::SaintDenis] = createSaintDenis();
@@ -44,11 +45,11 @@ MapArea* MapAreasManager::createBlackwater()
 	Vector3 cellCoords = toVector3(-765.036, -1264.13, 44.0245);
 
 	Vector3 posterCoords;
-	posterCoords.x = -785.882;
-	posterCoords.y = -1344.54;
-	posterCoords.z = 43.7609;
+	posterCoords.x = -756.9555;
+	posterCoords.y = -1270.587;
+	posterCoords.z = 44.17991;
 
-	return new MapArea("Blackwater", policeDeptCoords, posterCoords, cellCoords);
+	return new MapArea("Blackwater", policeDeptCoords, posterCoords, cellCoords, 90.4);
 }
 
 MapArea* MapAreasManager::createRhodes()
@@ -64,25 +65,34 @@ MapArea* MapAreasManager::createValentine()
 {
 	Vector3 policeDeptCoords = toVector3(-275.256, 801.303, 118.397);
 	Vector3 cellCoords = toVector3(-275.918, 810.098, 118.376);
-	Vector3 posterCoords = toVector3(-272.947, 799.64, 119.412);
+	Vector3 posterCoords = toVector3(-274.3045, 802.762, 119.5886);
 
-	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 15.019545);
+	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 10.03);
+}
+
+MapArea* MapAreasManager::createStrawberry()
+{
+	Vector3 policeDeptCoords = toVector3(-1804.106, -352.3542, 164.1339);
+	Vector3 cellCoords = toVector3(-1812.943, -352.3905, 160.3946);
+	Vector3 posterCoords = toVector3(-1805.729, -348.1523, 164.342);
+
+	return new MapArea("Strawberry", policeDeptCoords, posterCoords, cellCoords, 66.03);
 }
 
 MapArea* MapAreasManager::createTumbleweed()
 {
 	Vector3 policeDeptCoords = toVector3(-5527.188, -2927.814, -1.360926);
 	Vector3 cellCoords = toVector3(-5527.188, -2927.814, -2.360926);
-	Vector3 posterCoords = toVector3(-5531.845, -2931.186, -1.92352);
+	Vector3 posterCoords = toVector3(-5531.614, -2934.285, -1.772461);
 
-	return new MapArea("Tumbleweed", policeDeptCoords, posterCoords, cellCoords, 294.79);
+	return new MapArea("Tumbleweed", policeDeptCoords, posterCoords, cellCoords, 82.30);
 }
 
 MapArea* MapAreasManager::createArmadillo()
 {
 	Vector3 policeDeptCoords = toVector3(-3619.911, -2605.103, -13.33457);
 	Vector3 cellCoords = toVector3(-3619.911, -2605.103, -14.33457);
-	Vector3 posterCoords = toVector3(-3625.664, -2603.477, -13.32546);
+	Vector3 posterCoords = toVector3(-3625.664, -2603.477, -13.42546);
 
 	return new MapArea("Armadillo", policeDeptCoords, posterCoords, cellCoords, 293.79);
 }
@@ -91,7 +101,7 @@ MapArea* MapAreasManager::createSaintDenis()
 {
 	Vector3 policeDeptCoords = toVector3(2502.79, -1308.546, 47.95366);
 	Vector3 cellCoords = toVector3(2502.79, -1308.546, 47.95366);
-	Vector3 posterCoords = toVector3(2516.739, -1305.807, 49.26161);
+	Vector3 posterCoords = toVector3(2516.739, -1305.577, 49.26161);
 
 	return new MapArea("SaintDenis", policeDeptCoords, posterCoords, cellCoords, 91.36);
 }

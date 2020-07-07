@@ -2,33 +2,35 @@
 
 using namespace std;
 
-const int IDLE_DIST = 45;
+const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
 const int HEARING_RANGE = 45;
-const int COMBAT_RANGE = 12;
+const int COMBAT_RANGE = 20;
 
-RobertCorbucciExecutor::RobertCorbucciExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+PanchoDanielExecutor::PanchoDanielExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
+	setTargetAreaRadius(100);
 	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
-	campfirePos = toVector3(1261.292, -419.4841, 94.66013);
+	campfirePos = toVector3(-3836.463, -3014.846, -8.249296); //test deze bounty
 	toleratePlayer = true;
 	campfire = NULL;
 	horse = NULL;
 }
 
-void RobertCorbucciExecutor::update()
+void PanchoDanielExecutor::update()
 {
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (getMissionStage() == BountyMissionStage::CaptureTarget)
+	vector<Ped>::iterator pedItr;
+	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
+	if (getMissionStage() == BountyMissionStage::LocateTarget || getMissionStage() == BountyMissionStage::CaptureTarget)
 	{
-		float distanceToTarget = distanceBetweenEntities(target, player);
+		float distanceToTarget = distanceBetweenEntities(*pedItr, player);
 		switch (enemiesStatus)
 		{
 		case EnemiesMode::IDLE:
@@ -108,22 +110,21 @@ void RobertCorbucciExecutor::update()
 		}
 		if (distanceBetweenEntities(target, player) > 120)
 		{
+			PED::DELETE_PED(&target);
 			fail("Bounty failed, target lost");
 		}
 	}
 
 }
 
-Ped RobertCorbucciExecutor::spawnTarget()
+Ped PanchoDanielExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(1266.142, -414.9333, 96.9925);
-	Ped target = createPed(M_BOUNTY_FANCY, targetPos);
-	giveWeaponToPed(target, PistolMauser, 0x743D4F54, false);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(target, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Vector3 targetPos = toVector3(-3846.701, -3008.478, -6.990899);
+	Ped target = createPed(M_BOUNTY_MEXICAN, targetPos);
 	return target;
 }
 
-void RobertCorbucciExecutor::enterIdleMode()
+void PanchoDanielExecutor::enterIdleMode()
 {
 	char* scenarioName;
 	Ped player = PLAYER::PLAYER_PED_ID();
@@ -141,7 +142,7 @@ void RobertCorbucciExecutor::enterIdleMode()
 	enemiesStatus = EnemiesMode::IDLE;
 }
 
-void RobertCorbucciExecutor::enterAlertMode()
+void PanchoDanielExecutor::enterAlertMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
@@ -162,19 +163,19 @@ void RobertCorbucciExecutor::enterAlertMode()
 	enemiesStatus = EnemiesMode::ALERTED;
 }
 
-void RobertCorbucciExecutor::enterWarningMode()
+void PanchoDanielExecutor::enterWarningMode()
 {
 	vector<Ped>::iterator pedItr;
 	for (pedItr = enemies.begin(); pedItr != enemies.end(); pedItr++)
 	{
-		pedEquipBestWeapon(*pedItr);
+			WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
 	}
 
 	playAmbientSpeech(target, "FINAL_WARNING");
 	enemiesStatus = EnemiesMode::WARNING;
 }
 
-void RobertCorbucciExecutor::enterCombatMode()
+void PanchoDanielExecutor::enterCombatMode()
 {
 	enemiesStatus = EnemiesMode::COMBAT;
 
@@ -184,11 +185,9 @@ void RobertCorbucciExecutor::enterCombatMode()
 	{
 		PED::_0xFE07FF6495D52E2A(*pedItr, 0, 0, 0);
 		WEAPON::SET_CURRENT_PED_WEAPON(*pedItr, WEAPON::GET_BEST_PED_WEAPON(*pedItr, 0, 0), true, 0, false, false);
-
 		if (*pedItr == target)
 		{
-			int iSecret;
-			iSecret = rand() % 2 + 1;
+			int iSecret = rand() % 2 + 1;
 			if (iSecret == 1)
 			{
 
@@ -222,7 +221,7 @@ void RobertCorbucciExecutor::enterCombatMode()
 			AI::OPEN_SEQUENCE_TASK(&seq);
 			AI::TASK_COMBAT_PED(0, player, 0, 16);
 			AI::CLOSE_SEQUENCE_TASK(seq);
-
+			PED::SET_PED_RELATIONSHIP_GROUP_HASH(*pedItr, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
 			AI::CLEAR_SEQUENCE_TASK(&seq);
@@ -230,28 +229,28 @@ void RobertCorbucciExecutor::enterCombatMode()
 	}
 }
 
-void RobertCorbucciExecutor::prepareSet()
+void PanchoDanielExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(1274.108, -416.0844, 96.54754));
+	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-3826.912, -2986.882, -6.143115));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1275.101, -419.3702, 96.54288));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1273.547, -422.7119, 96.05209));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-3823.523, -2986.894, -6.212348));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-3819.972, -2986.908, -6.132692));
 
 	addEnemy(target);
-	addEnemy(toVector3(1268.606, -415.0178, 96.63109));
-	addEnemy(toVector3(1270.231, -423.3733, 95.81705));
-	addEnemy(toVector3(1261.092, -426.003, 94.63454));
-	addEnemy(toVector3(1250.025, -418.1788, 94.90736));
-	addEnemy(toVector3(1257.707, -413.5381, 97.57777));
-	addEnemy(toVector3(1271.717, -438.8706, 93.89452));
-	addEnemy(toVector3(1269.097, -441.278, 93.41737));
+	addEnemy(toVector3(-3842.993, -3010.589, -6.893568));
+	addEnemy(toVector3(-3837.225, -3007.275, -7.020287));
+	addEnemy(toVector3(-3843.519, -3000.476, -6.841477));
+	addEnemy(toVector3(-3846.691, -2999.394, -7.02098));
+	addEnemy(toVector3(-3854.507, -3021.4, -6.946145));
+	addEnemy(toVector3(-3827.201, -2975.924, -6.567559));
+	addEnemy(toVector3(-3824.178, -2978.448, -6.386905));
 
 	enterIdleMode();
 }
 
-void RobertCorbucciExecutor::onTargetLocated()
+void PanchoDanielExecutor::onTargetLocated()
 {
 	BaseMissionExecutor::onTargetLocated();
 
@@ -265,7 +264,7 @@ void RobertCorbucciExecutor::onTargetLocated()
 	}
 }
 
-void RobertCorbucciExecutor::createEnemyBlips()
+void PanchoDanielExecutor::createEnemyBlips()
 {
 	std::vector<Ped>::iterator it;
 	for (it = enemies.begin(); it != enemies.end(); ++it)
@@ -277,7 +276,7 @@ void RobertCorbucciExecutor::createEnemyBlips()
 	}
 }
 
-void RobertCorbucciExecutor::releaseUnnecessaryEntities()
+void PanchoDanielExecutor::releaseUnnecessaryEntities()
 {
 	Ped player = PLAYER::PLAYER_PED_ID();
 	std::vector<Ped>::iterator it;
@@ -296,34 +295,34 @@ void RobertCorbucciExecutor::releaseUnnecessaryEntities()
 	}
 }
 
-void RobertCorbucciExecutor::addEnemy(Vector3 pos)
+void PanchoDanielExecutor::addEnemy(Vector3 pos)
 {
-	Ped enemyPed = createPed("G_M_M_UniBronteGoons_01", pos);
-	PED::SET_PED_RELATIONSHIP_GROUP_HASH(enemyPed, GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
+	Ped enemyPed = createPed(M_BOUNTY_MEXICAN, pos);
 	addEnemy(enemyPed);
 }
 
-void RobertCorbucciExecutor::addEnemy(Ped ped)
+void PanchoDanielExecutor::addEnemy(Ped ped)
 {
 	enemies.push_back(ped);
+
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, 1);
 	AI::CLEAR_PED_TASKS(ped, true, true);
 }
 
-void RobertCorbucciExecutor::addHorse(const char* model, Vector3 pos)
+void PanchoDanielExecutor::addHorse(const char* model, Vector3 pos)
 {
 	Ped horse = createPed((char*)model, pos);
 	addHorse(horse);
 }
 
-void RobertCorbucciExecutor::addHorse(Ped horse)
+void PanchoDanielExecutor::addHorse(Ped horse)
 {
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
 	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false); // give saddle
 	horses.push_back(horse);
 }
 
-void RobertCorbucciExecutor::cleanup()
+void PanchoDanielExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 	releaseEntitySafe(&campfire);
