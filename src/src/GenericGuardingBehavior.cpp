@@ -9,6 +9,7 @@ GenericGuardingBehavior::GenericGuardingBehavior(Ped ped, Vector3 defensePositio
 	setMode(TensionMode::Idle);
 	setIdlingModifier(idlingModifier);
 	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+	applepie = false;
 }
 
 GenericGuardingBehavior::GenericGuardingBehavior(Ped ped, Vector3 defensePosition, float radius, IdlingModifier idlingModifier, RoutineParams routineParams, set<Ped>* bodiesFound, bool shouldTolerate)
@@ -126,7 +127,7 @@ void GenericGuardingBehavior::update()
 		}
 		else if (stopwatch.getElapsedSecondsRealTime() >= GUARD_SEARCH_DURATION_SECS)
 		{
-			showSubtitle("stopped searching");
+			//showSubtitle("stopped searching");
 			stopwatch.stop();
 			enterAlertedMode();
 		}
@@ -140,7 +141,7 @@ void GenericGuardingBehavior::update()
 	{
 		Vector3 lastImpactCoords;
 
-		if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) &&
+		if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) ||
 			distanceBetween(ENTITY::GET_ENTITY_COORDS(ped(), 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE &&
 			PED::IS_PED_SHOOTING(player))
 		{
@@ -157,6 +158,26 @@ void GenericGuardingBehavior::update()
 				 ((distanceFromCenter <= GUARD_COMBAT_RANGE + radius || PLAYER::IS_PLAYER_FREE_AIMING(player)) && isPlayerWithinLos()))
 		{
 			enterCombatMode();
+		}
+	}
+	if (getIdlingModifier() == IdlingModifier::Patrol && getMode() == TensionMode::Idle || getIdlingModifier() == IdlingModifier::Patrol && getMode() == TensionMode::Alerted)
+	{
+		if (!AI::IS_PED_STILL(ped()))
+		{
+			applepie = true;
+			stopwatch.start();
+		}
+		if (applepie == true && AI::IS_PED_STILL(ped()) && stopwatch.getElapsedSecondsRealTime() >= 1.2)
+		{
+			stopwatch.stop();
+			Object seq;
+			AI::OPEN_SEQUENCE_TASK(&seq);
+			//AI::TASK_STAND_STILL(0, 4000);
+			AI::TASK_PATROL(0, "miss_brob1_patrolLM02", 1, 1, 1);
+			AI::CLOSE_SEQUENCE_TASK(seq);
+			AI::TASK_PERFORM_SEQUENCE(ped(), seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
+			applepie = false;
 		}
 	}
 }
@@ -230,8 +251,8 @@ void GenericGuardingBehavior::patrol(vector<Vector3> nodes)
 	AI::OPEN_PATROL_ROUTE("miss_brob1_patrolLM02");
 	while (itr != nodes.end())
 	{
-		AI::ADD_PATROL_ROUTE_NODE(i, generateScoutingScenario(), (*itr).x, (*itr).y, (*itr).z, 0, 0, 0, GAMEPLAY::GET_RANDOM_INT_IN_RANGE(4000, 8000), 0);
-		
+		AI::ADD_PATROL_ROUTE_NODE(i, "WORLD_HUMAN_SMOKE", (*itr).x, (*itr).y, (*itr).z, 0, 0, 0, 1, 0);
+		//GAMEPLAY::GET_RANDOM_INT_IN_RANGE(4000, 8000)
 		if (i + 1 < nodes.size())
 		{
 			AI::ADD_PATROL_ROUTE_LINK(i, i+1);

@@ -47,13 +47,22 @@ void JesseHillExecutor::prepareSet()
 	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5687.966, -2379.522, 3.616471));
 
 	// Now just add the enemies to the group to make them be controlled by it
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5711.004, -2391.769, 6.44563))); 
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5706.604, -2387.53, 5.327281)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5701.083, -2383.894, 4.922241)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5698.187, -2389.69, 3.816682)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5704.169, -2405.032, 4.893043)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5687.943, -2381.427, 3.032831)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5685.831, -2386.835, 2.014514)));
+	RoutineParams routine1;
+	routine1.patrolRoute.push_back(toVector3(-5704.74, -2393.44, 5.04757));
+	routine1.patrolRoute.push_back(toVector3(-5692.02, -2380.41, 3.96114));
+	routine1.patrolRoute.push_back(toVector3(-5688.78, -2394.3, 0.441149));
+	RoutineParams routine2;
+	routine2.patrolRoute.push_back(toVector3(-5701.74, -2420.06, 3.71958));
+	routine2.patrolRoute.push_back(toVector3(-5688.22, -2420.01, 0.526367));
+	routine2.patrolRoute.push_back(toVector3(-5690.23, -2401.13, -0.842842));
+	routine2.patrolRoute.push_back(toVector3(-5703.05, -2401.06, 4.50752));
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5711.004, -2391.769, 6.44563), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5706.604, -2387.53, 5.327281), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5701.083, -2383.894, 4.922241), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5698.187, -2389.69, 3.816682), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5704.169, -2405.032, 4.893043), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5687.943, -2381.427, 3.032831), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5685.831, -2386.835, 2.014514), (rand() % 361)), IdlingModifier::Scout);
 	enemiesGroup->start();
 
 }
@@ -62,7 +71,6 @@ Ped JesseHillExecutor::spawnTarget()
 {
 	Vector3 targetPos = toVector3(-5710.177, -2386.995, 6.257581);
 	Ped target = createPed(M_BOUNTY_TARGET, targetPos);
-	enemiesGroup->add(target);
 	return target;
 }
 

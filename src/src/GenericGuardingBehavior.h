@@ -27,6 +27,7 @@ public:
 	GenericGuardingBehavior(Ped ped, Vector3 defensePosition, float radius, IdlingModifier idlingModifier, RoutineParams routineParams, set<Ped>* bodiesFound = NULL, bool shouldTolerate = true);
 
 	TensionMode getMode();
+	bool applepie;
 	virtual void start(bool withBlip = false);
 	virtual void update();
 	virtual void stop();

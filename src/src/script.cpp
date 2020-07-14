@@ -39,7 +39,7 @@ void main()
 	{
 		bountiesMgr->update();
 		menu->update();
-		printHelpMessage();
+		//printHelpMessage();
 
 		if (group)
 		{
@@ -124,7 +124,16 @@ void main()
 		else if (IsKeyJustUp(VK_KEY_X))
 		{
 			Ped player = PLAYER::PLAYER_PED_ID();
-			ENTITY::SET_ENTITY_HEALTH(player, PED::GET_PED_MAX_HEALTH(player), 0);
+			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+			float ground;
+			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
+			std::stringstream output;
+			output << "\n"
+				<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
+				<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
+				<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
+
+			log(output.str().c_str());
 			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			//float ground;
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);

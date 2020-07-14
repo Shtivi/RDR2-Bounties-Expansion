@@ -135,6 +135,7 @@ void BaseMissionExecutor::update()
 		if (distanceBetween(playerPos, missionData->startPosition) > targetAreaRadius)
 		{
 			cleanup();
+			releaseEntitySafe(&target);
 			stage = BountyMissionStage::GoToArea;
 			if (yellow == true)
 			{
