@@ -2,6 +2,165 @@
 
 using namespace std;
 
+BobLaneExecutor::BobLaneExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-1873.52, -1112.42, 82.35722);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void BobLaneExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void BobLaneExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-1860.888, -1120.664, 84.74303));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-1864.291, -1123.054, 83.68706));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello43";
+	routine1.patrolRoute.push_back(toVector3(-1877.07, -1090.86, 86.3445));
+	routine1.patrolHeading.push_back(toVector3(-1877.39, -1090.16, 86.3005));
+	routine1.patrolRoute.push_back(toVector3(-1877.55, -1107.69, 84.6328));
+	routine1.patrolHeading.push_back(toVector3(-1877.02, -1108.35, 84.4729));
+	routine1.patrolRoute.push_back(toVector3(-1852.06, -1115.58, 87.4214));
+	routine1.patrolHeading.push_back(toVector3(-1851.51, -1115.83, 87.3329));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello44";
+	routine2.patrolRoute.push_back(toVector3(-1891.13, -1104.57, 87.0008));
+	routine2.patrolHeading.push_back(toVector3(-1891.62, -1104.68, 87.0959));
+	routine2.patrolRoute.push_back(toVector3(-1883.3, -1119.39, 84.5928));
+	routine2.patrolHeading.push_back(toVector3(-1883.24, -1120.25, 84.6548));
+	routine2.patrolRoute.push_back(toVector3(-1869.43, -1120.07, 84.086));
+	routine2.patrolHeading.push_back(toVector3(-1868.69, -1120.21, 84.1432));
+	routine2.patrolRoute.push_back(toVector3(-1866.01, -1105.12, 85.426));
+	routine2.patrolHeading.push_back(toVector3(-1865.8, -1104.48, 85.4151));
+
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1874.285, -1118.821, 83.09675), 344), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1879.151, -1115.226, 82.88729), 298), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1878.67, -1111.667, 82.98797), 264), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1869.14, -1101.193, 83.89746), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1867.187, -1102.819, 84.19816), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1892.373, -1106.019, 86.14277), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1876.922, -1091.205, 85.35896), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->start();
+}
+
+Ped BobLaneExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-1858.253, -1118.813, 85.39363));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-1867.683, -1111.65, 83.22722);
+	Ped target = createPed("G_M_M_UniRanchers_01", targetPos, 97.1728);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void BobLaneExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void BobLaneExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void BobLaneExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void BobLaneExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void BobLaneExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +519,4 @@ void BobLaneExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

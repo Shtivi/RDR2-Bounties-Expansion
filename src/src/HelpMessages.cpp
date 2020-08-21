@@ -50,7 +50,8 @@ void printHelpMessage()
         args2.p0 = 0;
         args2.p1 = UI::_CREATE_VAR_STRING(10, "LITERAL_STRING", helpMessageText);
 
-        UIUNK::_0x049D5C615BD38BAD((Any*)&args1, (Any*)&args2, 1);		clearHelpMessage();
+        UIUNK::_0x049D5C615BD38BAD((Any*)&args1, (Any*)&args2, 1);
+        clearHelpMessage();
 	}
 }
 

@@ -117,15 +117,18 @@ void GuardsGroup::combat()
 
 void GuardsGroup::clearDeadGuards()
 {
+	BaseMissionExecutor* ped;
 	vector<GenericGuardingBehavior*>::iterator itr = guards.begin();
 	while (itr != guards.end())
 	{
 		(*itr)->update();
+		Ped pedItr = (*itr)->ped();
 
 		if (ENTITY::IS_ENTITY_DEAD((*itr)->ped()) || distanceBetweenEntities((*itr)->ped(), PLAYER::PLAYER_PED_ID()) > 250)
 		{
 			(*itr)->stop();
 			itr = guards.erase(itr);
+			ped->releaseEntitySafe(&pedItr);
 		}
 		else
 		{

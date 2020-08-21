@@ -2,6 +2,167 @@
 
 using namespace std;
 
+BufordDukeExecutor::BufordDukeExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(1585.817, -1851.348, 51.3534);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void BufordDukeExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void BufordDukeExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1590.71, -1833.202, 51.35937));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1593.803, -1834.582, 51.36625));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello5";
+	routine1.patrolRoute.push_back(toVector3(1596.16, -1850.09, 55.2528));
+	routine1.patrolHeading.push_back(toVector3(1596.47, -1850.17, 55.2528));
+	routine1.patrolRoute.push_back(toVector3(1598.38, -1843.09, 52.3534));
+	routine1.patrolHeading.push_back(toVector3(1597.98, -1843.11, 52.3534));
+	routine1.patrolRoute.push_back(toVector3(1611.71, -1841.65, 51.9845));
+	routine1.patrolHeading.push_back(toVector3(1612.56, -1841.17, 51.7366));
+	routine1.patrolRoute.push_back(toVector3(1603.08, -1858.48, 52.3534));
+	routine1.patrolHeading.push_back(toVector3(1602.5, -1859.34, 52.3531));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello6";
+	routine2.patrolRoute.push_back(toVector3(1582.82, -1856.92, 52.3534));
+	routine2.patrolHeading.push_back(toVector3(1583.14, -1856.36, 52.3534));
+	routine2.patrolRoute.push_back(toVector3(1572.4, -1845.28, 52.2836));
+	routine2.patrolHeading.push_back(toVector3(1571.71, -1844.8, 52.2129));
+	routine2.patrolRoute.push_back(toVector3(1562.2, -1864.02, 50.0294));
+	routine2.patrolHeading.push_back(toVector3(1561.32, -1864.56, 50.0564));
+	routine2.patrolRoute.push_back(toVector3(1582.35, -1873.63, 50.6202));
+	routine2.patrolHeading.push_back(toVector3(1582.79, -1874.08, 50.4752));
+
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1587.436, -1847.274, 51.35342), 164), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1587.88, -1851.641, 51.52284), 72), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1583.227, -1857.805, 51.3534), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1588.024, -1839.284, 57.53828), 66), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1585.812, -1845.111, 57.57048), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1597.018, -1849.776, 54.25288), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1580.818, -1843.372, 51.35342), (rand() % 345 + 153)), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped BufordDukeExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(1587.518, -1832.286, 51.4919));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(1586.68, -1841.879, 51.35339);
+	Ped target = createPed("G_M_O_UniExConfeds_01", targetPos, 247);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void BufordDukeExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void BufordDukeExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void BufordDukeExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void BufordDukeExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void BufordDukeExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +521,4 @@ void BufordDukeExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

@@ -2,6 +2,163 @@
 
 using namespace std;
 
+WilliamRogersExecutor::WilliamRogersExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-2480.93, -171.0881, 177.6074);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void WilliamRogersExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void WilliamRogersExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2493.595, -184.4382, 177.0768));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2495.573, -181.8229, 177.7511));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello42";
+	routine1.patrolRoute.push_back(toVector3(-2481.94, -158.362, 181.08));
+	routine1.patrolHeading.push_back(toVector3(-2482.6, -157.641, 181.179));
+	routine1.patrolRoute.push_back(toVector3(-2494.86, -166.176, 179.557));
+	routine1.patrolHeading.push_back(toVector3(-2495.12, -166.897, 179.619));
+	routine1.patrolRoute.push_back(toVector3(-2492.48, -182.512, 178.292));
+	routine1.patrolHeading.push_back(toVector3(-2492.55, -183.322, 178.148));
+
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2487.212, -166.568, 178.004), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2481.792, -164.0055, 178.3437), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2473.547, -173.9572, 177.7698), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2474.652, -171.3465, 178.0068), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2481.017, -178.1557, 177.293), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2479.108, -187.1623, 175.2595), 209.181), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2481.832, -188.9205, 174.7917), 163.127), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped WilliamRogersExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-2491.998, -186.5505, 176.6704));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	routine3.patrolName = "miss_bandito13";
+	routine3.patrolRoute.push_back(toVector3(-2494.64, -178.349, 179.149));
+	routine3.patrolHeading.push_back(toVector3(-2495.38, -178.852, 179.189));
+	routine3.patrolRoute.push_back(toVector3(-2482.98, -186.642, 176.708));
+	routine3.patrolHeading.push_back(toVector3(-2482.64, -187.002, 176.546));
+	routine3.patrolRoute.push_back(toVector3(-2477.06, -176.568, 178.367));
+	routine3.patrolHeading.push_back(toVector3(-2477.37, -176.101, 178.411));
+	routine3.patrolRoute.push_back(toVector3(-2494.62, -160.434, 179.435));
+	routine3.patrolHeading.push_back(toVector3(-2495.02, -159.357, 179.42));
+	Vector3 targetPos = toVector3(-2491.479, -176.6571, 177.9433);
+	Ped target = createPed("G_M_M_UniRanchers_01", targetPos, (rand() % 361));
+	enemiesGroup->add(target, IdlingModifier::Patrol, routine3);
+	return target;
+}
+
+void WilliamRogersExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void WilliamRogersExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void WilliamRogersExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void WilliamRogersExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void WilliamRogersExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -359,4 +516,4 @@ void WilliamRogersExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

@@ -2,6 +2,155 @@
 
 using namespace std;
 
+MarquisRussellExecutor::MarquisRussellExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-1963.304, 2158.636, 326.5899);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void MarquisRussellExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void MarquisRussellExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-1961.849, 2153.194, 327.0338));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-1959.186, 2153.141, 326.3642));
+
+	// Now just add the enemies to the group to make them be controlled by it
+
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello15";
+	routine1.patrolRoute.push_back(toVector3(-1967.23, 2161.94, 328.391));
+	routine1.patrolHeading.push_back(toVector3(-1967.23, 2161.58, 328.399));
+	routine1.patrolRoute.push_back(toVector3(-1956.91, 2166.75, 327.059));
+	routine1.patrolHeading.push_back(toVector3(-1956.32, 2166.93, 326.893));
+	routine1.patrolRoute.push_back(toVector3(-1969.07, 2170.07, 329.384));
+	routine1.patrolHeading.push_back(toVector3(-1969.6, 2170.21, 329.447));
+
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1961.146, 2157.891, 326.5644), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1960.277, 2164.74, 326.5345), (rand() % 361)), IdlingModifier::Scout);//
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1963.44, 2165.132, 327.2058), (rand() % 361)), IdlingModifier::Scout);//
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1967.631, 2161.309, 327.4136), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1958.29, 2158.37, 326.059), 269), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1966.345, 2156.546, 327.421), (rand() % 361)), IdlingModifier::Scout);//
+	enemiesGroup->add(createPed("G_M_M_UNIMICAHGOONS_01", toVector3(-1961.693, 2151.215, 327.0578), (rand() % 361)), IdlingModifier::Scout);//
+	enemiesGroup->start();
+}
+
+Ped MarquisRussellExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-1964.544, 2153.432, 327.3247));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-1960.786, 2161.016, 326.61);
+	Ped target = createPed("G_M_M_UNIMICAHGOONS_01", targetPos, (rand() % 361));
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void MarquisRussellExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void MarquisRussellExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void MarquisRussellExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void MarquisRussellExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void MarquisRussellExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -359,4 +508,4 @@ void MarquisRussellExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

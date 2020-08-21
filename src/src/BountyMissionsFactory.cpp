@@ -66,10 +66,10 @@ void BountyMissionsFactory::initializeCache()
 	executorsCache[26] = richardMooreExecutor();
 	executorsCache[27] = juanCortezExecutor();
 	executorsCache[28] = clintonvonHagenExecutor();
-	executorsCache[29] = treasuryPeteExecutor();
-	executorsCache[30] = robertCorbucciExecutor();
-	executorsCache[31] = mikeSandersExecutor();
-	executorsCache[32] = carlMartinExecutor();
+	executorsCache[29] = carlMartinExecutor();
+	executorsCache[30] = treasuryPeteExecutor();
+	executorsCache[31] = robertCorbucciExecutor();
+	executorsCache[32] = mikeSandersExecutor();
 	executorsCache[33] = chrisJaniceExecutor();
 	executorsCache[34] = justusBarnesExecutor();
 	executorsCache[35] = williamRogersExecutor();
@@ -425,7 +425,7 @@ JesseHillExecutor* BountyMissionsFactory::jesseHillExecutor()
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 60;
 	data.rewardStr = "$60";
-	data.startPosition = toVector3(-5710.177, -2386.995, 6.257581);
+	data.startPosition = toVector3(-5660.05, -2396.66, -3.67743);
 	data.isTargetMale = true;
 	data.targetName = "Jesse Hill";
 
@@ -479,7 +479,7 @@ BillyWilsonExecutor* BountyMissionsFactory::billyWilsonExecutor()
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 65;
 	data.rewardStr = "$65";
-	data.startPosition = toVector3(-4459.897, -3628.035, 56.84821);
+	data.startPosition = toVector3(-4458.25, -3654.89, 57.7783);
 	data.isTargetMale = true;
 	data.targetName = "Billy Wilson";
 
@@ -594,10 +594,28 @@ ClintonvonHagenExecutor* BountyMissionsFactory::clintonvonHagenExecutor()
 	return new ClintonvonHagenExecutor(data, areasMgr);
 }
 
-TreasuryPeteExecutor* BountyMissionsFactory::treasuryPeteExecutor()
+CarlMartinExecutor* BountyMissionsFactory::carlMartinExecutor()
 {
 	BountyMissionData data;
 	data.id = 29;
+	data.area = MapAreas::SaintDenis;
+	data.missionName = "CarlMartin";
+	data.crime = "Murder";
+	data.description = "";
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
+	data.reward = 100;
+	data.rewardStr = "$100";
+	data.startPosition = toVector3(1522.948, -18.84619, 97.08103);
+	data.isTargetMale = true;
+	data.targetName = "Carlton Martin";
+
+	return new CarlMartinExecutor(data, areasMgr);
+}
+
+TreasuryPeteExecutor* BountyMissionsFactory::treasuryPeteExecutor()
+{
+	BountyMissionData data;
+	data.id = 30;
 	data.area = MapAreas::SaintDenis;
 	data.missionName = "TreasuryPete";
 	data.crime = "Bank Robbery";
@@ -605,7 +623,7 @@ TreasuryPeteExecutor* BountyMissionsFactory::treasuryPeteExecutor()
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 100;
 	data.rewardStr = "$100";
-	data.startPosition = toVector3(2884.414, -244.7007, 41.77635);
+	data.startPosition = toVector3(2856.04, -203.053, 41.1886);
 	data.isTargetMale = true;
 	data.targetName = "Treasury Pete";
 
@@ -615,7 +633,7 @@ TreasuryPeteExecutor* BountyMissionsFactory::treasuryPeteExecutor()
 RobertCorbucciExecutor* BountyMissionsFactory::robertCorbucciExecutor()
 {
 	BountyMissionData data;
-	data.id = 30;
+	data.id = 31;
 	data.area = MapAreas::SaintDenis;
 	data.missionName = "RobertCorbucci";
 	data.crime = "Murder";
@@ -633,9 +651,9 @@ RobertCorbucciExecutor* BountyMissionsFactory::robertCorbucciExecutor()
 MikeSandersExecutor* BountyMissionsFactory::mikeSandersExecutor()
 {
 	BountyMissionData data;
-	data.id = 31;
+	data.id = 32;
 	data.area = MapAreas::SaintDenis;
-	data.missionName = "MikeSanders";
+	data.missionName = "LucienVinrouge";
 	data.crime = "Murder";
 	data.description = "";
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
@@ -643,27 +661,9 @@ MikeSandersExecutor* BountyMissionsFactory::mikeSandersExecutor()
 	data.rewardStr = "$110";
 	data.startPosition = toVector3(2315.076, -343.0998, 42.65502);
 	data.isTargetMale = true;
-	data.targetName = "Micheal Sanders";
+	data.targetName = "Lucien le Vinrouge";
 
 	return new MikeSandersExecutor(data, areasMgr);
-}
-
-CarlMartinExecutor* BountyMissionsFactory::carlMartinExecutor()
-{
-	BountyMissionData data;
-	data.id = 32;
-	data.area = MapAreas::SaintDenis;
-	data.missionName = "CarlMartin";
-	data.crime = "Murder";
-	data.description = "";
-	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
-	data.reward = 100;
-	data.rewardStr = "$100";
-	data.startPosition = toVector3(1522.948, -18.84619, 97.08103);
-	data.isTargetMale = true;
-	data.targetName = "Carlton Martin";
-
-	return new CarlMartinExecutor(data, areasMgr);
 }
 
 ChrisJaniceExecutor* BountyMissionsFactory::chrisJaniceExecutor()
@@ -749,7 +749,7 @@ GeorgeCoenExecutor* BountyMissionsFactory::georgeCoenExecutor()
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 65;
 	data.rewardStr = "$65";
-	data.startPosition = toVector3(-1554.509, 262.5712, 114.1837);
+	data.startPosition = toVector3(-1578.95, 253.227, 111.212);
 	data.isTargetMale = true;
 	data.targetName = "George Coen";
 

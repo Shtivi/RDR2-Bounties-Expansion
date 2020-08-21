@@ -43,10 +43,10 @@ private:
 	RichardMooreExecutor* richardMooreExecutor();
 	JuanCortezExecutor* juanCortezExecutor();
 	ClintonvonHagenExecutor* clintonvonHagenExecutor();
+	CarlMartinExecutor* carlMartinExecutor();
 	TreasuryPeteExecutor* treasuryPeteExecutor();
 	RobertCorbucciExecutor* robertCorbucciExecutor();
 	MikeSandersExecutor* mikeSandersExecutor();
-	CarlMartinExecutor* carlMartinExecutor();
 	ChrisJaniceExecutor* chrisJaniceExecutor();
 	JustusBarnesExecutor* justusBarnesExecutor();
 	WilliamRogersExecutor* williamRogersExecutor();

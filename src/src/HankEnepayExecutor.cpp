@@ -2,6 +2,166 @@
 
 using namespace std;
 
+HankEnepayExecutor::HankEnepayExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-2357.136, -948.3532, 165.9597);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void HankEnepayExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void HankEnepayExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2376.451, -952.2982, 160.4741));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2375.432, -949.2769, 160.7709));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello1";
+	routine1.patrolRoute.push_back(toVector3(-2373.25, -943.631, 162.721));
+	routine1.patrolHeading.push_back(toVector3(-2372.56, -943.855, 162.697));
+	routine1.patrolRoute.push_back(toVector3(-2372.4, -934.016, 161.834));
+	routine1.patrolHeading.push_back(toVector3(-2372.39, -933.212, 161.693));
+	routine1.patrolRoute.push_back(toVector3(-2380.52, -938.756, 161.313));
+	routine1.patrolHeading.push_back(toVector3(-2381.07, -939.134, 161.277));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello2";
+	routine2.patrolRoute.push_back(toVector3(-2381.28, -936.956, 160.904));
+	routine2.patrolHeading.push_back(toVector3(-2380.62, -936.75, 160.919));
+	routine2.patrolRoute.push_back(toVector3(-2390.95, -929.733, 159.855));
+	routine2.patrolHeading.push_back(toVector3(-2391.11, -929.142, 159.804));
+	routine2.patrolRoute.push_back(toVector3(-2399.37, -941.788, 160.215));
+	routine2.patrolHeading.push_back(toVector3(-2399.76, -942.201, 160.214));
+	routine2.patrolRoute.push_back(toVector3(-2390.19, -951.063, 160.106));
+	routine2.patrolHeading.push_back(toVector3(-2389.63, -951.228, 160.149));
+
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2357.273, -950.934, 165.8784), 17.7596), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2360.847, -954.2001, 165.3427), 328.281), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2364.695, -951.1624, 163.473), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2372.124, -944.5281, 161.7042), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2370.188, -940.2191, 162.2291), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2374.493, -930.195, 160.3815), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2379.734, -938.6382, 160.4243), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2369.88, -919.96, 162.472), 16.1259), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped HankEnepayExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-2376.892, -955.0765, 160.4581));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-2356.949, -945.3693, 165.8598);
+	Ped target = createPed(SKINNER_BROTHER_MODEL, targetPos, 168.863);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void HankEnepayExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void HankEnepayExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void HankEnepayExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void HankEnepayExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void HankEnepayExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 130;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -361,4 +521,4 @@ void HankEnepayExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

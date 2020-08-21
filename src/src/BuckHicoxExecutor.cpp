@@ -2,6 +2,165 @@
 
 using namespace std;
 
+BuckHicoxExecutor::BuckHicoxExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-2125.775, 361.3478, 135.1135);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void BuckHicoxExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void BuckHicoxExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2125.183, 369.4261, 132.4568));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2123.578, 372.5853, 131.3413));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello47";
+	routine1.patrolRoute.push_back(toVector3(-2106.72, 362.575, 131.515));
+	routine1.patrolHeading.push_back(toVector3(-2105.88, 362.773, 131.326));
+	routine1.patrolRoute.push_back(toVector3(-2110.5, 376.932, 128.906));
+	routine1.patrolHeading.push_back(toVector3(-2110.65, 377.685, 128.776));
+	routine1.patrolRoute.push_back(toVector3(-2123.2, 365.779, 134.153));
+	routine1.patrolHeading.push_back(toVector3(-2123.45, 365.308, 134.353));
+	routine1.patrolRoute.push_back(toVector3(-2128.13, 371.336, 133.412));
+	routine1.patrolHeading.push_back(toVector3(-2127.54, 371.343, 133.325));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello48";
+	routine2.patrolRoute.push_back(toVector3(-2139.79, 387.044, 131.756));
+	routine2.patrolHeading.push_back(toVector3(-2140.08, 387.691, 131.731));
+	routine2.patrolRoute.push_back(toVector3(-2152.27, 372.336, 136.438));
+	routine2.patrolHeading.push_back(toVector3(-2152.82, 371.622, 136.695));
+	routine2.patrolRoute.push_back(toVector3(-2139.23, 360.265, 140.13));
+	routine2.patrolHeading.push_back(toVector3(-2139.06, 360.325, 140.084));
+
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2126.761, 354.9373, 137.4859), 352), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2124.129, 356.6917, 136.1421), 19), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2131.327, 360.7215, 136.2773), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2123.272, 351.4809, 137.4948), (rand() % 268 + 72)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2106.465, 361.7401, 130.6631), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2133.81, 371.7192, 133.1191), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-2121.923, 344.3732, 147.5946), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped BuckHicoxExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-2126.751, 366.3427, 133.626));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-2116.705, 351.9135, 135.5443);
+	Ped target = createPed("G_M_M_UniRanchers_01", targetPos, (rand() % 268 + 72));
+	enemiesGroup->add(target, IdlingModifier::Scout, routine3);
+	return target;
+}
+
+void BuckHicoxExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void BuckHicoxExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void BuckHicoxExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void BuckHicoxExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void BuckHicoxExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +519,4 @@ void BuckHicoxExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

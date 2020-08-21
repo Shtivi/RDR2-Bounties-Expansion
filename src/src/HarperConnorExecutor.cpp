@@ -2,6 +2,165 @@
 
 using namespace std;
 
+HarperConnorExecutor::HarperConnorExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(768.0861, -852.4528, 54.38295);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void HarperConnorExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void HarperConnorExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(758.0254, -862.0231, 53.66626));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(761.9842, -862.2714, 53.74209));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello7";
+	routine1.patrolRoute.push_back(toVector3(769.776, -835.057, 55.7592));
+	routine1.patrolHeading.push_back(toVector3(769.352, -833.85, 55.7819));
+	routine1.patrolRoute.push_back(toVector3(777.94, -850.234, 55.194));
+	routine1.patrolHeading.push_back(toVector3(778.152, -849.588, 55.1907));
+	routine1.patrolRoute.push_back(toVector3(773.842, -861.309, 54.2665));
+	routine1.patrolHeading.push_back(toVector3(773.229, -861.963, 54.2096));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello8";
+	routine2.patrolRoute.push_back(toVector3(753.386, -844.66, 55.1289));
+	routine2.patrolHeading.push_back(toVector3(753.514, -844.66, 55.1268));
+	routine2.patrolRoute.push_back(toVector3(751.576, -859.582, 54.4967));
+	routine2.patrolHeading.push_back(toVector3(751.411, -860.135, 54.3287));
+	routine2.patrolRoute.push_back(toVector3(764.514, -859.939, 55.035));
+	routine2.patrolHeading.push_back(toVector3(764.994, -860.007, 54.9913));
+	routine2.patrolRoute.push_back(toVector3(750.397, -857.654, 54.5683));
+	routine2.patrolHeading.push_back(toVector3(749.73, -857.485, 54.4517));
+
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(762.6347, -850.3631, 54.25639), 245), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(762.7381, -853.0121, 54.34014), 286), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(765.1423, -856.9935, 54.24311), 326), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(769.776, -835.057, 54.7592), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(776.5958, -844.3274, 54.55535), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(757.3467, -844.9959, 54.13348), (rand() % 274 + 98)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(754.035, -844.9783, 54.15492), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->start();
+}
+
+Ped HarperConnorExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(755.3113, -861.9045, 53.51758));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(764.5617, -842.8209, 54.50637);
+	Ped target = createPed("G_M_O_UniExConfeds_01", targetPos, (rand() % 269 + 82));
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void HarperConnorExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void HarperConnorExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void HarperConnorExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void HarperConnorExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void HarperConnorExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +519,4 @@ void HarperConnorExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

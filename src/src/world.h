@@ -44,5 +44,5 @@ float distanceBetweenEntities(Entity entity1, Entity entity2);
 float distanceBetweenEntitiesHor(Entity entity1, Entity entity2);
 Object createProp(char* model, Vector3 position, float heading = 0, bool isStatic = false, bool isVisible = true);
 RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastIntersectionOptions intersectionOptions = Everything);
-void releaseEntitySafe(Entity* entity);
+//void releaseEntitySafe(Entity* entity);
 tm getGameTime();

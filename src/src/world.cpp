@@ -89,13 +89,13 @@ RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastI
 	return result;
 }
 
-void releaseEntitySafe(Entity* entity)
+/*void releaseEntitySafe(Entity* entity)
 {
 	if ((*entity) && ENTITY::DOES_ENTITY_EXIST(*entity))
 	{
 		ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(entity);
 	}
-}
+}*/
 
 tm getGameTime()
 {

@@ -2,6 +2,158 @@
 
 using namespace std;
 
+ClintonvonHagenExecutor::ClintonvonHagenExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(1878.301, -548.9763, 42.79025);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void ClintonvonHagenExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void ClintonvonHagenExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1860.283, -543.2865, 43.5644));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1858.016, -541.511, 43.58672));
+
+	// Now just add the enemies to the group to make them be controlled by it
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello30";
+	routine2.patrolRoute.push_back(toVector3(1878.07, -535.874, 44.6098));
+	routine2.patrolHeading.push_back(toVector3(1877.96, -536.286, 44.6042));
+	routine2.patrolRoute.push_back(toVector3(1876.11, -546.643, 43.9879));
+	routine2.patrolHeading.push_back(toVector3(1876.55, -547.119, 43.9376));
+	routine2.patrolRoute.push_back(toVector3(1881.51, -535.169, 44.5361));
+	routine2.patrolHeading.push_back(toVector3(1882.12, -534.725, 44.5095));
+	routine2.patrolRoute.push_back(toVector3(1876.96, -520.464, 44.2782));
+	routine2.patrolHeading.push_back(toVector3(1876.26, -520.187, 44.271));
+
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1882.838, -540.6451, 43.17368), 244), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1883.176, -531.792, 43.3957), 300), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1867.759, -551.862, 42.7626), 100), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1878.939, -558.862, 42.50563), 177), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1887.32, -546.0612, 42.74894), 309), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1871.617, -531.5223, 43.57956), 255), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1877.967, -536.8925, 43.57931), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->start();
+}
+
+Ped ClintonvonHagenExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(1862.671, -546.8985, 43.31232));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(1874.233, -540.7623, 43.48211);
+	Ped target = createPed(M_BOUNTY_FANCY, targetPos, (rand() % 295 + 181));
+	giveWeaponToPed(target, Pistol1899, 0x743D4F54, false);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void ClintonvonHagenExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void ClintonvonHagenExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void ClintonvonHagenExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void ClintonvonHagenExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void ClintonvonHagenExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 45;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -338,4 +490,4 @@ void ClintonvonHagenExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

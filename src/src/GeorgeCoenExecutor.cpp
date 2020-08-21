@@ -2,6 +2,165 @@
 
 using namespace std;
 
+GeorgeCoenExecutor::GeorgeCoenExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(60);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-1554.509, 262.5712, 113.1837);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void GeorgeCoenExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void GeorgeCoenExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-1545.938, 244.3545, 112.9342));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-1549.619, 242.9857, 112.9617));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello45";
+	routine1.patrolRoute.push_back(toVector3(-1541.47, 251.103, 113.928));
+	routine1.patrolHeading.push_back(toVector3(-1540.98, 250.706, 113.902));
+	routine1.patrolRoute.push_back(toVector3(-1557.37, 244.337, 113.877));
+	routine1.patrolHeading.push_back(toVector3(-1558.02, 243.942, 113.835));
+	routine1.patrolRoute.push_back(toVector3(-1563.08, 266.014, 114.136));
+	routine1.patrolHeading.push_back(toVector3(-1563.18, 266.243, 114.139));
+	routine1.patrolRoute.push_back(toVector3(-1548.04, 265.939, 114.149));
+	routine1.patrolHeading.push_back(toVector3(-1547.28, 266.367, 114.137));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello46";
+	routine2.patrolRoute.push_back(toVector3(-1566.33, 249.532, 112.362));
+	routine2.patrolHeading.push_back(toVector3(-1567.02, 249.322, 112.272));
+	routine2.patrolRoute.push_back(toVector3(-1555.83, 239.247, 112.582));
+	routine2.patrolHeading.push_back(toVector3(-1555.9, 238.647, 112.527));
+	routine2.patrolRoute.push_back(toVector3(-1551.49, 253.4, 113.799));
+	routine2.patrolHeading.push_back(toVector3(-1551.55, 253.594, 113.799));
+
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1559.703, 263.0791, 113.1685), 270.013), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1548.214, 265.9428, 113.1504), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1558.147, 252.729, 113.7665), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1553.369, 256.1577, 113.7989), 5.51281), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1553.271, 249.7118, 113.7989), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1549.31, 257.1102, 113.7989), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniRanchers_01", toVector3(-1547.708, 254.671, 113.7989), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->start();
+}
+
+Ped GeorgeCoenExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-1543.032, 245.435, 112.9305));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-1558.463, 258.1013, 113.0615);
+	Ped target = createPed("G_M_M_UniRanchers_01", targetPos, 313.557);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void GeorgeCoenExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void GeorgeCoenExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void GeorgeCoenExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void GeorgeCoenExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void GeorgeCoenExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +519,4 @@ void GeorgeCoenExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

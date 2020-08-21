@@ -2,6 +2,168 @@
 
 using namespace std;
 
+CarlMartinExecutor::CarlMartinExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(1522.948, -18.84619, 96.08103);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void CarlMartinExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void CarlMartinExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1511.45, -32.02819, 95.92773));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1508.161, -29.23418, 95.20477));
+
+	// Now just add the enemies to the group to make them be controlled by it
+
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello36";
+	routine1.patrolRoute.push_back(toVector3(1535.32, -5.81269, 98.1147));
+	routine1.patrolHeading.push_back(toVector3(1536.1, -5.05978, 98.156));
+	routine1.patrolRoute.push_back(toVector3(1524.37, 10.2572, 96.7535));
+	routine1.patrolHeading.push_back(toVector3(1523.96, 10.7868, 96.8086));
+	routine1.patrolRoute.push_back(toVector3(1507.18, 1.24369, 95.7214));
+	routine1.patrolHeading.push_back(toVector3(1506.46, 1.35786, 95.7129));
+	routine1.patrolRoute.push_back(toVector3(1516.65, -12.0529, 96.8231));
+	routine1.patrolHeading.push_back(toVector3(1517.13, -12.5633, 96.8444));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello37";
+	routine2.patrolRoute.push_back(toVector3(1512.19, -26.401, 96.6638));
+	routine2.patrolHeading.push_back(toVector3(1511.62, -27.1346, 96.684));
+	routine2.patrolRoute.push_back(toVector3(1529.37, -57.6948, 103.749));
+	routine2.patrolHeading.push_back(toVector3(1529.6, -58.481, 103.779));
+	routine2.patrolRoute.push_back(toVector3(1503.23, -58.5539, 105.914));
+	routine2.patrolHeading.push_back(toVector3(1502.99, -59.1528, 105.974));
+	routine2.patrolRoute.push_back(toVector3(1495.23, -34.697, 97.2727));
+	routine2.patrolHeading.push_back(toVector3(1495.08, -34.0974, 97.1517));
+
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1529.045, -27.51363, 96.90405), (rand() % 361)), IdlingModifier::Rest);//
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1531.382, -24.60375, 96.74261), 58), IdlingModifier::Rest);//
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1531.008, -17.92665, 96.70364), 95), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1525.583, -13.06933, 96.85066), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1522.816, -12.09922, 96.74552), (rand() % 361)), IdlingModifier::Scout);//
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1513.1, -18.45685, 95.18468), (rand() % 361)), IdlingModifier::Scout);//
+	enemiesGroup->add(createPed("G_M_M_UniCriminals_01", toVector3(1515.318, -23.9986, 95.58247), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->start();
+}
+
+Ped CarlMartinExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(1514.802, -34.25022, 96.63939));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(1522.726, -24.09433, 96.29025);
+	Ped target = createPed("G_M_M_UniCriminals_01", targetPos, 354);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void CarlMartinExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void CarlMartinExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void CarlMartinExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void CarlMartinExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void CarlMartinExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -338,4 +500,4 @@ void CarlMartinExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

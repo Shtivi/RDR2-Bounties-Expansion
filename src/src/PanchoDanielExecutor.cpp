@@ -2,6 +2,166 @@
 
 using namespace std;
 
+PanchoDanielExecutor::PanchoDanielExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-3836.463, -3014.846, -8.249296);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void PanchoDanielExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void PanchoDanielExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-3823.523, -2986.894, -7.212348));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-3819.972, -2986.908, -7.132692));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello24";
+	routine1.patrolRoute.push_back(toVector3(-3868.77, -3016.67, -7.23623));
+	routine1.patrolHeading.push_back(toVector3(-3869.21, -3015.55, -7.26233));
+	routine1.patrolRoute.push_back(toVector3(-3854.46, -3013.5, -7.11306));
+	routine1.patrolHeading.push_back(toVector3(-3853.62, -3012.89, -7.09947));
+	routine1.patrolRoute.push_back(toVector3(-3841.45, -3016.25, -7.03341));
+	routine1.patrolHeading.push_back(toVector3(-3840.31, -3015.94, -7.08558));
+	routine1.patrolRoute.push_back(toVector3(-3858.04, -3032.1, -6.62244));
+	routine1.patrolHeading.push_back(toVector3(-3858.18, -3033.3, -6.66532));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello25";
+	routine2.patrolRoute.push_back(toVector3(-3850.63, -2993.27, -6.98027));
+	routine2.patrolHeading.push_back(toVector3(-3851.36, -2993.14, -7.06568));
+	routine2.patrolRoute.push_back(toVector3(-3836.16, -2980.91, -6.5651));
+	routine2.patrolHeading.push_back(toVector3(-3836.07, -2978.71, -6.57435));
+	routine2.patrolRoute.push_back(toVector3(-3831.72, -2990.59, -6.63944));
+	routine2.patrolHeading.push_back(toVector3(-3830, -2989.98, -6.58707));
+	routine2.patrolRoute.push_back(toVector3(-3831.67, -3009.04, -7.10926));
+	routine2.patrolHeading.push_back(toVector3(-3832.56, -3010.09, -7.17063));
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3842.993, -3010.589, -7.893568), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3837.225, -3007.275, -8.020287), 183.896), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3843.519, -3000.476, -7.841477), 319.646), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3846.691, -2999.394, -8.02098), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3854.507, -3021.4, -7.946145), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3827.201, -2975.924, -7.567559), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-3824.178, -2978.448, -7.386905), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped PanchoDanielExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-3826.912, -2986.882, -7.143115));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-3846.701, -3008.478, -7.990899);
+	Ped target = createPed(M_BOUNTY_MEXICAN, targetPos, (rand() % 361));
+	enemiesGroup->add(target, IdlingModifier::Scout, routine3);
+	return target;
+}
+
+void PanchoDanielExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void PanchoDanielExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void PanchoDanielExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void PanchoDanielExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void PanchoDanielExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -337,4 +497,4 @@ void PanchoDanielExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

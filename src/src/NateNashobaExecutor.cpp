@@ -2,6 +2,167 @@
 
 using namespace std;
 
+NateNashobaExecutor::NateNashobaExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-2575.68, -1371.892, 148.1127);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void NateNashobaExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void NateNashobaExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2583.376, -1370.467, 148.7572));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2583.127, -1367.585, 149.2169));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello3";
+	routine1.patrolRoute.push_back(toVector3(-2578.07, -1387.62, 149.282));
+	routine1.patrolHeading.push_back(toVector3(-2578.05, -1388.53, 149.31));
+	routine1.patrolRoute.push_back(toVector3(-2574.47, -1377.73, 149.257));
+	routine1.patrolHeading.push_back(toVector3(-2574.64, -1376.89, 149.251));
+	routine1.patrolRoute.push_back(toVector3(-2567.02, -1388.6, 146.752));
+	routine1.patrolHeading.push_back(toVector3(-2566.68, -1388.78, 146.669));
+	routine1.patrolRoute.push_back(toVector3(-2567.94, -1366.29, 151.178));
+	routine1.patrolHeading.push_back(toVector3(-2567.19, -1365.89, 151.284));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello4";
+	routine2.patrolRoute.push_back(toVector3(-2591.49, -1376.13, 149.047));
+	routine2.patrolHeading.push_back(toVector3(-2591.64, -1376.53, 148.964));
+	routine2.patrolRoute.push_back(toVector3(-2602.09, -1370.26, 151.12));
+	routine2.patrolHeading.push_back(toVector3(-2602.74, -1370.55, 151.085));
+	routine2.patrolRoute.push_back(toVector3(-2582.96, -1356.85, 152.836));
+	routine2.patrolHeading.push_back(toVector3(-2582.5, -1357.25, 152.702));
+	routine2.patrolRoute.push_back(toVector3(-2580.54, -1369.47, 149.841));
+	routine2.patrolHeading.push_back(toVector3(-2579.95, -1369.73, 149.728));
+
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2580.808, -1386.714, 148.2508), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2577.527, -1386.616, 148.2807), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2574.525, -1389.367, 148.6264), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2574.719, -1383.86, 148.2368), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2579.547, -1369.475, 148.7495), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2575.337, -1368.521, 148.8804), 183.43), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2579.049, -1377.122, 148.3945), 330.359), IdlingModifier::Rest);
+	enemiesGroup->start();
+}
+
+Ped NateNashobaExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-2583.661, -1373.742, 147.9621));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-2581.988, -1384.003, 148.2432);
+	Ped target = createPed(SKINNER_BROTHER_MODEL, targetPos, (rand() % 357 + 180));
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void NateNashobaExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void NateNashobaExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void NateNashobaExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void NateNashobaExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void NateNashobaExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +521,4 @@ void NateNashobaExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

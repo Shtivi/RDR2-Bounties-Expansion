@@ -2,6 +2,165 @@
 
 using namespace std;
 
+CullenBakerExecutor::CullenBakerExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(378.7642, -10.15373, 107.0928);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void CullenBakerExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void CullenBakerExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(356.889, -26.08888, 106.3023));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(364.0253, -24.15448, 106.0603));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello11";
+	routine1.patrolRoute.push_back(toVector3(376.335, -24.177, 109.416));
+	routine1.patrolHeading.push_back(toVector3(376.379, -24.7884, 109.617));
+	routine1.patrolRoute.push_back(toVector3(383.329, -12.1784, 108.4));
+	routine1.patrolHeading.push_back(toVector3(382.969, -12.0025, 108.397));
+	routine1.patrolRoute.push_back(toVector3(366.767, -5.40075, 106.732));
+	routine1.patrolHeading.push_back(toVector3(366.61, -5.90114, 106.684));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello12";
+	routine2.patrolRoute.push_back(toVector3(357.851, -22.1714, 107.645));
+	routine2.patrolHeading.push_back(toVector3(358.371, -22.5717, 107.581));
+	routine2.patrolRoute.push_back(toVector3(376.556, -25.6137, 109.81));
+	routine2.patrolHeading.push_back(toVector3(377.3, -25.4958, 109.798));
+	routine2.patrolRoute.push_back(toVector3(377.944, 0.0358042, 107.448));
+	routine2.patrolHeading.push_back(toVector3(377.32, 0.616114, 107.478));
+	routine2.patrolRoute.push_back(toVector3(351.807, -6.19616, 106.476));
+	routine2.patrolHeading.push_back(toVector3(350.981, -6.30216, 106.472));
+
+	enemiesGroup->add(createPed("G_M_M_UniDuster_02", toVector3(371.4706, -14.84297, 107.1398), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniDuster_01", toVector3(370.4065, -12.71948, 107.2296), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniDuster_02", toVector3(371.1617, -8.016054, 106.6445), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniDuster_01", toVector3(365.059, -8.638431, 104.8402), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniDuster_02", toVector3(363.8441, -5.851395, 104.7168), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniDuster_01", toVector3(351.5181, -18.49321, 105.8755), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniDuster_02", toVector3(354.3462, -19.8241, 106.1316), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->start();
+}
+
+Ped CullenBakerExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(361.2498, -24.87347, 106.1273));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(375.5174, -17.17714, 107.2445);
+	Ped target = createPed("G_M_M_UniDuster_01", targetPos, (rand() % 361));
+	enemiesGroup->add(target, IdlingModifier::Scout, routine3);
+	return target;
+}
+
+void CullenBakerExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void CullenBakerExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void CullenBakerExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void CullenBakerExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void CullenBakerExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 100;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -360,4 +519,4 @@ void CullenBakerExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/
