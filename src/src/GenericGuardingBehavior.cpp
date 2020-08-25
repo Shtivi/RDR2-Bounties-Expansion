@@ -133,7 +133,7 @@ void GenericGuardingBehavior::update()
 		break;
 
 	case TensionMode::Search:
-		if (isPlayerWithinLos())
+		if (isPlayerWithinLos() || distanceBetweenEntities(ped(), player) <= 40 && PED::IS_PED_SHOOTING(player))
 		{
 			enterCombatMode();
 		}
@@ -142,11 +142,6 @@ void GenericGuardingBehavior::update()
 			//showSubtitle("stopped searching");
 			stopwatch.stop();
 			enterAlertedMode();
-		}
-		else if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(ped()) && !PED::IS_PED_BEING_STEALTH_KILLED(ped()))
-		{
-			enterSearchMode(ENTITY::GET_ENTITY_COORDS(player, 1, 0), 20);
-			ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(ped());
 		}
 		break;
 
@@ -440,6 +435,7 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 {
 	HighProfileEvents event = HighProfileEvents::None;
 	Vector3 eventOrigin;
+	Ped player = PLAYER::PLAYER_PED_ID();
 
 	vector<Ped> nearbyPeds = getNearbyDeadBodies(ped(), 20, GUARD_SEEING_RANGE);
 	vector<Ped>::iterator itr = nearbyPeds.begin();
@@ -453,6 +449,22 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 		}
 
 		itr++;
+	}
+	vector<Ped> nearbyBeds = getNearbyPeds(ped(), 20, 10);
+	vector<Ped>::iterator ytr = nearbyBeds.begin();
+	while (ytr != nearbyBeds.end() && event == HighProfileEvents::None)
+	{
+		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(*ytr) && !PED::IS_PED_BEING_STEALTH_KILLED(*ytr))
+		{
+			event = HighProfileEvents::Generic;
+			eventOrigin = ENTITY::GET_ENTITY_COORDS(player, 1, 1);
+			if (shouldIgnoreBody(*ytr))
+			{
+				ENTITY::CLEAR_ENTITY_LAST_DAMAGE_ENTITY(*ytr);
+			}
+		}
+
+		ytr++;
 	}
 
 	itr = nearbyPeds.begin();
@@ -470,7 +482,7 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 		playAmbientSpeech(ped(), "FOUND_BODY");
 		break;
 	case HighProfileEvents::Generic:
-		playAmbientSpeech(ped(), "WHAT_IS_THAT");
+		playAmbientSpeech(ped(), "WHO_GOES_THERE");
 		break;
 	default:
 		break;

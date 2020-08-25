@@ -15,6 +15,7 @@ private:
 	int requiredDistanceToLocate;
 	bool mustBeCloseToLocate;
 	bool seen;
+	bool stopped;
 	int targetAreaRadius;
 	bool spawnedBountyHunters;
 	int spawnchance;

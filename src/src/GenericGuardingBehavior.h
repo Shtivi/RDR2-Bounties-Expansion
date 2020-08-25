@@ -3,7 +3,7 @@
 const float GUARD_IDLE_RANGE = 20;
 const float GUARD_SUSPECT_RANGE = 15;
 const float GUARD_COMBAT_RANGE = 6;
-const float GUARD_SEARCH_DURATION_SECS = 10;
+const float GUARD_SEARCH_DURATION_SECS = 12;
 const float GUARD_SEEING_RANGE = 28;
 const float GUARD_HEARING_RANGE = 35;
 
