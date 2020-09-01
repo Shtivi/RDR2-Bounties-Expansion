@@ -125,8 +125,6 @@ void BaseMissionExecutor::update()
 		case BountyMissionStage::MissionInitialization:
 			initialize();
 			seen = false;
-			spawnedBountyHunters = false;
-			spawnchance = rand() % 3 + 1;
 			nextStage();
 			break;
 
@@ -177,6 +175,8 @@ void BaseMissionExecutor::update()
 			if (isPedHogtied(target) ||
 				(missionData->requiredTargetCondition == TargetCondition::DeadOrAlive && ENTITY::IS_ENTITY_DEAD(target)))
 			{
+				spawnedBountyHunters = false;
+				spawnchance = rand() % 2 + 1;
 				nextStage();
 			}
 			if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(target, player, 1) && seen == false)
@@ -188,7 +188,7 @@ void BaseMissionExecutor::update()
 			break;
 
 		case BountyMissionStage::ArriveToPoliceStation:
-			if (distanceToPolice < 500 && !spawnedBountyHunters && spawnchance == 1 && missionData->area != MapAreas::Armadillo)
+			if (distanceBetween(playerPos, missionData->startPosition) > 250 && spawnchance == 1 && !spawnedBountyHunters && missionData->area != MapAreas::Armadillo)
 			{
 				spawnBountyHunters();
 			}
@@ -421,6 +421,7 @@ void BaseMissionExecutor::nextStage()
 void BaseMissionExecutor::fail(const char* reason)
 {
 	status = BountyMissionStatus::Failed;
+	seen = false;
 
 	if (reason)
 	{

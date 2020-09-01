@@ -204,6 +204,7 @@ void GushkalaInataExecutor::enterCombatMode()
 
 void GushkalaInataExecutor::prepareSet()
 {
+	toleratePlayer = true;
 	addEnemy(target);
 
 	enterIdleMode();

@@ -117,6 +117,7 @@ Ped TurkishRunnerExecutor::spawnTarget()
 
 void TurkishRunnerExecutor::prepareSet()
 {
+	toleratePlayer = true;
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
 	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-2824.89, -2611.77, 92.867));

@@ -204,6 +204,7 @@ void JaneBullionExecutor::enterCombatMode()
 
 void JaneBullionExecutor::prepareSet()
 {
+	toleratePlayer = true;
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
 	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(2115.438, -1283.105, 42.50136));

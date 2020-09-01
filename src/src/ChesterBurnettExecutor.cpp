@@ -261,6 +261,7 @@ void ChesterBurnettExecutor::enterCombatMode()
 
 void ChesterBurnettExecutor::prepareSet()
 {
+	toleratePlayer = true;
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
 	addEnemy(target);

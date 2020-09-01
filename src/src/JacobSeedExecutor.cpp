@@ -16,13 +16,13 @@ JacobSeedExecutor::JacobSeedExecutor(BountyMissionData missionData, MapAreasMana
 
 void JacobSeedExecutor::update()
 {
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	updateEnemies();
 	Ped player = PLAYER::PLAYER_PED_ID();
 	vector<Ped>::iterator it;
 	float distanceToTarget;
 
-	BaseMissionExecutor::update();
-	updateEnemies();
-	releaseUnnecessaryEntities();
 
 	if (enemiesAlerted && !finishedAlertingEnemies)
 	{
@@ -66,6 +66,8 @@ Ped JacobSeedExecutor::spawnTarget()
 
 void JacobSeedExecutor::prepareSet()
 {
+	enemiesAlerted = false;
+	finishedAlertingEnemies = false;
 	campfire = createProp("P_CAMPFIRE02X", toVector3(1551.14, -372.55, 80.5242));
 	gatlingWagon = createVehicle(GATLING_POLICE_WAGON_VEHICLE, toVector3(1550.35, -363.854, 80.3371), 63.1261);
 

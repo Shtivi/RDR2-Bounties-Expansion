@@ -4,7 +4,7 @@ const float GUARD_IDLE_RANGE = 20;
 const float GUARD_SUSPECT_RANGE = 15;
 const float GUARD_COMBAT_RANGE = 6;
 const float GUARD_SEARCH_DURATION_SECS = 12;
-const float GUARD_SEEING_RANGE = 28;
+const float GUARD_SEEING_RANGE = 40;
 const float GUARD_HEARING_RANGE = 35;
 
 const int RESTING_SCENARIOS_NUM = 3;
@@ -17,6 +17,8 @@ class GenericGuardingBehavior : public PedBehavior
 {
 private:
 	Vector3 defensePosition;
+	vector<Ped> nearbyBeds;
+	vector<Ped>::iterator ytr;
 	float radius;
 	TensionMode mode;
 	bool _shouldTolerate;

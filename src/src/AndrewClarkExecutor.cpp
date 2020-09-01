@@ -62,7 +62,9 @@ Ped AndrewClarkExecutor::spawnTarget()
 }
 
 void AndrewClarkExecutor::prepareSet()
-{	
+{
+	isTargetAlerted = false;
+	isTargetScared = false;
 	wagon = createVehicle(VehicleHash::Wagon02X, toVector3(-310.107, 1360.19, 158.084), 94.2345);
 	setVehicleCargo(wagon, VehicleCargoHash::CampCargo1);
 

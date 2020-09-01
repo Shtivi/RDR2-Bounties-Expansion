@@ -59,6 +59,8 @@ Ped EliasTraditionExecutor::spawnTarget()
 
 void EliasTraditionExecutor::prepareSet()
 {
+	executionCleanedUp = false;
+	enemiesAlerted = false;
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
 	vector<Ped>::iterator enemiesItr;
