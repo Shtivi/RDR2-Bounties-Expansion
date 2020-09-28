@@ -65,9 +65,9 @@ void BaseMissionExecutor::update()
 	{
 		if (RADAR::DOES_BLIP_EXIST(posterBlip) || RADAR::DOES_BLIP_EXIST(targetAreaBlip) || stage == BountyMissionStage::CaptureTarget)
 		{
-			cleanup();
 			if (stage == BountyMissionStage::CaptureTarget)
 			{
+				cleanup();
 				stage = BountyMissionStage::GoToArea;
 			}
 			deleteBlipSafe(&posterBlip);
@@ -558,7 +558,7 @@ void BaseMissionExecutor::onTargetHandedOver()
 
 void BaseMissionExecutor::onRewardCollected()
 {
-	CASH::PLAYER_ADD_CASH(missionData->reward * 100, 0);
+	CASH::PLAYER_ADD_CASH(missionData->reward * 100, 1831944558);
 	showSubtitle(BOUNTY_COMPLETED);
 }
 
