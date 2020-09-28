@@ -128,8 +128,6 @@ void GuardsGroup::clearDeadGuards()
 		{
 			(*itr)->stop();
 			itr = guards.erase(itr);
-
-			WAIT(1000);
 			ped->releaseEntitySafe(&pedItr);
 		}
 		else

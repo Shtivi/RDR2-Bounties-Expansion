@@ -115,7 +115,8 @@ enum WeaponHash
 	SniperrifleRollingblockExotic = 0x4E328256,
 	ThrownTomahawkAncient = 0x7F23B6C7,
 	MeleeTorchCrowd = 0xCC4588BD,
-	MeleeHatchetMeleeonly = 0x76D4FAB
+	MeleeHatchetMeleeonly = 0x76D4FAB,
+	NavyRevolver = 0x7E945C8
 };
 
 enum WeaponGroup

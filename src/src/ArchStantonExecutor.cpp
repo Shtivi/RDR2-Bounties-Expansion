@@ -21,6 +21,7 @@ void ArchStantonExecutor::update()
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
 	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 lastImpactCoords;
 	vector<Ped>::iterator pedItr;
 	vector<Ped>* enemyPeds = enemiesGroup->peds();
 	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
@@ -32,7 +33,7 @@ void ArchStantonExecutor::update()
 				PED::_0x5337B721C51883A9(*pedItr, true, true);
 			}
 		}
-		if (ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) && getMissionStage() == BountyMissionStage::LocateTarget)
+		if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) || WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(*pedItr, 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE) && getMissionStage() == BountyMissionStage::LocateTarget)
 		{
 			nextStage();
 		}

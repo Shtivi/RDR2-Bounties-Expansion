@@ -17,12 +17,12 @@ class GenericGuardingBehavior : public PedBehavior
 {
 private:
 	Vector3 defensePosition;
-	vector<Ped> nearbyBeds;
-	vector<Ped>::iterator ytr;
 	float radius;
 	TensionMode mode;
 	bool _shouldTolerate;
 	bool restpos;
+	bool test;
+	Vector3 lastImpactCoords;
 	IdlingModifier idlingModifier;
 	RoutineParams routineParams;
 	set<Ped>* bodiesFound;

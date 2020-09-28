@@ -86,19 +86,20 @@ void main()
 				log("didnt hit");
 			}*/
 
-		if (IsKeyJustUp(VK_KEY_X))
-		{
-			Ped player = PLAYER::PLAYER_PED_ID();
-			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-			float ground;
-			GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
-			std::stringstream output;
-			output << "\n"
-				<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
-				<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
-				<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
+		//if (IsKeyJustUp(VK_KEY_X))
+		//{
+		//	Ped player = PLAYER::PLAYER_PED_ID();
+		//	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+		//	float ground;
+		//	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
+		//	std::stringstream output;
+		//	output << "\n"
+		//		<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
+		//		<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
+		//		<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
 
-			log(output.str().c_str());
+		//	log(output.str().c_str());
+
 			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			//float ground;
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
@@ -138,7 +139,7 @@ void main()
 			//conv.play();
 			////AI::TASK_AIM_GUN_AT_COORD(ped, aimPos.x, aimPos.y, aimPos.z, -1, 1, 1);
 			//temp = ped;
-		}
+		//}
 
 
 		WAIT(0);

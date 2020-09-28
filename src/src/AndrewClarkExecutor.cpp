@@ -15,8 +15,11 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 	isTargetScared = false;
 	robberyAttempts = 0;
 	robberyProgress = RobberyProgress::NONE;
-	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	stash = NULL;
+	Vector3 stashPos = toVector3(-345.296, 1362.1, 158.634);
+	campProps.push_back(stash);
+	campProps.push_back(createProp("p_moneystack01x", stashPos));
+	campProps.push_back(createProp("p_moneystack01x", stashPos));
 }
 
 void AndrewClarkExecutor::update()
@@ -65,6 +68,9 @@ void AndrewClarkExecutor::prepareSet()
 {
 	isTargetAlerted = false;
 	isTargetScared = false;
+	robberyAttempts = 0;
+	robberyProgress = RobberyProgress::NONE;
+	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	wagon = createVehicle(VehicleHash::Wagon02X, toVector3(-310.107, 1360.19, 158.084), 94.2345);
 	setVehicleCargo(wagon, VehicleCargoHash::CampCargo1);
 
@@ -81,8 +87,6 @@ void AndrewClarkExecutor::prepareSet()
 	Vector3 stashPos = toVector3(-345.296, 1362.1, 158.634);
 	stash = createProp("p_boxmeddeposit01x", stashPos, 335.257);
 	campProps.push_back(stash);
-	campProps.push_back(createProp("p_moneystack01x", stashPos));
-	campProps.push_back(createProp("p_moneystack01x", stashPos));
 
 	AI::_0x524B54361229154F(target, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_SIT_GROUND"), -1, true, true, 0, true);
 }
@@ -113,6 +117,7 @@ void AndrewClarkExecutor::onTargetLocated()
 void AndrewClarkExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
+	threatPrompt->remove();
 	releaseEntitySafe(&wagon);
 
 	vector<Object>::iterator propsItr;
