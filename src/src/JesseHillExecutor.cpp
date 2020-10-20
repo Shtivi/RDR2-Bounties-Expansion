@@ -5,8 +5,8 @@ using namespace std;
 JesseHillExecutor::JesseHillExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
 	: BaseMissionExecutor(missionData, areasMgr)
 {
-	setTargetAreaRadius(130);
-	setRequiredDistanceToLocateTarget(50);
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
 	setMustBeCloseToLocate(true);
 
 	campfirePos = toVector3(-5705.996, -2390.512, 4.240256);
@@ -21,6 +21,23 @@ void JesseHillExecutor::update()
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
 	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 lastImpactCoords;
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) || WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(*pedItr, 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
 
 	enemiesGroup->update(); // Update the group to keep it working
 
@@ -32,6 +49,8 @@ void JesseHillExecutor::update()
 		}
 		if (distanceBetweenEntities(target, player) > 120)
 		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
 			fail("Bounty failed, target lost");
 		}
 	}
@@ -40,28 +59,50 @@ void JesseHillExecutor::update()
 void JesseHillExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
-
-	this->horse = createPed("A_C_Horse_Turkoman_Gold", toVector3(-5695.089, -2379.958, 4.456663));
 	addHorse(horse);
-	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-5693.293, -2376.194, 5.328225));
-	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5687.966, -2379.522, 3.616471));
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-5693.293, -2376.194, 4.328225));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-5687.966, -2379.522, 2.616471));
 
 	// Now just add the enemies to the group to make them be controlled by it
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5711.004, -2391.769, 6.44563))); 
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5706.604, -2387.53, 5.327281)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5701.083, -2383.894, 4.922241)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5698.187, -2389.69, 3.816682)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5704.169, -2405.032, 4.893043)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5687.943, -2381.427, 3.032831)));
-	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5685.831, -2386.835, 2.014514)));
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello17";
+	routine1.patrolRoute.push_back(toVector3(-5703.91, -2393.14, 4.83566));
+	routine1.patrolHeading.push_back(toVector3(-5707.16, -2389.43, 5.31787));
+	routine1.patrolRoute.push_back(toVector3(-5690.99, -2382.07, 3.45468));
+	routine1.patrolHeading.push_back(toVector3(-5692.53, -2379.75, 4.19157));
+	routine1.patrolRoute.push_back(toVector3(-5685.82, -2399.27, -1.52852));
+	routine1.patrolHeading.push_back(toVector3(-5681.78, -2399.8, -2.10429));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello18";
+	routine2.patrolRoute.push_back(toVector3(-5699.14, -2421.78, 3.12039));
+	routine2.patrolHeading.push_back(toVector3(-5697.08, -2424.3, 2.88844));
+	routine2.patrolRoute.push_back(toVector3(-5686.79, -2418.78, -0.170547));
+	routine2.patrolHeading.push_back(toVector3(-5683.26, -2419.42, -0.564384));
+	routine2.patrolRoute.push_back(toVector3(-5685.52, -2405.42, -2.43268));
+	routine2.patrolHeading.push_back(toVector3(-5684.66, -2403.22, -2.55869));
+	routine2.patrolRoute.push_back(toVector3(-5700.9, -2401.41, 3.7117));
+	routine2.patrolHeading.push_back(toVector3(-5701.68, -2399.63, 4.04795));
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5711.004, -2391.769, 4.44563), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5706.604, -2387.53, 4.327281), (rand() % 90 + 180)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5701.083, -2383.894, 3.922241), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5698.187, -2389.69, 2.816682), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5704.169, -2405.032, 3.893043), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5687.943, -2381.427, 2.032831), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-5685.831, -2386.835, 1.014514), (rand() % 361)), IdlingModifier::Scout);
 	enemiesGroup->start();
 
 }
 
 Ped JesseHillExecutor::spawnTarget()
 {
-	Vector3 targetPos = toVector3(-5710.177, -2386.995, 6.257581);
-	Ped target = createPed(M_BOUNTY_TARGET, targetPos);
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-5695.089, -2379.958, 3.456663));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-5710.177, -2386.995, 5.257581);
+	Ped target = createPed(M_BOUNTY_TARGET, targetPos, (rand() % 180 + 90));
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
 	return target;
 }
 
@@ -91,7 +132,10 @@ void JesseHillExecutor::releaseUnnecessaryEntities()
 
 	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
 	{
-		releaseEntitySafe(&horse);
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
 	}
 }
 
@@ -99,7 +143,7 @@ void JesseHillExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
 
-	enemiesGroup->stop(); 
+	enemiesGroup->stop();
 	releaseEntitySafe(&campfire);
 
 	vector<Ped>::iterator pedItr;
@@ -107,14 +151,13 @@ void JesseHillExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-
 	vector<Ped>* enemyPeds = enemiesGroup->peds();
 	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
 	
-	delete enemiesGroup;
+	//delete enemiesGroup;
 }
 
 //#include "Main.h";

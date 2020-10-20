@@ -175,6 +175,7 @@ void ChesterBurnettExecutor::enterIdleMode()
 		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -227,11 +228,12 @@ void ChesterBurnettExecutor::enterCombatMode()
 			{
 				Object seq;
 				AI::OPEN_SEQUENCE_TASK(&seq);
-				AI::TASK_COMBAT_PED(target, player, 0, 16);
+				AI::TASK_COMBAT_PED(0, player, 0, 16);
 				AI::CLOSE_SEQUENCE_TASK(seq);
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 		}
@@ -248,6 +250,7 @@ void ChesterBurnettExecutor::enterCombatMode()
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
 		}
 	}
 	if (stopwatch.getElapsedSecondsRealTime() >= 4)
@@ -258,6 +261,7 @@ void ChesterBurnettExecutor::enterCombatMode()
 
 void ChesterBurnettExecutor::prepareSet()
 {
+	toleratePlayer = true;
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
 
 	addEnemy(target);

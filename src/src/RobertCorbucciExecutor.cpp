@@ -2,6 +2,169 @@
 
 using namespace std;
 
+RobertCorbucciExecutor::RobertCorbucciExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(1261.292, -419.4841, 94.66013);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void RobertCorbucciExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 lastImpactCoords;
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) || WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(*pedItr, 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void RobertCorbucciExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(1275.101, -419.3702, 95.54288));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(1273.547, -422.7119, 95.05209));
+
+	// Now just add the enemies to the group to make them be controlled by it
+
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello33";
+	routine1.patrolRoute.push_back(toVector3(1261.27, -424.035, 95.1646));
+	routine1.patrolHeading.push_back(toVector3(1261.28, -423.315, 95.3435));
+	routine1.patrolRoute.push_back(toVector3(1247.64, -430.968, 91.3554));
+	routine1.patrolHeading.push_back(toVector3(1247.06, -431.437, 91.2446));
+	routine1.patrolRoute.push_back(toVector3(1255.07, -448.731, 90.609));
+	routine1.patrolHeading.push_back(toVector3(1255.02, -449.534, 90.459));
+	routine1.patrolRoute.push_back(toVector3(1273.6, -431.62, 94.715));
+	routine1.patrolHeading.push_back(toVector3(1274.29, -430.893, 94.8848));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello34";
+	routine2.patrolRoute.push_back(toVector3(1278.27, -410.656, 96.7829));
+	routine2.patrolHeading.push_back(toVector3(1278.7, -409.83, 96.7917));
+	routine2.patrolRoute.push_back(toVector3(1266.62, -396.947, 97.1007));
+	routine2.patrolHeading.push_back(toVector3(1266.01, -396.285, 97.0948));
+	routine2.patrolRoute.push_back(toVector3(1249.98, -404.028, 96.3031));
+	routine2.patrolHeading.push_back(toVector3(1249.05, -404.336, 96.2443));
+	routine2.patrolRoute.push_back(toVector3(1254.78, -417.074, 95.4227));
+	routine2.patrolHeading.push_back(toVector3(1255.36, -417.303, 95.4064));
+
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1268.606, -415.0178, 95.63109), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1270.231, -423.3733, 94.81705), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1261.092, -426.003, 93.63454), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1250.025, -418.1788, 93.90736), 132), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1257.707, -413.5381, 96.57777), (rand() % 223 + 72)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1271.717, -438.8706, 92.89452), 279 + 117), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBronteGoons_01", toVector3(1269.097, -441.278, 92.41737), (rand() % 316 + 172)), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped RobertCorbucciExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(1274.108, -416.0844, 95.54754));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(1266.142, -414.9333, 95.9925);
+	Ped target = createPed("G_M_M_UniBronteGoons_01", targetPos, 121);
+	enemiesGroup->add(target, IdlingModifier::Scout, routine3);
+	return target;
+}
+
+void RobertCorbucciExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void RobertCorbucciExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void RobertCorbucciExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void RobertCorbucciExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void RobertCorbucciExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 45;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -135,6 +298,7 @@ void RobertCorbucciExecutor::enterIdleMode()
 		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -199,6 +363,7 @@ void RobertCorbucciExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 			else if (iSecret == 2)
@@ -210,6 +375,7 @@ void RobertCorbucciExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 		}
@@ -222,6 +388,7 @@ void RobertCorbucciExecutor::enterCombatMode()
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
 		}
 	}
 }
@@ -334,4 +501,4 @@ void RobertCorbucciExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

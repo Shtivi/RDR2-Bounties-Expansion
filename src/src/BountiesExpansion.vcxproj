@@ -12,11 +12,16 @@
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="Autosave.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
-    <ClCompile Include="ChesterBurnettExecutor.cpp" />
+    <ClCompile Include="ChrisJaniceExecutor.cpp" />
     <ClCompile Include="ClintonvonHagenExecutor.cpp" />
+    <ClCompile Include="CullenBakerExecutor.cpp" />
+    <ClCompile Include="EmmettDavisExecutor.cpp" />
     <ClCompile Include="GenericGuardingBehavior.cpp" />
+    <ClCompile Include="GeorgeCoenExecutor.cpp" />
     <ClCompile Include="GuardsGroup.cpp" />
     <ClCompile Include="GushkalaInataExecutor.cpp" />
+    <ClCompile Include="HankEnepayExecutor.cpp" />
+    <ClCompile Include="HarperConnorExecutor.cpp" />
     <ClCompile Include="JaneBullionExecutor.cpp" />
     <ClCompile Include="JesseHillExecutor.cpp" />
     <ClCompile Include="blips.cpp" />
@@ -24,7 +29,6 @@
     <ClCompile Include="BountiesMenu.cpp" />
     <ClCompile Include="BountyMissionsFactory.cpp" />
     <ClCompile Include="Conversation.cpp" />
-    <ClCompile Include="ConversationLine.cpp" />
     <ClCompile Include="Delay.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
     <ClCompile Include="ExecuteVictimInteraction.h" />
@@ -32,15 +36,24 @@
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="HelpMessages.cpp" />
     <ClCompile Include="JacobSeedExecutor.cpp" />
+    <ClCompile Include="JohnBullExecutor.cpp" />
+    <ClCompile Include="JohnEastwoodExecutor.cpp" />
+    <ClCompile Include="JoseChavezExecutor.cpp" />
     <ClCompile Include="JuanCortezExecutor.cpp" />
+    <ClCompile Include="JustusBarnesExecutor.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MapArea.cpp" />
     <ClCompile Include="MapAreasManager.cpp" />
+    <ClCompile Include="MarquisRussellExecutor.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="MikeSandersExecutor.cpp" />
     <ClCompile Include="ModProgress.cpp" />
+    <ClCompile Include="NateNashobaExecutor.cpp" />
+    <ClCompile Include="PanchoDanielExecutor.cpp" />
     <ClCompile Include="Ped.cpp" />
     <ClCompile Include="PedBehavior.cpp" />
+    <ClCompile Include="PeteEatonExecutor.cpp" />
     <ClCompile Include="Prompt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="AttachedRopesHandling.cpp" />
@@ -57,7 +70,9 @@
     <ClCompile Include="TurkishRunnerExecutor.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Vehicles.cpp" />
+    <ClCompile Include="WallaceKnoxExecutor.cpp" />
     <ClCompile Include="Weapons.cpp" />
+    <ClCompile Include="WilliamRogersExecutor.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -70,12 +85,24 @@
     <ClInclude Include="AttachedRope.h" />
     <ClInclude Include="Autosave.h" />
     <ClInclude Include="BaseMissionExecutor.h" />
+    <ClInclude Include="BillyWilsonExecutor.h" />
+    <ClInclude Include="BobLaneExecutor.h" />
+    <ClInclude Include="BuckHicoxExecutor.h" />
+    <ClInclude Include="BufordDukeExecutor.h" />
+    <ClInclude Include="CarlMartinExecutor.h" />
+    <ClInclude Include="CharlesMoonExecutor.h" />
     <ClInclude Include="ChesterBurnettExecutor.h" />
+    <ClInclude Include="ChrisJaniceExecutor.h" />
     <ClInclude Include="ClintonvonHagenExecutor.h" />
+    <ClInclude Include="CullenBakerExecutor.h" />
+    <ClInclude Include="EmmettDavisExecutor.h" />
     <ClInclude Include="GenericGuardingBehavior.h" />
+    <ClInclude Include="GeorgeCoenExecutor.h" />
     <ClInclude Include="GuardingDefinitions.h" />
     <ClInclude Include="GuardsGroup.h" />
     <ClInclude Include="GushkalaInataExecutor.h" />
+    <ClInclude Include="HankEnepayExecutor.h" />
+    <ClInclude Include="HarperConnorExecutor.h" />
     <ClInclude Include="JaneBullionExecutor.h" />
     <ClInclude Include="JesseHillExecutor.h" />
     <ClInclude Include="blips.h" />
@@ -88,15 +115,24 @@
     <ClInclude Include="EliasTraditionExecutor.h" />
     <ClInclude Include="GUIDrawer.h" />
     <ClInclude Include="JacobSeedExecutor.h" />
+    <ClInclude Include="JohnBullExecutor.h" />
+    <ClInclude Include="JohnEastwoodExecutor.h" />
+    <ClInclude Include="JoseChavezExecutor.h" />
     <ClInclude Include="JuanCortezExecutor.h" />
+    <ClInclude Include="JustusBarnesExecutor.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MapArea.h" />
     <ClInclude Include="MapAreasManager.h" />
+    <ClInclude Include="MarquisRussellExecutor.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="MikeSandersExecutor.h" />
     <ClInclude Include="ModProgress.h" />
+    <ClInclude Include="NateNashobaExecutor.h" />
+    <ClInclude Include="PanchoDanielExecutor.h" />
     <ClInclude Include="Ped.h" />
     <ClInclude Include="PedBehavior.h" />
+    <ClInclude Include="PeteEatonExecutor.h" />
     <ClInclude Include="Prompt.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="AttachedRopesHanding.h" />
@@ -111,7 +147,9 @@
     <ClInclude Include="TurkishRunnerExecutor.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vehicles.h" />
+    <ClInclude Include="WallaceKnoxExecutor.h" />
     <ClInclude Include="Weapons.h" />
+    <ClInclude Include="WilliamRogersExecutor.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -139,7 +177,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <OutDir>F:\Program Files\Rockstar Games\Red Dead Redemption 2</OutDir>
+    <OutDir>..\..</OutDir>
     <IntDir>tmp\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

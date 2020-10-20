@@ -16,6 +16,7 @@ private:
 	MapArea* createBlackwater();
 	MapArea* createRhodes();
 	MapArea* createValentine();
+	MapArea* createStrawberry();
 	MapArea* createTumbleweed();
 	MapArea* createArmadillo();
 	MapArea* createSaintDenis();

@@ -1,7 +1,7 @@
 #pragma once
 
 const int AREA_RADIUS = 90;
-const int REQUIRED_DIST_TO_LOCATE = 25;
+const int REQUIRED_DIST_TO_LOCATE = 20;
 
 class BaseMissionExecutor
 {
@@ -14,24 +14,31 @@ private:
 
 	int requiredDistanceToLocate;
 	bool mustBeCloseToLocate;
+	bool seen;
+	bool stopped;
 	int targetAreaRadius;
+	bool spawnedBountyHunters;
+	int spawnchance;
 
 	Object poster;
+	Object dummyProp;
 	Blip posterBlip;
 	Blip targetAreaBlip;
 	Blip policeLocBlip;
 	Blip cellBlip;
 	Blip targetBlip;
+	vector<Ped> bountyHunters;
+	vector<Ped> bountyhorses;
 
 protected:
 	Ped target;
 
 public:
 	BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
-
 	BountyMissionData* getMissionData();
 	BountyMissionStage getMissionStage();
 	BountyMissionStatus getMissionStatus();
+	void releaseEntitySafe(Entity* entity);
 	void setMissionStatus(BountyMissionStatus status);
 	virtual void update();
 
@@ -59,4 +66,7 @@ protected:
 
 private:
 	void decorateTarget();
+	void spawnBountyHunters();
+	void addBountyHunter(Ped horse, bool isDriver);
+	void releaseUnnecessaryEntities();
 };

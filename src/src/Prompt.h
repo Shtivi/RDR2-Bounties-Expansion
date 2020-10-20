@@ -34,6 +34,7 @@ class Prompt
 		void setMode(PromptMode mode);
 
 		bool isActivatedByPlayer();
+		void remove();
 		void show();
 		void hide();
 

@@ -15,7 +15,6 @@ GenericGuardingBehavior::GenericGuardingBehavior(Ped ped, Vector3 defensePositio
 	: GenericGuardingBehavior(ped, defensePosition, radius, shouldTolerate, idlingModifier)
 {
 	this->routineParams = routineParams;
-	
 	if (bodiesFound)
 	{
 		this->bodiesFound = bodiesFound;;
@@ -30,9 +29,10 @@ GenericGuardingBehavior::GenericGuardingBehavior(Ped ped, Vector3 defensePositio
 void GenericGuardingBehavior::start(bool withBlip)
 {
 	PedBehavior::start();
+	PED::SET_PED_RELATIONSHIP_GROUP_HASH(ped(), GAMEPLAY::GET_HASH_KEY("REL_CRIMINALS"));
 	setMode(TensionMode::Idle);
+	restpos = false;
 	enterIdleMode();
-
 	if (withBlip)
 	{
 		addEnemyBlip();
@@ -56,11 +56,11 @@ void GenericGuardingBehavior::update()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	float distanceFromGuard = distanceBetweenEntities(ped(), player);
 	float distanceFromCenter = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 0), getDefensePosition());
-
+	//displayDebugText(to_string(bullet).c_str());
 	switch (mode)
 	{
 	case TensionMode::Idle:
-		if (distanceFromCenter <= GUARD_SUSPECT_RANGE + radius && isPlayerWithinLos())
+		if (distanceFromCenter <= GUARD_SUSPECT_RANGE + radius && isPlayerWithinLos() || distanceFromGuard <= GUARD_SUSPECT_RANGE && ENTITY::GET_ENTITY_SPEED(player) >= 1.75/GUARD_SUSPECT_RANGE * distanceFromGuard + 2 && (AI::IS_PED_RUNNING(player) || AI::IS_PED_SPRINTING(player) || AI::IS_PED_WALKING(player) || PED::IS_PED_ON_MOUNT(player)))
 		{
 			if (shouldTolerate())
 			{
@@ -85,7 +85,11 @@ void GenericGuardingBehavior::update()
 				enterCombatMode();
 			}
 		}
-		else if (distanceFromCenter >= GUARD_IDLE_RANGE + radius)
+		if (isPlayerWithinLos() && PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()))
+		{
+			enterCombatMode();
+		}
+		else if (distanceFromGuard >= GUARD_IDLE_RANGE + radius)
 		{
 			stopwatch.stop();
 			enterIdleMode();
@@ -95,7 +99,7 @@ void GenericGuardingBehavior::update()
 	case TensionMode::Warn:
 		if (stopwatch.getElapsedSecondsRealTime() >= 4)
 		{
-			if (distanceFromCenter >= GUARD_SUSPECT_RANGE + radius)
+			if (distanceFromGuard >= GUARD_SUSPECT_RANGE + radius)
 			{
 				setShouldTolerate(false);
 				stopwatch.stop();
@@ -106,16 +110,24 @@ void GenericGuardingBehavior::update()
 				enterCombatMode();
 			}
 		}
+		if (isPlayerWithinLos() && PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()))
+		{
+			enterCombatMode();
+		}
 		break;
 
 	case TensionMode::Alerted:
-		if (isPlayerWithinLos())
+		if (isPlayerWithinLos() || distanceFromGuard <= GUARD_SUSPECT_RANGE && ENTITY::GET_ENTITY_SPEED(player) >= 1.75/GUARD_SUSPECT_RANGE * distanceFromGuard + 2 && (AI::IS_PED_RUNNING(player) || AI::IS_PED_SPRINTING(player) || AI::IS_PED_WALKING(player) || PED::IS_PED_ON_MOUNT(player)))
 		{
 			enterCombatMode();
 		}
 		else
 		{
 			detectHighProfileEventAround();
+		}
+		if (isPlayerWithinLos() && PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID()))
+		{
+			enterCombatMode();
 		}
 		break;
 
@@ -126,7 +138,7 @@ void GenericGuardingBehavior::update()
 		}
 		else if (stopwatch.getElapsedSecondsRealTime() >= GUARD_SEARCH_DURATION_SECS)
 		{
-			showSubtitle("stopped searching");
+			//showSubtitle("stopped searching");
 			stopwatch.stop();
 			enterAlertedMode();
 		}
@@ -138,47 +150,111 @@ void GenericGuardingBehavior::update()
 
 	if (getMode() < TensionMode::Combat)
 	{
-		Vector3 lastImpactCoords;
-
-		if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) &&
-			distanceBetween(ENTITY::GET_ENTITY_COORDS(ped(), 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE &&
-			PED::IS_PED_SHOOTING(player))
+		auto bow = new Hash;
+		Vector3 bob = ENTITY::GET_ENTITY_COORDS(ped(), 1, 0);
+		if (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(bob.x, bob.y, bob.z, 15, true, true))
 		{
-			if (distanceFromGuard <= GUARD_SEEING_RANGE)
+			enterCombatMode();
+		}
+
+		else if (distanceFromGuard <= GUARD_HEARING_RANGE && PED::IS_PED_SHOOTING(player) && WEAPON::GET_CURRENT_PED_WEAPON(player, bow, 0, 0, 1))
+		{
+			if (*bow != WeaponBow)
 			{
 				enterCombatMode();
 			}
-			else
-			{
-				enterSearchMode(ENTITY::GET_ENTITY_COORDS(ped(), 1, 0));
-			}
 		}
-		else if ((distanceFromGuard <= GUARD_HEARING_RANGE && PED::IS_PED_SHOOTING(player)) || 
-				 ((distanceFromCenter <= GUARD_COMBAT_RANGE + radius || PLAYER::IS_PLAYER_FREE_AIMING(player)) && isPlayerWithinLos()))
+		else if (((distanceFromCenter <= GUARD_COMBAT_RANGE + radius || PLAYER::IS_PLAYER_FREE_AIMING(player)) && isPlayerWithinLos()))
 		{
 			enterCombatMode();
 		}
 	}
+	/*if (getIdlingModifier() == IdlingModifier::Patrol && getMode() == TensionMode::Idle || getIdlingModifier() == IdlingModifier::Patrol && getMode() == TensionMode::Alerted)
+	{
+		if (!AI::IS_PED_STILL(ped()))
+		{
+			applepie = true;
+			stopwatch.start();
+		}
+		if (applepie == true && AI::IS_PED_STILL(ped()) && stopwatch.getElapsedSecondsRealTime() >= 1.2)
+		{
+			stopwatch.stop();
+			Object seq;
+			AI::OPEN_SEQUENCE_TASK(&seq);
+			//AI::TASK_STAND_STILL(0, 4000);
+			AI::TASK_PATROL(0, "miss_brob1_patrolLM02", 1, 1, 1);
+			AI::CLOSE_SEQUENCE_TASK(seq);
+			AI::TASK_PERFORM_SEQUENCE(ped(), seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
+			applepie = false;
+		}
+	}*/
 }
 
 void GenericGuardingBehavior::routine()
 {
 	AI::CLEAR_PED_TASKS(ped(), 1, 1);
-	if (getIdlingModifier() == IdlingModifier::Scout)
+	switch (idlingModifier)
 	{
+	case IdlingModifier::Rest:
+		rest();
+		break;
+
+	case IdlingModifier::Scout:
 		scout();
+		break;
+
+	case IdlingModifier::Patrol:
+		patrol();
+		break;
+	}
+}
+
+void GenericGuardingBehavior::rest()
+{
+	Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(ped(), 1, 0);
+	float currentHeading = ENTITY::GET_ENTITY_HEADING(ped());
+	if (routineParams.isTarget == true && restpos == false)
+	{
+		routineParams.scoutPosition = currentPosition;
+		routineParams.scoutHeading = currentHeading;
+		restpos = true;
+	}
+	if (distanceBetween(routineParams.scoutPosition, toVector3(0, 0, 0)) != 0)
+	{
+		rest(routineParams.scoutPosition, routineParams.scoutHeading);
 	}
 	else
 	{
-		patrol();
+		rest(currentPosition, currentHeading);
 	}
+}
+
+void GenericGuardingBehavior::rest(Vector3 scoutPosition, float heading)
+{
+	this->routineParams.scoutPosition = scoutPosition;
+	this->routineParams.scoutHeading = heading;
+	setIdlingModifier(IdlingModifier::Rest);
+
+	Object seq;
+	AI::OPEN_SEQUENCE_TASK(&seq);
+	AI::TASK_GO_TO_COORD_ANY_MEANS(0, scoutPosition.x, scoutPosition.y, scoutPosition.z, 1.0f, 0, 0, 1, 0);
+	AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(generateRestingScenario()), -1, true, true, 0, true); // PLAY SCENARIO
+	AI::CLOSE_SEQUENCE_TASK(seq);
+	AI::TASK_PERFORM_SEQUENCE(ped(), seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 }
 
 void GenericGuardingBehavior::scout()
 {
 	Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(ped(), 1, 0);
 	float currentHeading = ENTITY::GET_ENTITY_HEADING(ped());
-
+	if (routineParams.isTarget == true && restpos == false)
+	{
+		routineParams.scoutPosition = currentPosition;
+		routineParams.scoutHeading = currentHeading;
+		restpos = true;
+	}
 	if (distanceBetween(routineParams.scoutPosition, toVector3(0,0,0)) != 0)
 	{
 		scout(routineParams.scoutPosition, routineParams.scoutHeading);
@@ -202,11 +278,12 @@ void GenericGuardingBehavior::scout(Vector3 scoutPosition, float heading)
 	//AI::_0x524B54361229154F(0, GAMEPLAY::GET_HASH_KEY(generateScoutingScenario()), -1, true, true, 0, true); // PLAY SCENARIO
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(ped(), seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 }
 
 void GenericGuardingBehavior::patrol()
 {
-	if (routineParams.patrolRoute.size() == 0)
+	/*if (routineParams.patrolRoute.size() == 0)
 	{
 		vector<Vector3> nodes;
 		nodes.push_back(getRandomPedPositionInRange(defensePosition, radius));
@@ -215,37 +292,38 @@ void GenericGuardingBehavior::patrol()
 		patrol(nodes);
 	}
 	else
-	{
-		patrol(routineParams.patrolRoute);
-	}
+	{*/
+		patrol(routineParams.patrolRoute, routineParams.patrolHeading);
+	//}
 }
 
-void GenericGuardingBehavior::patrol(vector<Vector3> nodes)
+void GenericGuardingBehavior::patrol(vector<Vector3> nodes, vector<Vector3> hodes)
 {
 	this->routineParams.patrolRoute = nodes;
-
+	this->routineParams.patrolHeading = hodes;
 	int i = 0;
 	vector<Vector3>::iterator itr = nodes.begin();
-	AI::OPEN_PATROL_ROUTE("miss_brob1_patrolLM02");
-	while (itr != nodes.end())
+	vector<Vector3>::iterator ith = hodes.begin();
+	AI::OPEN_PATROL_ROUTE(routineParams.patrolName);
+	while (itr != nodes.end() && ith != hodes.end())
 	{
-		AI::ADD_PATROL_ROUTE_NODE(i, generateScoutingScenario(), (*itr).x, (*itr).y, (*itr).z, 0, 0, 0, GAMEPLAY::GET_RANDOM_INT_IN_RANGE(4000, 8000), 0);
-		
+		AI::ADD_PATROL_ROUTE_NODE(i, generateScoutingScenario(), (*itr).x, (*itr).y, (*itr).z, (*ith).x, (*ith).y, (*ith).z, GAMEPLAY::GET_RANDOM_INT_IN_RANGE(4000, 8000), 0);
 		if (i + 1 < nodes.size())
 		{
-			AI::ADD_PATROL_ROUTE_LINK(i, i+1);
+			AI::ADD_PATROL_ROUTE_LINK(i, i + 1);
 		}
 		else
 		{
 			AI::ADD_PATROL_ROUTE_LINK(i, 0);
 		}
-		
+
 		i++;
 		itr++;
+		ith++;
 	}
 	AI::CLOSE_PATROL_ROUTE();
 	AI::CREATE_PATROL_ROUTE();
-	AI::TASK_PATROL(ped(), "miss_brob1_patrolLM02", 1, 1, 1);
+	AI::TASK_PATROL(ped(), routineParams.patrolName, 1, false, true);
 	setIdlingModifier(IdlingModifier::Patrol);
 }
 
@@ -335,6 +413,13 @@ bool GenericGuardingBehavior::isPlayerWithinLos()
 	return /*(distanceFromCenter <= GUARD_IDLE_RANGE + radius) && */(distanceFromGuard <= GUARD_SEEING_RANGE) && hasLos;
 }
 
+char* GenericGuardingBehavior::generateRestingScenario()
+{
+	int scenarioIdx = rndInt(0, RESTING_SCENARIOS_NUM - 1);
+	const char* scenario = RESTING_SCENARIO_NAMES[scenarioIdx];
+	return (char*)scenario;
+}
+
 char* GenericGuardingBehavior::generateScoutingScenario()
 {
 	int scenarioIdx = rndInt(0, SCOUTING_SCENARIOS_NUM - 1);
@@ -346,7 +431,24 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 {
 	HighProfileEvents event = HighProfileEvents::None;
 	Vector3 eventOrigin;
+	Ped player = PLAYER::PLAYER_PED_ID();
 
+	vector<Ped> nearbyBeds = getNearbyPeds(ped(), 20, -1);
+	vector<Ped>::iterator ytr = nearbyBeds.begin();
+	while (ytr != nearbyBeds.end() && event == HighProfileEvents::None)
+	{
+		Vector3 lastImpactCoords;
+		if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(ped(), 1, 0), lastImpactCoords) <= 13)
+		{
+			if (!ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(*ytr, ped(), 1) || distanceBetweenEntities(ped(), *ytr) <= GUARD_COMBAT_RANGE)
+			{
+				event = HighProfileEvents::Generic;
+				eventOrigin = ENTITY::GET_ENTITY_COORDS(player, 1, 1);
+			}
+		}
+
+		ytr++;
+	}
 	vector<Ped> nearbyPeds = getNearbyDeadBodies(ped(), 20, GUARD_SEEING_RANGE);
 	vector<Ped>::iterator itr = nearbyPeds.begin();
 	while (itr != nearbyPeds.end() && event == HighProfileEvents::None)
@@ -361,6 +463,7 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 		itr++;
 	}
 
+	//|| ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(ped(), player, false, false)
 	itr = nearbyPeds.begin();
 	while (itr != nearbyPeds.end())
 	{
@@ -376,7 +479,7 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 		playAmbientSpeech(ped(), "FOUND_BODY");
 		break;
 	case HighProfileEvents::Generic:
-		playAmbientSpeech(ped(), "WHAT_IS_THAT");
+		playAmbientSpeech(ped(), "WHO_GOES_THERE");
 		break;
 	default:
 		break;
@@ -401,6 +504,7 @@ void GenericGuardingBehavior::enterIdleMode()
 
 void GenericGuardingBehavior::enterSuspectionMode()
 {
+	PED::_0xFE07FF6495D52E2A(ped(), 0, 0, 0);
 	AI::TASK_TURN_PED_TO_FACE_ENTITY(ped(), PLAYER::PLAYER_PED_ID(), -1, 0, 0, 0);
 	stopwatch.start();
 
@@ -434,6 +538,7 @@ void GenericGuardingBehavior::enterWarningMode()
 
 void GenericGuardingBehavior::enterSearchMode(Vector3 aroundWhere, float searchRadius)
 {
+	PED::_0xFE07FF6495D52E2A(ped(), 0, 0, 0);
 	AI::CLEAR_PED_TASKS(ped(), 1, 1);
 	pedEquipBestWeapon(ped());
 
@@ -449,6 +554,7 @@ void GenericGuardingBehavior::enterSearchMode(Vector3 aroundWhere, float searchR
 
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(ped(), seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 
 	setMode(TensionMode::Search);
 	stopwatch.start();
@@ -456,16 +562,36 @@ void GenericGuardingBehavior::enterSearchMode(Vector3 aroundWhere, float searchR
 
 void GenericGuardingBehavior::enterCombatMode()
 {
+	PED::_0xFE07FF6495D52E2A(ped(), 0, 0, 0);
 	setMode(TensionMode::Combat);
+	pedEquipBestWeapon(ped());
 
 	Ped player = PLAYER::PLAYER_PED_ID();
-	if (!PED::IS_PED_IN_COMBAT(ped(), player))
+	if (!PED::IS_PED_IN_COMBAT(ped(), player) && routineParams.isTarget == true)
 	{
-		PED::_0xFE07FF6495D52E2A(ped(), 0, 0, 0);
+		int iSecret = rand() % 2 + 1;
+		if (iSecret == 1)
+		{
+			Object seq;
+			AI::OPEN_SEQUENCE_TASK(&seq);
+			AI::_0x92DB0739813C5186(0, routineParams.Horse, -1, -1, 2.0f, 1, 0, 0);
+			AI::_0xFD45175A6DFD7CE9(0, player, 3, 0, -999.0f, -1, 0); // FLEE
+			AI::CLOSE_SEQUENCE_TASK(seq);
+
+			AI::CLEAR_PED_TASKS(ped(), 1, 1);
+			AI::TASK_PERFORM_SEQUENCE(ped(), seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
+		}
+		else if (iSecret == 2)
+		{
+			AI::TASK_COMBAT_PED(ped(), player, 0, 16);
+		}
+	}
+	else if (!PED::IS_PED_IN_COMBAT(ped(), player))
+	{
 		AI::TASK_COMBAT_PED(ped(), player, 0, 16);
 	}
 	playAmbientSpeech(ped(), "GET_SUSPECT_MALE");
-	addEnemyBlip();
 }
 
 void GenericGuardingBehavior::setMode(TensionMode mode)

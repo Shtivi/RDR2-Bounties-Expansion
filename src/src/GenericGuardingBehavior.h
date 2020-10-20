@@ -3,12 +3,15 @@
 const float GUARD_IDLE_RANGE = 20;
 const float GUARD_SUSPECT_RANGE = 15;
 const float GUARD_COMBAT_RANGE = 6;
-const float GUARD_SEARCH_DURATION_SECS = 10;
-const float GUARD_SEEING_RANGE = 28;
+const float GUARD_SEARCH_DURATION_SECS = 12;
+const float GUARD_SEEING_RANGE = 40;
 const float GUARD_HEARING_RANGE = 35;
 
+const int RESTING_SCENARIOS_NUM = 3;
+const char* const RESTING_SCENARIO_NAMES[RESTING_SCENARIOS_NUM] = { "WORLD_HUMAN_SIT_GROUND", "WORLD_HUMAN_SIT_SMOKE", "WORLD_HUMAN_SIT_GROUND_COFFEE_DRINK" };
+
 const int SCOUTING_SCENARIOS_NUM = 3;
-const char* const SCOUTING_SCENARIO_NAMES[SCOUTING_SCENARIOS_NUM] = { "WORLD_HUMAN_GUARD_LAZY", "WORLD_HUMAN_SMOKE", "WORLD_HUMAN_GUARD_SCOUT" };
+const char* const SCOUTING_SCENARIO_NAMES[SCOUTING_SCENARIOS_NUM] = { "WORLD_HUMAN_GUARD_LAZY_MALE_B", "WORLD_HUMAN_SMOKE", "WORLD_HUMAN_GUARD_SCOUT" };
 
 class GenericGuardingBehavior : public PedBehavior
 {
@@ -17,6 +20,9 @@ private:
 	float radius;
 	TensionMode mode;
 	bool _shouldTolerate;
+	bool restpos;
+	bool test;
+	Vector3 lastImpactCoords;
 	IdlingModifier idlingModifier;
 	RoutineParams routineParams;
 	set<Ped>* bodiesFound;
@@ -31,10 +37,12 @@ public:
 	virtual void update();
 	virtual void stop();
 	void routine();
+	void rest();
+	void rest(Vector3 scoutPosition, float heading);
 	void scout();
 	void scout(Vector3 scoutPosition, float heading);
 	void patrol();
-	void patrol(vector<Vector3> nodes);
+	void patrol(vector<Vector3> nodes, vector<Vector3> hodes);
 	void alert();
 	void search();
 	void search(Vector3 aroundWhere, float radius = GUARD_SUSPECT_RANGE);
@@ -49,6 +57,7 @@ protected:
 	bool shouldTolerate();
 	void setShouldTolerate(bool flag);
 	IdlingModifier getIdlingModifier();
+	char* generateRestingScenario();
 	char* generateScoutingScenario();
 	bool isPlayerWithinLos();
 	void detectHighProfileEventAround();
