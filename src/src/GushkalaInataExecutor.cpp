@@ -148,6 +148,7 @@ void GushkalaInataExecutor::enterIdleMode()
 		AI::_0x17293C633C8AC019(target, true, 0, true);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -195,6 +196,7 @@ void GushkalaInataExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 			}
 		}
 	}
@@ -202,6 +204,7 @@ void GushkalaInataExecutor::enterCombatMode()
 
 void GushkalaInataExecutor::prepareSet()
 {
+	toleratePlayer = true;
 	addEnemy(target);
 
 	enterIdleMode();

@@ -2,6 +2,166 @@
 
 using namespace std;
 
+RichardMooreExecutor::RichardMooreExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(75);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-4391.213, -2167.451, 47.74528);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void RichardMooreExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 lastImpactCoords;
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) || WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(*pedItr, 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void RichardMooreExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-4404.028, -2181.011, 47.76351));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-4401.42, -2177.604, 48.19514));
+
+	// Now just add the enemies to the group to make them be controlled by it
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello27";
+	routine2.patrolRoute.push_back(toVector3(-4391.01, -2156.58, 55.2562));
+	routine2.patrolHeading.push_back(toVector3(-4390.68, -2157.18, 55.1546));
+	routine2.patrolRoute.push_back(toVector3(-4394.61, -2167.36, 49.3707));
+	routine2.patrolHeading.push_back(toVector3(-4393.72, -2167.41, 49.0214));
+	routine2.patrolRoute.push_back(toVector3(-4385.39, -2166.51, 48.9786));
+	routine2.patrolHeading.push_back(toVector3(-4384.85, -2167.32, 48.9884));
+	routine2.patrolRoute.push_back(toVector3(-4397.73, -2173.81, 48.2831));
+	routine2.patrolHeading.push_back(toVector3(-4398.71, -2174.31, 48.5151));
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4385.336, -2173.381, 44.14293), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4394.518, -2170.475, 47.59334), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4392.3, -2163.881, 48.14744), 189.82), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4405.135, -2169.746, 51.81371), (rand() % 295 + 147)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4385.955, -2153.212, 54.88373), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4395.487, -2160.891, 47.30305), (rand() % 361)), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_M_UniBanditos_01", toVector3(-4395.47, -2157.159, 55.40608), (rand() % 264 + 136)), IdlingModifier::Scout);
+	enemiesGroup->start();
+}
+
+Ped RichardMooreExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-4407.01, -2182.397, 47.9128));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	routine3.patrolName = "miss_bandito12";
+	routine3.patrolRoute.push_back(toVector3(-4388.74, -2160, 49.7543));
+	routine3.patrolHeading.push_back(toVector3(-4389.15, -2159.25, 49.7804));
+	routine3.patrolRoute.push_back(toVector3(-4403.21, -2169.58, 52.3119));
+	routine3.patrolHeading.push_back(toVector3(-4403.66, -2170.08, 52.4058));
+	routine3.patrolRoute.push_back(toVector3(-4391.63, -2157.8, 55.081));
+	routine3.patrolHeading.push_back(toVector3(-4391.02, -2157.8, 55.0612));
+	routine3.patrolRoute.push_back(toVector3(-4402.34, -2163.1, 57.1519));
+	routine3.patrolHeading.push_back(toVector3(-4402.74, -2163.93, 57.1174));
+	Vector3 targetPos = toVector3(-4388.753, -2161.34, 48.57555);
+	Ped target = createPed(M_BOUNTY_TARGET, targetPos, (rand() % 361));
+	enemiesGroup->add(target, IdlingModifier::Patrol, routine3);
+	return target;
+}
+
+void RichardMooreExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void RichardMooreExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void RichardMooreExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void RichardMooreExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void RichardMooreExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 45;
 const int ALERT_DIST = 35;
 const int WARN_DIST = 30;
@@ -133,6 +293,7 @@ void RichardMooreExecutor::enterIdleMode()
 		AI::TASK_TURN_PED_TO_FACE_COORD(*pedItr, campfirePos.x, campfirePos.y, campfirePos.z, 0);
 		AI::CLOSE_SEQUENCE_TASK(seq);
 		AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
 	}
 
 	enemiesStatus = EnemiesMode::IDLE;
@@ -197,6 +358,7 @@ void RichardMooreExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 			else if (iSecret == 2)
@@ -208,6 +370,7 @@ void RichardMooreExecutor::enterCombatMode()
 
 				AI::CLEAR_PED_TASKS(target, 1, 1);
 				AI::TASK_PERFORM_SEQUENCE(target, seq);
+				AI::CLEAR_SEQUENCE_TASK(&seq);
 				playAmbientSpeech(target, "ITS_MALE_EXTREME");
 			}
 		}
@@ -220,6 +383,7 @@ void RichardMooreExecutor::enterCombatMode()
 
 			AI::CLEAR_PED_TASKS(*pedItr, 1, 1);
 			AI::TASK_PERFORM_SEQUENCE(*pedItr, seq);
+			AI::CLEAR_SEQUENCE_TASK(&seq);
 		}
 	}
 }
@@ -332,4 +496,4 @@ void RichardMooreExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

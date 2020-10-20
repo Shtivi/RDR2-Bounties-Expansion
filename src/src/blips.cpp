@@ -3,7 +3,7 @@
 Blip createBlip(Vector3 pos, Hash blipType, Hash blipSprite)
 {
 	Blip blip;
-	Object dummyProp = createProp("p_shotGlass01x", pos, true, false);
+	Object dummyProp = createProp("p_shotGlass01x", pos, true, false, false);
 
 	blip = RADAR::_0x23F74C2FDA6E7C61(blipType, dummyProp); // Add blip for dummy prop
 	if (blipSprite != 0)

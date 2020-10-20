@@ -14,9 +14,7 @@ BountyMissionsFactory* missionsFactory;
 BountiesManager* bountiesMgr;
 
 
-
-GuardsGroup* group;
-Ped temp = 0;
+//Ped temp = 0;
 
 void initialize()
 {
@@ -41,42 +39,10 @@ void main()
 		menu->update();
 		printHelpMessage();
 
-		if (group)
-		{
-			group->update();
-		}
-
-		if (temp && ENTITY::DOES_ENTITY_EXIST(temp) && !ENTITY::IS_ENTITY_DEAD(temp))
+		/*if (temp && ENTITY::DOES_ENTITY_EXIST(temp) && !ENTITY::IS_ENTITY_DEAD(temp))
 		{
 			displayDebugText(to_string(AI::GET_SEQUENCE_PROGRESS(temp)).c_str());
-		}
-
-		if (IsKeyJustUp(VK_KEY_Z))
-		{
-			if (group)
-			{
-				group->stop();
-				delete group;
-			}
-
-			Ped player = PLAYER::PLAYER_PED_ID();
-			Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-			Vector3 forwardVec = ENTITY::GET_ENTITY_FORWARD_VECTOR(player);
-			Vector3 pos = playerPos + forwardVec * 60;
-			getGroundPos(&pos);
-			group = new GuardsGroup(toVector3(1117.49, -1988.06, 54.3471), 25);
-			
-			Ped ped1 = createPed("g_m_y_uniexconfeds_01", toVector3(1107.74, -1984.7, 53.8183));
-			Ped ped2 = createPed("g_m_y_uniexconfeds_01", toVector3(1122.45, -1984.45, 53.0666));
-			group->add(ped1, IdlingModifier::Scout);
-
-			RoutineParams routine2;
-			routine2.patrolRoute.push_back(toVector3(1114.12, -1983.69, 53.9669));
-			routine2.patrolRoute.push_back(toVector3(1120.18, -1982.46, 53.348));
-			routine2.patrolRoute.push_back(toVector3(1125.8, -1990.2, 52.0249));
-			group->add(ped2, IdlingModifier::Patrol, routine2);
-			WAIT(1000);
-			group->start();
+		}*/
 
 			//Vector3 vehPos = playerPos + (forwardVec * 5);
 			//Ped ped = createPed("g_m_y_uniexconfeds_01", vehPos);
@@ -119,12 +85,21 @@ void main()
 			{
 				log("didnt hit");
 			}*/
-		}
 
-		else if (IsKeyJustUp(VK_KEY_X))
-		{
-			Ped player = PLAYER::PLAYER_PED_ID();
-			ENTITY::SET_ENTITY_HEALTH(player, PED::GET_PED_MAX_HEALTH(player), 0);
+		//if (IsKeyJustUp(VK_KEY_X))
+		//{
+		//	Ped player = PLAYER::PLAYER_PED_ID();
+		//	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+		//	float ground;
+		//	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
+		//	std::stringstream output;
+		//	output << "\n"
+		//		<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
+		//		<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
+		//		<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
+
+		//	log(output.str().c_str());
+
 			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			//float ground;
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
@@ -164,7 +139,7 @@ void main()
 			//conv.play();
 			////AI::TASK_AIM_GUN_AT_COORD(ped, aimPos.x, aimPos.y, aimPos.z, -1, 1, 1);
 			//temp = ped;
-		}
+		//}
 
 
 		WAIT(0);

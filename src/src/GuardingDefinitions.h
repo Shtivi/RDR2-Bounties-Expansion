@@ -29,7 +29,10 @@ class RoutineParams
 public:
 	Vector3 scoutPosition;
 	float scoutHeading;
-	vector<Vector3> patrolRoute;
+	Ped Horse;
+	vector<Vector3> patrolRoute, patrolHeading;
+	char* patrolName;
+	bool isTarget;
 };
 
 #include "GenericGuardingBehavior.h"

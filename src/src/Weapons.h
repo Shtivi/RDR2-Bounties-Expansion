@@ -72,6 +72,7 @@ enum WeaponHash
 	ShotgunSawedoff = 0x1765A8F8,
 	PistolSemiauto = 0x657065D6,
 	PistolMauser = 0x8580C63E,
+	Pistol1899 = 0x5B78B8DD,
 	RepeaterHenry = 0x95B24592,
 	ShotgunPump = 0x31B7B9FE,
 	WeaponBow = 0x88A8505C,
@@ -114,7 +115,8 @@ enum WeaponHash
 	SniperrifleRollingblockExotic = 0x4E328256,
 	ThrownTomahawkAncient = 0x7F23B6C7,
 	MeleeTorchCrowd = 0xCC4588BD,
-	MeleeHatchetMeleeonly = 0x76D4FAB
+	MeleeHatchetMeleeonly = 0x76D4FAB,
+	NavyRevolver = 0x7E945C8
 };
 
 enum WeaponGroup

@@ -13,11 +13,13 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 	setMustBeCloseToLocate(true);
 	isTargetAlerted = false;
 	isTargetScared = false;
-	spawnedBountyHunters = false;
 	robberyAttempts = 0;
 	robberyProgress = RobberyProgress::NONE;
-	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	stash = NULL;
+	Vector3 stashPos = toVector3(-345.296, 1362.1, 158.634);
+	campProps.push_back(stash);
+	campProps.push_back(createProp("p_moneystack01x", stashPos));
+	campProps.push_back(createProp("p_moneystack01x", stashPos));
 }
 
 void AndrewClarkExecutor::update()
@@ -51,16 +53,6 @@ void AndrewClarkExecutor::update()
 			}
 		}
 	}
-
-	if (getMissionStage() == BountyMissionStage::ArriveToPoliceStation)
-	{
-		float distanceToPolice = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 1), *(getArea()->policeDeptCoords));
-		if (distanceToPolice < 220 && !spawnedBountyHunters)
-		{
-			spawnBountyHunters();
-			spawnedBountyHunters = true;
-		}
-	}
 }
 
 Ped AndrewClarkExecutor::spawnTarget()
@@ -73,7 +65,12 @@ Ped AndrewClarkExecutor::spawnTarget()
 }
 
 void AndrewClarkExecutor::prepareSet()
-{	
+{
+	isTargetAlerted = false;
+	isTargetScared = false;
+	robberyAttempts = 0;
+	robberyProgress = RobberyProgress::NONE;
+	threatPrompt = new Prompt("Where Is The Money?", 0x9FA5AD07);
 	wagon = createVehicle(VehicleHash::Wagon02X, toVector3(-310.107, 1360.19, 158.084), 94.2345);
 	setVehicleCargo(wagon, VehicleCargoHash::CampCargo1);
 
@@ -90,8 +87,6 @@ void AndrewClarkExecutor::prepareSet()
 	Vector3 stashPos = toVector3(-345.296, 1362.1, 158.634);
 	stash = createProp("p_boxmeddeposit01x", stashPos, 335.257);
 	campProps.push_back(stash);
-	campProps.push_back(createProp("p_moneystack01x", stashPos));
-	campProps.push_back(createProp("p_moneystack01x", stashPos));
 
 	AI::_0x524B54361229154F(target, GAMEPLAY::GET_HASH_KEY("WORLD_HUMAN_SIT_GROUND"), -1, true, true, 0, true);
 }
@@ -114,6 +109,7 @@ void AndrewClarkExecutor::onTargetLocated()
 	AI::TASK_GO_TO_ENTITY(0, target, 10000, OFFSET_FROM_TARGET, 1, 0, 0);
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(player, seq);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 
 	setHelpMessage(ROBBERY_HINT);
 }
@@ -121,23 +117,13 @@ void AndrewClarkExecutor::onTargetLocated()
 void AndrewClarkExecutor::cleanup()
 {
 	BaseMissionExecutor::cleanup();
+	threatPrompt->remove();
 	releaseEntitySafe(&wagon);
 
 	vector<Object>::iterator propsItr;
 	for (propsItr = campProps.begin(); propsItr != campProps.end(); propsItr++)
 	{
 		releaseEntitySafe(&(*propsItr));
-	}
-
-	vector<Ped>::iterator pedItr;
-	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
-	{
-		releaseEntitySafe(&(*pedItr));
-	}
-
-	for (pedItr = bountyHunters.begin(); pedItr != bountyHunters.end(); pedItr++)
-	{
-		releaseEntitySafe(&(*pedItr));
 	}
 }
 
@@ -239,40 +225,5 @@ void AndrewClarkExecutor::goToStash()
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::CLEAR_PED_TASKS(target, 1, 1);
 	AI::TASK_PERFORM_SEQUENCE(target, seq);
-}
-
-void AndrewClarkExecutor::spawnBountyHunters()
-{
-	Ped player = PLAYER::PLAYER_PED_ID();
-	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-	Vector3 enemiesSourcePos = getRandomPedPositionInRange(playerPos, 60);
-	log(playerPos);
-	log(enemiesSourcePos);
-
-	Ped horse1 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
-	Ped horse2 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
-	horses.push_back(horse1);
-	horses.push_back(horse2);
-	giveSaddleToHorse(horse1, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_004);
-	giveSaddleToHorse(horse2, HorseSaddleHashes::MCCLELLAN_01_STOCK_NEW_SADDLE_002);
-
-	addBountyHunter(horse1, true);
-	addBountyHunter(horse1, false);
-	addBountyHunter(horse2, true);
-	WAIT(1000);
-
-	vector<Ped>::iterator pedItr;
-	for (pedItr = bountyHunters.begin(); pedItr != bountyHunters.end(); pedItr++)
-	{
-		Ped curr = *pedItr;
-		AI::TASK_COMBAT_PED(curr, player, 0, 16);
-	}
-}
-
-void AndrewClarkExecutor::addBountyHunter(Ped horse, bool isDriver)
-{
-	Ped bh = createPedOnHorse("G_M_M_BountyHunters_01", horse, isDriver ? -1 : 0);
-	bountyHunters.push_back(bh);
-	createBlip(bh, BLIP_STYLE_ENEMY);
-	pedEquipBestWeapon(bh);
+	AI::CLEAR_SEQUENCE_TASK(&seq);
 }

@@ -16,16 +16,16 @@ BountiesManager::BountiesManager(ModProgress* progress, MapAreasManager* areasMg
 void BountiesManager::resetMissions(MapAreas areaId)
 {
 	MapArea* area = areasMgr->getMapArea(areaId);
-	
+
 	string msg("reseting missions in ");
 	msg = msg.append(area->name);
 	log(msg);
-	
+
 	set<int>::iterator missionsItr = area->getMissionIds()->begin();
 	while (missionsItr != area->getMissionIds()->end())
 	{
 		BaseMissionExecutor* executor = missionsFactory->fromMissionId(*missionsItr);
-		
+
 		string msg("reseting: ");
 		msg = msg.append(executor->getMissionData()->targetName);
 
@@ -50,7 +50,7 @@ void BountiesManager::update()
 	BaseMissionExecutor* curr;
 	BountyMissionStatus currStatus;
 	int currId;
-	vector<BaseMissionExecutor*> finishedMissions;
+	//vector<BaseMissionExecutor*> finishedMissions;
 	vector<BaseMissionExecutor*>::iterator it = missionExecutors.begin();
 
 	while (it != missionExecutors.end())
@@ -58,7 +58,7 @@ void BountiesManager::update()
 		curr = *it;
 		currStatus = curr->getMissionStatus();
 		currId = curr->getMissionData()->id;
-		
+
 		if (currStatus == BountyMissionStatus::Completed)
 		{
 			std::string msg = "completed mission: ";
@@ -68,7 +68,9 @@ void BountiesManager::update()
 			progress->completeMission(currId);
 			progress->save();
 			it = missionExecutors.erase(it);
-			finishedMissions.push_back(curr);
+			nextMissions[currId] = getGameTime();
+			//finishedMissions.push_back(curr);
+
 		}
 		else if (currStatus == BountyMissionStatus::Failed)
 		{
@@ -92,12 +94,31 @@ void BountiesManager::update()
 			it++;
 		}
 	}
-
-	for (it = finishedMissions.begin(); it != finishedMissions.end(); it++)
-	{
-		startNextMission(*it);
-	}
-
+		tm gameTime = getGameTime();
+		tm* missionNextTime;
+		int missionId;
+		map<int, tm>::iterator id = nextMissions.begin();
+		while (id != nextMissions.end())
+		{
+			missionId = (*id).first;
+			missionNextTime = &(*id).second;
+			int diffInSecs = difftime(mktime(&gameTime), mktime(missionNextTime));
+			if (diffInSecs >= NEXT_MISSION_TIME_WAITING_SECS)
+			{
+				curr = missionsFactory->fromMissionId(missionId);
+				startNextMission(curr);
+				id = nextMissions.erase(id);
+			}
+			else
+			{
+				id++;
+			}
+		}
+	//for (it = finishedMissions.begin(); it != finishedMissions.end(); it++)
+	//{
+	//	startNextMission(*it);
+	//}
+			
 	updateFailedMissions();
 }
 
@@ -130,8 +151,12 @@ void BountiesManager::loadActiveMissions()
 					executor->setMissionStatus(missionProgress);
 					missionExecutors.push_back(executor);
 					doneAreaHandling = true;
-
 					log(executor->getMissionData()->targetName);
+				}
+				executor = missionsFactory->fromMissionId(currMissionId);
+				if (missionProgress == BountyMissionStatus::Completed)
+				{
+					loadNextMission(executor);
 				}
 			}
 			else
@@ -145,6 +170,24 @@ void BountiesManager::loadActiveMissions()
 	}
 }
 
+void BountiesManager::loadNextMission(BaseMissionExecutor* after)
+{
+	MapArea* area = areasMgr->getMapArea(after->getMissionData()->area);
+	int nextMissionId = area->nextMission(after->getMissionData()->id);
+
+	if (nextMissionId == -1)
+	{
+		set<int>::iterator missionItr = area->getMissionIds()->begin();
+		BaseMissionExecutor* executor = missionsFactory->fromMissionId(*missionItr);
+		for (missionItr = area->getMissionIds()->begin(); missionItr != area->getMissionIds()->end();missionItr++)
+		{
+			executor->setMissionStatus(BountyMissionStatus::Pending);
+			progress->allowMission(*missionItr);
+		}
+		missionExecutors.push_back(executor);
+	}
+}
+
 void BountiesManager::startNextMission(BaseMissionExecutor* after)
 {
 	log((new string("starting next mission after: "))->append(after->getMissionData()->targetName));
@@ -155,7 +198,7 @@ void BountiesManager::startNextMission(BaseMissionExecutor* after)
 	if (nextMissionId != -1)
 	{
 		BaseMissionExecutor* nextMission = missionsFactory->fromMissionId(nextMissionId);
-		
+
 		if (progress->getMissionProgress(nextMissionId) > BountyMissionStatus::Unavailable)
 		{
 			nextMission->setMissionStatus(progress->getMissionProgress(nextMissionId));
@@ -170,9 +213,14 @@ void BountiesManager::startNextMission(BaseMissionExecutor* after)
 	}
 	else
 	{
-		std::string msg = "no mission after: ";
-		msg = msg.append(after->getMissionData()->targetName);
-		log(msg);
+		set<int>::iterator missionItr = area->getMissionIds()->begin();
+		BaseMissionExecutor* executor = missionsFactory->fromMissionId(*missionItr);
+		for (missionItr = area->getMissionIds()->begin(); missionItr != area->getMissionIds()->end();missionItr++)
+		{
+			executor->setMissionStatus(BountyMissionStatus::Pending);
+			progress->allowMission(*missionItr);
+		}
+		missionExecutors.push_back(executor);
 	}
 }
 

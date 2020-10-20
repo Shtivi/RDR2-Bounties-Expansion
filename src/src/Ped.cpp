@@ -43,7 +43,7 @@ Ped createPedOnHorse(char* modelName, Ped horse, int seatIndex)
 
 bool isPedHogtied(Ped ped)
 {
-	return AI::GET_IS_TASK_ACTIVE(ped, 399);
+	return AI::GET_IS_TASK_ACTIVE(ped, 400);
 }
 
 void playAmbientSpeech(Ped ped, char* speechName, char* voice)

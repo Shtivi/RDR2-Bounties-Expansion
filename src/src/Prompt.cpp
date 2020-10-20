@@ -120,6 +120,11 @@ void Prompt::show()
 	update();
 }
 
+void Prompt::remove()
+{
+	UI::_0x00EDE88D4D13CF59(handle);
+}
+
 void Prompt::hide()
 {
 	isEnabled = false;

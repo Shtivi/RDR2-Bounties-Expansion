@@ -9,9 +9,9 @@ const Hash BLIP_SPRITE_BOUNTY_TARGET = 0x5846C31D;
 char* const SKINNER_BROTHER_MODEL = "g_m_m_unimountainmen_01";
 char* const F_LOWER_TOWN_FOLK = "A_F_M_LowerSDTownfolk_01";
 char* const M_LOWER_TOWN_FOLK = "A_M_M_LowerSDTownfolk_01";
-char* const M_BOUNTY_TARGET = "G_M_M_UniRanchers_01";
+char* const M_BOUNTY_TARGET = "G_M_M_UniCriminals_02";
 char* const M_BOUNTY_MEXICAN = "G_M_M_UniBanditos_01";
-char* const M_BOUNTY_FANCY = "MSP_SAINTDENIS1_MALES_01";
+char* const M_BOUNTY_FANCY = "A_M_M_SDFANCYTRAVELLERS_01";
 
 typedef struct RaycastResult
 {
@@ -41,7 +41,8 @@ void getGroundPos(Vector3* position);
 void getGroundPos(Vector3 originalPos, Vector3* outPos);
 float getGroundPos(Vector3 originalPos);
 float distanceBetweenEntities(Entity entity1, Entity entity2);
+float distanceBetweenEntitiesHor(Entity entity1, Entity entity2);
 Object createProp(char* model, Vector3 position, float heading = 0, bool isStatic = false, bool isVisible = true);
 RaycastResult raycast(Vector3 source, Vector3 direction, float maxDist, RaycastIntersectionOptions intersectionOptions = Everything);
-void releaseEntitySafe(Entity* entity);
+//void releaseEntitySafe(Entity* entity);
 tm getGameTime();
