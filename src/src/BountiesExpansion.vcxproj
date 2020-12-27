@@ -12,8 +12,16 @@
     <ClCompile Include="AttachedRope.cpp" />
     <ClCompile Include="Autosave.cpp" />
     <ClCompile Include="BaseMissionExecutor.cpp" />
+    <ClCompile Include="BillyWilsonExecutor.cpp" />
+    <ClCompile Include="BobLaneExecutor.cpp" />
+    <ClCompile Include="BuckHicoxExecutor.cpp" />
+    <ClCompile Include="BufordDukeExecutor.cpp" />
+    <ClCompile Include="CarlMartinExecutor.cpp" />
+    <ClCompile Include="CharlesMoonExecutor.cpp" />
+    <ClCompile Include="ChesterBurnettExecutor.cpp" />
     <ClCompile Include="ChrisJaniceExecutor.cpp" />
     <ClCompile Include="ClintonvonHagenExecutor.cpp" />
+    <ClCompile Include="ConversationLine.cpp" />
     <ClCompile Include="CullenBakerExecutor.cpp" />
     <ClCompile Include="EmmettDavisExecutor.cpp" />
     <ClCompile Include="GenericGuardingBehavior.cpp" />
@@ -177,7 +185,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <OutDir>..\..</OutDir>
+    <OutDir>F:\Program Files\Rockstar Games\Red Dead Redemption 2</OutDir>
     <IntDir>tmp\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -153,6 +153,8 @@ void BaseMissionExecutor::update()
 			break;
 
 		case BountyMissionStage::LocateTarget:
+			spawnedBountyHunters = false;
+			spawnchance = rand() >= 0.75;
 			if (mustBeCloseToLocate)
 			{
 				if (distanceBetweenEntities(player, target) <= requiredDistanceToLocate)
@@ -175,8 +177,6 @@ void BaseMissionExecutor::update()
 			if (isPedHogtied(target) ||
 				(missionData->requiredTargetCondition == TargetCondition::DeadOrAlive && ENTITY::IS_ENTITY_DEAD(target)))
 			{
-				spawnedBountyHunters = false;
-				spawnchance = rand() % 2 + 1;
 				nextStage();
 			}
 			if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(target, player, 1) && seen == false)

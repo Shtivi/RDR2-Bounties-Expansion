@@ -28,9 +28,6 @@
     <ClCompile Include="Math.cpp">
       <Filter>Src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Src\Script</Filter>
-    </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>Src\UI</Filter>
     </ClCompile>
@@ -70,16 +67,10 @@
     <ClCompile Include="AndrewClarkExecutor.cpp">
       <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
     </ClCompile>
-    <ClCompile Include="Vehicles.cpp">
-      <Filter>Src\Game\World\Vehicle</Filter>
-    </ClCompile>
     <ClCompile Include="Ped.cpp">
       <Filter>Src\Game\Ped</Filter>
     </ClCompile>
     <ClCompile Include="Conversation.cpp">
-      <Filter>Src\Game\Ped\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="ConversationLine.cpp">
       <Filter>Src\Game\Ped\Interaction</Filter>
     </ClCompile>
     <ClCompile Include="Delay.cpp">
@@ -93,9 +84,6 @@
     </ClCompile>
     <ClCompile Include="RobberyAimAtVictim.cpp">
       <Filter>Src\Game\BountyMissions\AndrewClark\RobberyInteraction</Filter>
-    </ClCompile>
-    <ClCompile Include="Weapons.cpp">
-      <Filter>Src\Game\World\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="ExecuteVictimInteraction.h">
       <Filter>Src\Game\BountyMissions\ElsieGreen</Filter>
@@ -139,20 +127,11 @@
     <ClCompile Include="GushkalaInataExecutor.cpp">
       <Filter>Src\Game\BountyMissions\GushkalaInata</Filter>
     </ClCompile>
-    <ClCompile Include="ChesterBurnettExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\ChesterBurnett</Filter>
-    </ClCompile>
     <ClCompile Include="HankEnepayExecutor.cpp">
       <Filter>Src\Game\BountyMissions\HankEnepay</Filter>
     </ClCompile>
     <ClCompile Include="NateNashobaExecutor.cpp">
       <Filter>Src\Game\BountyMissions\NateNashoba</Filter>
-    </ClCompile>
-    <ClCompile Include="CharlesMoonExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\CharlesMoon</Filter>
-    </ClCompile>
-    <ClCompile Include="BillyWilsonExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\BillyWilson</Filter>
     </ClCompile>
     <ClCompile Include="JoseChavezExecutor.cpp">
       <Filter>Src\Game\BountyMissions\JoseChavez</Filter>
@@ -172,9 +151,6 @@
     <ClCompile Include="PeteEatonExecutor.cpp">
       <Filter>Src\Game\BountyMissions\PeteEaton</Filter>
     </ClCompile>
-    <ClCompile Include="BufordDukeExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\BufordDuke</Filter>
-    </ClCompile>
     <ClCompile Include="EmmettDavisExecutor.cpp">
       <Filter>Src\Game\BountyMissions\EmmettDavis</Filter>
     </ClCompile>
@@ -184,9 +160,6 @@
     <ClCompile Include="WallaceKnoxExecutor.cpp">
       <Filter>Src\Game\BountyMissions\WallaceKnox</Filter>
     </ClCompile>
-    <ClCompile Include="CarlMartinExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\CarlMartin</Filter>
-    </ClCompile>
     <ClCompile Include="ChrisJaniceExecutor.cpp">
       <Filter>Src\Game\BountyMissions\ChrisJanice</Filter>
     </ClCompile>
@@ -195,12 +168,6 @@
     </ClCompile>
     <ClCompile Include="JustusBarnesExecutor.cpp">
       <Filter>Src\Game\BountyMissions\JustusBarnes</Filter>
-    </ClCompile>
-    <ClCompile Include="BobLaneExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\BobLane</Filter>
-    </ClCompile>
-    <ClCompile Include="BuckHicoxExecutor.cpp">
-      <Filter>Src\Game\BountyMissions\BuckHicox</Filter>
     </ClCompile>
     <ClCompile Include="GeorgeCoenExecutor.cpp">
       <Filter>Src\Game\BountyMissions\GeorgeCoen</Filter>
@@ -219,6 +186,37 @@
     </ClCompile>
     <ClCompile Include="GuardsGroup.cpp">
       <Filter>Src\Game\Ped</Filter>
+    </ClCompile>
+    <ClCompile Include="blips.cpp" />
+    <ClCompile Include="Vehicles.cpp" />
+    <ClCompile Include="Weapons.cpp" />
+    <ClCompile Include="world.cpp" />
+    <ClCompile Include="Logger.cpp">
+      <Filter>Src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversationLine.cpp">
+      <Filter>Src\Game\Ped\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="ChesterBurnettExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\ChesterBurnett</Filter>
+    </ClCompile>
+    <ClCompile Include="CharlesMoonExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\CharlesMoon</Filter>
+    </ClCompile>
+    <ClCompile Include="BillyWilsonExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\BillyWilson</Filter>
+    </ClCompile>
+    <ClCompile Include="BobLaneExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\BobLane</Filter>
+    </ClCompile>
+    <ClCompile Include="BuckHicoxExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\BuckHicox</Filter>
+    </ClCompile>
+    <ClCompile Include="BufordDukeExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\BufordDuke</Filter>
+    </ClCompile>
+    <ClCompile Include="CarlMartinExecutor.cpp">
+      <Filter>Src\Game\BountyMissions\CarlMartin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,9 +265,6 @@
     <ClInclude Include="Math.h">
       <Filter>Src\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Src\Script</Filter>
-    </ClInclude>
     <ClInclude Include="UI.h">
       <Filter>Src\UI</Filter>
     </ClInclude>
@@ -306,9 +301,6 @@
     <ClInclude Include="AndrewClarkExecutor.h">
       <Filter>Src\Game\BountyMissions\AndrewClark</Filter>
     </ClInclude>
-    <ClInclude Include="Vehicles.h">
-      <Filter>Src\Game\World\Vehicle</Filter>
-    </ClInclude>
     <ClInclude Include="Ped.h">
       <Filter>Src\Game\Ped</Filter>
     </ClInclude>
@@ -317,9 +309,6 @@
     </ClInclude>
     <ClInclude Include="RobberyInteraction.h">
       <Filter>Src\Game\BountyMissions\AndrewClark\RobberyInteraction</Filter>
-    </ClInclude>
-    <ClInclude Include="Weapons.h">
-      <Filter>Src\Game\World\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Stopwatch.h">
       <Filter>Src\Script\Stopwatch</Filter>
@@ -440,6 +429,13 @@
     </ClInclude>
     <ClInclude Include="GuardsGroup.h">
       <Filter>Src\Game\Ped</Filter>
+    </ClInclude>
+    <ClInclude Include="blips.h" />
+    <ClInclude Include="Vehicles.h" />
+    <ClInclude Include="Weapons.h" />
+    <ClInclude Include="world.h" />
+    <ClInclude Include="Logger.h">
+      <Filter>Src\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ ChesterBurnettExecutor::ChesterBurnettExecutor(BountyMissionData missionData, Ma
 	: BaseMissionExecutor(missionData, areasMgr)
 {
 	setTargetAreaRadius(50);
-	setRequiredDistanceToLocateTarget(0);
+	setRequiredDistanceToLocateTarget(20);
 	setMustBeCloseToLocate(true);
 	enemiesStatus = EnemiesMode::IDLE;
 	campfirePos = toVector3(-1352.869, 2440.57, 307.4282);
