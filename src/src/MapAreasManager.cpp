@@ -65,9 +65,9 @@ MapArea* MapAreasManager::createValentine()
 {
 	Vector3 policeDeptCoords = toVector3(-275.256, 801.303, 118.397);
 	Vector3 cellCoords = toVector3(-275.918, 810.098, 118.376);
-	Vector3 posterCoords = toVector3(-274.3045, 802.762, 119.5886);
+	Vector3 posterCoords = toVector3(-272.777, 799.70, 119.412);
 
-	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 10.03);
+	return new MapArea("Valentine", policeDeptCoords, posterCoords, cellCoords, 11);
 }
 
 MapArea* MapAreasManager::createStrawberry()
