@@ -179,7 +179,7 @@ void BaseMissionExecutor::update()
 				spawnchance = rand() % 2 + 1;
 				nextStage();
 			}
-			if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(target, player, 1) && seen == false)
+			if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(player, target, 1) && ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(target, player, 1) && seen == false)
 			{
 				deleteBlipSafe(&targetBlip);
 				targetBlip = createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);

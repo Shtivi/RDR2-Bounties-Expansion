@@ -22,10 +22,12 @@ private:
 	bool _shouldTolerate;
 	bool restpos;
 	bool test;
+	int previous;
 	Vector3 lastImpactCoords;
 	IdlingModifier idlingModifier;
 	RoutineParams routineParams;
 	set<Ped>* bodiesFound;
+	set<Ped>* pedsFound;
 	GameStopwatch stopwatch;
 
 public:
@@ -61,6 +63,7 @@ protected:
 	char* generateScoutingScenario();
 	bool isPlayerWithinLos();
 	void detectHighProfileEventAround();
+	bool shouldIgnoreSearch(Ped body);
 	bool shouldIgnoreBody(Ped body);
 
 	virtual void enterIdleMode();

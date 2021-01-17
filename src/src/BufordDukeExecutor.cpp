@@ -87,11 +87,11 @@ void BufordDukeExecutor::prepareSet()
 	routine2.patrolHeading.push_back(toVector3(1582.79, -1874.08, 50.4752));
 
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1587.436, -1847.274, 51.35342), 164), IdlingModifier::Scout);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1587.88, -1851.641, 51.52284), 72), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1587.88, -1851.641, 51.52284), 72), IdlingModifier::Rest);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1583.227, -1857.805, 51.3534), (rand() % 361)), IdlingModifier::Patrol, routine2);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1588.024, -1839.284, 57.53828), 66), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1588.024, -1839.284, 57.53828), 66), IdlingModifier::Scout);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1585.812, -1845.111, 57.57048), (rand() % 361)), IdlingModifier::Scout);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1597.018, -1849.776, 54.25288), (rand() % 361)), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1597.018, -1849.776, 54.25288), (rand() % 361)), IdlingModifier::Patrol, routine1);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1580.818, -1843.372, 51.35342), (rand() % 345 + 153)), IdlingModifier::Scout);
 	enemiesGroup->start();
 }

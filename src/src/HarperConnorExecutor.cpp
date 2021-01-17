@@ -84,13 +84,13 @@ void HarperConnorExecutor::prepareSet()
 	routine2.patrolRoute.push_back(toVector3(750.397, -857.654, 54.5683));
 	routine2.patrolHeading.push_back(toVector3(749.73, -857.485, 54.4517));
 
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(762.6347, -850.3631, 54.25639), 245), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(762.6347, -850.3631, 54.25639), 245), IdlingModifier::Rest);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(762.7381, -853.0121, 54.34014), 286), IdlingModifier::Rest);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(765.1423, -856.9935, 54.24311), 326), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(765.1423, -856.9935, 54.24311), 326), IdlingModifier::Rest);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(769.776, -835.057, 54.7592), (rand() % 361)), IdlingModifier::Patrol, routine1);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(776.5958, -844.3274, 54.55535), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(776.5958, -844.3274, 54.55535), (rand() % 361)), IdlingModifier::Scout);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(757.3467, -844.9959, 54.13348), (rand() % 274 + 98)), IdlingModifier::Scout);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(754.035, -844.9783, 54.15492), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(754.035, -844.9783, 54.15492), (rand() % 361)), IdlingModifier::Patrol, routine2);
 	enemiesGroup->start();
 }
 

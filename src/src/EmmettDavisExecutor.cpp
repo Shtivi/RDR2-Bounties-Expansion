@@ -76,13 +76,13 @@ void EmmettDavisExecutor::prepareSet()
 	routine2.patrolRoute.push_back(toVector3(717.709, -471.985, 78.9106));
 	routine2.patrolHeading.push_back(toVector3(717.826, -471.583, 78.957));
 
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(724.744, -462.2702, 78.33641), 44), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(724.744, -462.2702, 78.33641), 44), IdlingModifier::Rest);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(726.2008, -460.0238, 78.21921), 52), IdlingModifier::Rest);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(723.8654, -467.3318, 78.89738), 57), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(723.8654, -467.3318, 78.89738), 57), IdlingModifier::Scout);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(720.4483, -470.2119, 78.00019), (rand() % 361)), IdlingModifier::Scout);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(717.4052, -467.7865, 78.4699), 335), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(717.4052, -467.7865, 78.4699), 335), IdlingModifier::Rest);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(724.9504, -469.1515, 84.89081), (rand() % 361)), IdlingModifier::Rest);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(728.2208, -475.3792, 75.7203), (rand() % 361)), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(728.2208, -475.3792, 75.7203), (rand() % 361)), IdlingModifier::Patrol, routine2);
 	enemiesGroup->start();
 }
 
