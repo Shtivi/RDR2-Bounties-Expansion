@@ -61,7 +61,7 @@ void GenericGuardingBehavior::update()
 	float distanceFromGuard = distanceBetweenEntities(ped(), player);
 	float distanceFromCenter = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 0), getDefensePosition());
 	GameStopwatch ArrowTime;
-	//displayDebugText(to_string(bodiesFound->size()).c_str());
+	displayDebugText(to_string(stopwatch.getElapsedSecondsRealTime()).c_str());
 	switch (mode)
 	{
 	case TensionMode::Idle:
@@ -143,14 +143,12 @@ void GenericGuardingBehavior::update()
 		}
 		else if (stopwatch.getElapsedSecondsRealTime() >= GUARD_SEARCH_DURATION_SECS)
 		{
-			//showSubtitle("stopped searching");
 			stopwatch.stop();
 			enterAlertedMode();
 		}
 		break;
 
 	case TensionMode::Combat:
-		stopwatch.stop();
 		break;
 	}
 
@@ -162,7 +160,6 @@ void GenericGuardingBehavior::update()
 		{
 			enterCombatMode();
 		}
-
 		else if (distanceFromGuard <= GUARD_HEARING_RANGE && PED::IS_PED_SHOOTING(player) && WEAPON::GET_CURRENT_PED_WEAPON(player, bow, 0, 0, 1))
 		{
 			if (*bow != WeaponBow)
@@ -181,7 +178,7 @@ void GenericGuardingBehavior::update()
 		}
 		else if (ArrowTime.getElapsedSecondsRealTime() > 0)
 		{
-			previous = pedsFound->size();//oke hij werkt nu soort van op 1 persoon na je probeerde deze op verschillende plekken te zetten.
+			previous = pedsFound->size();
 			ArrowTime.stop();
 		}
 		else if (pedsFound->size() > previous)
@@ -458,9 +455,9 @@ void GenericGuardingBehavior::detectHighProfileEventAround()
 	Vector3 lastImpactCoords;
 	if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(ped(), 1, 0), lastImpactCoords) <= 13 && event == HighProfileEvents::None)
 	{
-		while (ytr != nearbyBeds.end() && shouldIgnoreSearch(*ytr))
+		while (ytr != nearbyBeds.end())
 		{
-			if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(ped(), *ytr, 1) || distanceBetweenEntities(ped(), *ytr) <= GUARD_COMBAT_RANGE)
+			if (!shouldIgnoreSearch(*ytr) && (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(ped(), *ytr, 1) || distanceBetweenEntities(ped(), *ytr) <= GUARD_COMBAT_RANGE))
 			{
 				event = HighProfileEvents::Generic;
 				eventOrigin = ENTITY::GET_ENTITY_COORDS(player, 1, 1);
@@ -600,6 +597,7 @@ void GenericGuardingBehavior::enterSearchMode(Vector3 aroundWhere, float searchR
 
 void GenericGuardingBehavior::enterCombatMode()
 {
+	stopwatch.stop();
 	PED::_0xFE07FF6495D52E2A(ped(), 0, 0, 0);
 	setMode(TensionMode::Combat);
 	pedEquipBestWeapon(ped());
