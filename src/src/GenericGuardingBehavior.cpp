@@ -61,7 +61,7 @@ void GenericGuardingBehavior::update()
 	float distanceFromGuard = distanceBetweenEntities(ped(), player);
 	float distanceFromCenter = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 0), getDefensePosition());
 	GameStopwatch ArrowTime;
-	displayDebugText(to_string(stopwatch.getElapsedSecondsRealTime()).c_str());
+	//displayDebugText(to_string(stopwatch.getElapsedSecondsRealTime()).c_str());
 	switch (mode)
 	{
 	case TensionMode::Idle:
