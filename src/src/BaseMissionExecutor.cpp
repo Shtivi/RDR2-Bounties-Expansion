@@ -124,7 +124,6 @@ void BaseMissionExecutor::update()
 		{
 		case BountyMissionStage::MissionInitialization:
 			initialize();
-			seen = false;
 			nextStage();
 			break;
 
@@ -188,6 +187,11 @@ void BaseMissionExecutor::update()
 			break;
 
 		case BountyMissionStage::ArriveToPoliceStation:
+			if (ENTITY::IS_ENTITY_DEAD(target) && !RADAR::DOES_BLIP_EXIST(targetBlip))
+			{
+				deleteBlipSafe(&targetBlip);
+				targetBlip = createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);
+			}
 			if (distanceBetween(playerPos, missionData->startPosition) > 250 && spawnchance == 1 && !spawnedBountyHunters && missionData->area != MapAreas::Armadillo)
 			{
 				spawnBountyHunters();
@@ -214,14 +218,12 @@ void BaseMissionExecutor::update()
 			break;
 
 		case BountyMissionStage::CollectReward:
-			nextStage();
+			if (OBJECT::HAS_PICKUP_BEEN_COLLECTED(money))
+			{
+				nextStage();
+			}
 			break;
 
-		}
-		if (ENTITY::IS_ENTITY_DEAD(target) && !RADAR::DOES_BLIP_EXIST(targetBlip))
-		{
-			deleteBlipSafe(&targetBlip);
-			targetBlip = createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);
 		}
 		if (stage >= BountyMissionStage::LocateTarget && stage <= BountyMissionStage::CollectReward)
 		{
@@ -414,6 +416,7 @@ void BaseMissionExecutor::onTargetLocated()
 {
 	decorateTarget();
 	RADAR::REMOVE_BLIP(&targetAreaBlip);
+	seen == false;
 
 	/*const char* gender = missionData->isTargetMale ? "He" : "She";
 	const char* condition = missionData->requiredTargetCondition == TargetCondition::Alive ? "Alive" : "Dead or Alive";
@@ -438,6 +441,7 @@ void BaseMissionExecutor::onArrivalToPoliceStation()
 	OBJECT::DELETE_OBJECT(&dummyProp);
 	deleteBlipSafe(&policeLocBlip);
 	Vector3* posterPos = getArea()->cellCoords;
+	OBJECT::_SET_DOOR_ACCELERATION_LIMIT(getArea()->cellnumber, 0);
 	dummyProp = createProp("p_shotGlass01x", *posterPos, true, false, false);
 	cellBlip = createBlip(dummyProp, 0x1857A152);//0xC19DA63
 	vector<Ped>::iterator pedItr;
@@ -451,21 +455,32 @@ void BaseMissionExecutor::onArrivalToPoliceStation()
 	}
 
 	std::stringstream text;
-	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in front of the ~COLOR_YELLOW~Cell";
+	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in the ~COLOR_YELLOW~Cell";
 	showSubtitle(text.str().c_str());
 }
 
 void BaseMissionExecutor::onTargetHandedOver()
 {
-	deleteBlipSafe(&targetBlip);
 	OBJECT::DELETE_OBJECT(&dummyProp);
+	Vector3* posterPos = getArea()->moneyCoords;
+	dummyProp = createProp("p_shotGlass01x", *posterPos, true, false, false);
+	moneyBlip = createBlip(dummyProp, 0x1857A152);//0xC19DA63
+	money = OBJECT::CREATE_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_VARIABLE"), (*getArea()->moneyCoords).x, (*getArea()->moneyCoords).y, (*getArea()->moneyCoords).z, 0, missionData->reward * 100, true, GAMEPLAY::GET_HASH_KEY("s_inv_moneyclip01x"), 1, 1);
+	//OBJECT::_0xB8F5062070BB6DBD(money, true);
+	std::stringstream text;
+	text << "~COLOR_WHITE~ Collect the ~COLOR_YELLOW~reward";
+	showSubtitle(text.str().c_str());
+	deleteBlipSafe(&targetBlip);
 	deleteBlipSafe(&cellBlip);
 }
 
 void BaseMissionExecutor::onRewardCollected()
 {
-	CASH::PLAYER_ADD_CASH(missionData->reward * 100, 1831944558);
-	showSubtitle(BOUNTY_COMPLETED);
+	OBJECT::DELETE_OBJECT(&dummyProp);
+	deleteBlipSafe(&moneyBlip);
+	std::stringstream text;
+	text << "Bounty complete $" << missionData->reward << ".00 collected";
+	showSubtitle(text.str().c_str());
 }
 
 void BaseMissionExecutor::onFinished(bool shouldCleanup)
@@ -562,11 +577,14 @@ void BaseMissionExecutor::cleanup()
 {
 	if (status == BountyMissionStatus::Completed || status == BountyMissionStatus::Failed)
 	{
+		OBJECT::_SET_DOOR_ACCELERATION_LIMIT(getArea()->cellnumber, 1);
 		deleteBlipSafe(&targetBlip);
 		deleteBlipSafe(&targetAreaBlip);
 		deleteBlipSafe(&policeLocBlip);
 		deleteBlipSafe(&cellBlip);
+		releaseEntitySafe(&moneyBlip);
 		releaseEntitySafe(&target);
+		releaseEntitySafe(&money);
 	}
 	vector<Ped>::iterator pedItr;
 	for (pedItr = bountyHunters.begin(); pedItr != bountyHunters.end(); pedItr++)

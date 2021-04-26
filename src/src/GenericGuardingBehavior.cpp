@@ -160,6 +160,10 @@ void GenericGuardingBehavior::update()
 		{
 			enterCombatMode();
 		}
+		else if (GAMEPLAY::HAS_BULLET_IMPACTED_IN_AREA(bob.x, bob.y, bob.z, 50, true, true))
+		{
+			enterSearchMode(ENTITY::GET_ENTITY_COORDS(player, 1, 1));
+		}
 		else if (distanceFromGuard <= GUARD_HEARING_RANGE && PED::IS_PED_SHOOTING(player) && WEAPON::GET_CURRENT_PED_WEAPON(player, bow, 0, 0, 1))
 		{
 			if (*bow != WeaponBow)
