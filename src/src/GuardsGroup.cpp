@@ -59,17 +59,17 @@ void GuardsGroup::stop()
 void GuardsGroup::update()
 {
 	clearDeadGuards();
-	if (guards.size() == 0)
-	{
-		stop();
-		return;
-	}
+	//if (guards.size() == 0)
+	//{
+	//	stop();
+	//	return;
+	//}
 
 	TensionMode sharedTensionMode = detectSharedTensionMode();
 	for (vector<GenericGuardingBehavior*>::iterator itr = guards.begin(); itr != guards.end(); itr++)
 	{
 		GenericGuardingBehavior* guard = (*itr);
-	
+
 		if (sharedTensionMode > TensionMode::Idle)
 		{
 			switch (sharedTensionMode)
@@ -85,7 +85,7 @@ void GuardsGroup::update()
 				break;
 			}
 		}
-		
+
 		guard->update();
 		guardsModeSnapshot[guard->ped()] = guard->getMode();
 	}

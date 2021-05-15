@@ -96,11 +96,11 @@ void TurkishRunnerExecutor::update()
 
 	if (getMissionStage() == BountyMissionStage::CaptureTarget && enemiesStatus >= EnemiesMode::ALERTED && !ENTITY::IS_ENTITY_DEAD(target))
 	{
-		if (distanceBetweenEntities(target, player) > 100)
+		if (distanceBetweenEntities(target, player) > 80)
 		{
 			showSubtitle("The target is getting too far!");
 		}
-		else if (distanceBetweenEntities(target, player) > 80)
+		else if (distanceBetweenEntities(target, player) > 100)
 		{
 			fail("Bounty failed, target lost");
 		}

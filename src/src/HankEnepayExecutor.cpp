@@ -43,11 +43,11 @@ void HankEnepayExecutor::update()
 
 	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
 	{
-		if (distanceBetweenEntities(target, player) > 80)
+		if (distanceBetweenEntities(target, player) > 100)
 		{
 			showSubtitle("The target is getting too far!");
 		}
-		if (distanceBetweenEntities(target, player) > 120)
+		if (distanceBetweenEntities(target, player) > 140)
 		{
 			PED::DELETE_PED(&target);
 			PED::DELETE_PED(&horse);

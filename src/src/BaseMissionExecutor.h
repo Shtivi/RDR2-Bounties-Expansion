@@ -22,11 +22,13 @@ private:
 
 	Object poster;
 	Object dummyProp;
+	Pickup money;
 	Blip posterBlip;
 	Blip targetAreaBlip;
 	Blip policeLocBlip;
 	Blip cellBlip;
 	Blip targetBlip;
+	Blip moneyBlip;
 	vector<Ped> bountyHunters;
 	vector<Ped> bountyhorses;
 

@@ -1,6 +1,7 @@
 # Red Dead Redemption 2: Bounties Expansion
-This mod adds some new bounty missions to Red Dead Redemption 2 single player.  
-Up to version 1.0.0 there are 4 new bounties.   
+This mods adds new and exciting bounties for you to collect. Most bounties are based off of the bounty system of RDR1.
+There are 39 bounties in total. With some of them having a unique mission.
+That's not all, with the new version(2.0.0) the bounties are replayable! just wait for about 6(in-game) hours and a new poster will spawn. 
 
 ### Installation:
 - Download and install AB's ScripthookRDR2: http://www.dev-c.com/rdr2/scripthookrdr2/ (make sure you install the asi loader).
@@ -16,4 +17,4 @@ Up to version 1.0.0 there are 4 new bounties.
 - Drop the target by the cell and get your reward.
 
 ### Known Issues:
-- Sometimes some of the blips are not removed.
+- Occasional memory exception error when killing a guard.

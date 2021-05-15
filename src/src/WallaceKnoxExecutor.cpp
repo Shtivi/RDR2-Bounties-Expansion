@@ -43,11 +43,11 @@ void WallaceKnoxExecutor::update()
 
 	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
 	{
-		if (distanceBetweenEntities(target, player) > 80)
+		if (distanceBetweenEntities(target, player) > 100)
 		{
 			showSubtitle("The target is getting too far!");
 		}
-		if (distanceBetweenEntities(target, player) > 120)
+		if (distanceBetweenEntities(target, player) > 140)
 		{
 			PED::DELETE_PED(&target);
 			PED::DELETE_PED(&horse);
@@ -76,11 +76,11 @@ void WallaceKnoxExecutor::prepareSet()
 	routine1.patrolHeading.push_back(toVector3(1385.34, -2069.89, 52.7382));
 
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1390.332, -2085.377, 51.56629), (rand() % 361)), IdlingModifier::Scout);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1387.937, -2086.211, 51.57132), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1387.937, -2086.211, 51.57132), (rand() % 361)), IdlingModifier::Scout);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1389.035, -2077.584, 51.61397), (rand() % 361)), IdlingModifier::Scout);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1389.902, -2080.091, 51.58126), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1389.902, -2080.091, 51.58126), (rand() % 361)), IdlingModifier::Scout);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1382.968, -2075.749, 51.28074), 176), IdlingModifier::Rest);
-	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_02", toVector3(1378.87, -2080.078, 50.97837), 251), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1378.87, -2080.078, 50.97837), 251), IdlingModifier::Rest);
 	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(1370.962, -2080.839, 51.08624), (rand() % 361)), IdlingModifier::Patrol, routine1);
 	enemiesGroup->start();
 }
